@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/lookfor_hotel"
+            android:icon="@drawable/search"
+            android:title="找飯店" />
+        <item
+            android:id="@+id/lookfor_partner"
+            android:icon="@drawable/search"
+            android:title="找共住夥伴" />
+        <item
+            android:id="@+id/my_order"
+            android:icon="@drawable/order"
+            android:title="我的訂單" />
+        <item
+        android:id="@+id/my_wishlist"
+        android:icon="@drawable/wish_list"
+        android:title="願望清單" />
+
+        <item
+            android:id="@+id/my_member"
+            android:icon="@drawable/member"
+            android:title="一般會員" />
+
+        <item
+            android:id="@+id/my_member_hotel"
+            android:icon="@drawable/member_hotel"
+            android:title="廠商會員" />
+
+        <item
+            android:id="@+id/info"
+            android:icon="@drawable/info"
+            android:title="訂房須知" />
+
+    </group>
+</menu>

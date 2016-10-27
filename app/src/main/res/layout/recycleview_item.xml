@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_margin="6dp"
+    app:cardBackgroundColor="#dddddd"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="8dp"
+    >
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        tools:context="com.example.sam.recycleviewprac.MainActivity">
+
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="48dp"
+            android:layout_height="53dp"
+            android:src="@drawable/hotel1"/>
+
+
+        <TextView
+            android:id="@+id/tvHotel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ivImage"
+
+            android:textSize="24sp"
+            android:text="福華飯店 單人房"
+            android:textColor="#0000AA"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tvHotel"
+            android:layout_below="@+id/tvHotel"
+            android:paddingTop="5dp"
+            android:textSize="20sp"
+            android:text="500$" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
