@@ -26,14 +26,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // toolbar setup
+        // toolbar  setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setBackgroundColor(0xFF3c0c60);
         myToolbar.setTitleTextColor(0xFFFFFFFF);
         setSupportActionBar(myToolbar);
 
 
-        // button-1
+        // button-step1
         setUpActionBar();
 
         initDrawer();
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPostCreate(Bundle savedInstanceState){
         super.onPostCreate(savedInstanceState);
-        // button-3
+        // button-step3
         actionBarDrawerToggle.syncState();
     }
 
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // button-2
+        // button-step2
         // 讓左上角的按鈕和DrawerLayout的動作同步，並同時製作轉動效果
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         NavigationView navigationView = (NavigationView)drawerLayout.findViewById(R.id.navigation_view);
 
-        // button-4
+        // button-step4
         switch(item.getItemId()){
             case android.R.id.home: // for home button at the top left corner
             if (drawerLayout.isDrawerOpen(navigationView)){
