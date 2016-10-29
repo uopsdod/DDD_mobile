@@ -11,7 +11,7 @@
         android:layout_height="35dp"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
-        android:background="@drawable/check"
+        android:background="@drawable/selector_live2"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:textOff=""
