@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         // toolbar   setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setBackgroundColor(0xFF3c0c60);
+        myToolbar.setBackgroundColor(0xFF666666);
         myToolbar.setTitleTextColor(0xFFFFFFFF);
         setSupportActionBar(myToolbar);
 
@@ -77,12 +77,16 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.lookfor_hotel:
                         showToast("hotel clicked");
                         fragment = new HotelFragment();
-                        switchFragment(R.id.drawer_layout_body,fragment);
+                        Util.switchFragment(MainActivity.this,fragment);
                         break;
                     case R.id.lookfor_partner:
                         showToast("partner clicked");
                         fragment = new PartnerFragment();
-                        switchFragment(R.id.drawer_layout_body,fragment);
+                        Util.switchFragment(MainActivity.this,fragment);
+                        break;
+                    case R.id.my_member:
+                        fragment = new MemberFragment();
+                        Util.switchFragment(MainActivity.this, fragment);
                         break;
 
                 }
