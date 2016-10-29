@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.my_member:
                         fragment = new MemberFragment();
                         Util.switchFragment(MainActivity.this, fragment);
-                        setTitle("一般會員");
                         break;
 
                 }
