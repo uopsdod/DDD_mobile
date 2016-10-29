@@ -1,12 +1,11 @@
 package com.example.sam.drawerlayoutprac;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.BaseAdapter;
+import android.widget.Toast;
 
+import com.yalantis.euclid.library.EuclidActivity;
 import com.yalantis.euclid.library.EuclidListAdapter;
 
 import java.util.ArrayList;
@@ -15,15 +14,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by cuser on 2016/10/9.
+ * Created by Oleksii Shliama on 1/27/15.
  */
-public class PartnerFragment extends Fragment {
+public class EuclidTest extends EuclidActivity{
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle){
-        super.onCreateView(inflater,viewGroup,bundle);
-        View view = inflater.inflate(R.layout.fragment_partner, viewGroup, false);
-        ListView listView = (ListView)view.findViewById(R.id.list_partner);
-        // get data
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mButtonProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplication(), "Oh hi!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected BaseAdapter getAdapter() {
         Map<String, Object> profileMap;
         List<Map<String, Object>> profilesList = new ArrayList<>();
 
@@ -50,7 +58,7 @@ public class PartnerFragment extends Fragment {
             profilesList.add(profileMap);
         }
 
-        listView.setAdapter(new PartnerList(getContext(), R.layout.list_item, profilesList));
-        return view;
+        return new EuclidListAdapter(this, R.layout.list_item, profilesList);
     }
+
 }
