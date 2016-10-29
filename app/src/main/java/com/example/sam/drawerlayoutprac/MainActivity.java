@@ -1,5 +1,6 @@
 package com.example.sam.drawerlayoutprac;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -83,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
                         showToast("partner clicked");
                         fragment = new PartnerFragment();
                         Util.switchFragment(MainActivity.this,fragment);
+//                        Intent intent = new Intent(getApplication(),EuclidTest.class);
+//                        startActivity(intent);
                         break;
                     case R.id.my_member:
                         fragment = new MemberFragment();

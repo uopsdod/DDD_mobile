@@ -1,14 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#cceecc"
     android:orientation="vertical">
 
-    <TextView
+    <ListView
+        android:id="@+id/list_partner"
+        android:divider="@drawable/list_divider"
+        android:layout_below="@+id/toolbar_list"
+        android:background="@color/gray"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Partner info here"
-        style="@style/text_style_black"/>
+        android:layout_height="match_parent"
+        tools:listitem="@layout/list_item" />
 
 </LinearLayout>

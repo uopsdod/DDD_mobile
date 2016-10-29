@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':Euclidlib'
+project(':Euclidlib').projectDir = new File('libs/Euclidlib')
