@@ -22,7 +22,7 @@ public class MemberFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.member_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_member, container, false);
 
         btLogin = (Button) view.findViewById(R.id.btLogin);
         btSignUp = (Button) view.findViewById(R.id.btSignUp);

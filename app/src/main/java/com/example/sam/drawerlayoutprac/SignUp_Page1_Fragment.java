@@ -26,7 +26,7 @@ public class SignUp_Page1_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.signup_page1_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_signup_page1, container, false);
         editText = (EditText) view.findViewWithTag("edtext");
         editText.setOnKeyListener(new edFocus());
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
