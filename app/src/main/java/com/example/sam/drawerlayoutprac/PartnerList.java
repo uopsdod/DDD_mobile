@@ -54,7 +54,7 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
                 .resize(sScreenWidth, sProfileImageHeight).centerCrop()
                 .placeholder(com.yalantis.euclid.library.R.color.blue)
                 .into(viewHolder.mListItemAvatar);
-
+//
         viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
         viewHolder.mListItemDescription.setText((String) mData.get(position).get(KEY_DESCRIPTION_SHORT));
         viewHolder.mViewOverlay.setBackground(EuclidActivity.sOverlayShape);
