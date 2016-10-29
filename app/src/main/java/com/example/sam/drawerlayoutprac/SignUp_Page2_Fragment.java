@@ -24,8 +24,8 @@ public class SignUp_Page2_Fragment extends Fragment {
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),MainActivity.class);
-                startActivity(intent);
+                Fragment fragment = new HotelFragment();
+                Util.switchFragment(getActivity(),fragment); // 回到首頁，清除所有Fragment stack
             }
         });
         return view;
