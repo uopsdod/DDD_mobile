@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // toolbar  setup
+        // toolbar   setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setBackgroundColor(0xFF3c0c60);
         myToolbar.setTitleTextColor(0xFFFFFFFF);
