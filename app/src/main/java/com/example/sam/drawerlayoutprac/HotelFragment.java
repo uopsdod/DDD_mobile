@@ -76,6 +76,18 @@ public class HotelFragment extends Fragment {
             holder.ivImage.setImageResource(mySpot.getimgId());
             holder.tvHotel.setText(mySpot.getHotelName());
             holder.tvPrice.setText(Integer.toString(mySpot.getPrice()) + "$");
+            holder.itemView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+//                    if(view != null){
+//                        view
+//                    }
+
+                    Fragment fragment = new HotelInfoFragment();
+                    Util.switchFragment(HotelFragment.this,fragment);
+                }
+            });
         }
     }// end class SpotAdapter
 

@@ -13,10 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelInfoFragment extends Fragment{
+public class HotelInfoFragment extends Fragment implements Serializable{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class HotelInfoFragment extends Fragment{
             rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), mySpot));
         }
         //warp up
-        return rv_hotelInfo;
+        return view;
     }
 
     private class SpotAdapter extends  RecyclerView.Adapter<SpotAdapter.ViewHolder>{
