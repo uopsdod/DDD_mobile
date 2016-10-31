@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * Created by Oleksii Shliama on 1/27/15.
  */
+// 實際上沒有用到，暫時放著了解用
 public class EuclidTest extends EuclidActivity{
 
     @Override

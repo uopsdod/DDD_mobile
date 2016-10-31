@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class HotelFragment extends Fragment {
 
         @Override
         public SpotAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = myLayoutInflater.inflate(R.layout.recycleview_item, parent, false);
+            View view = myLayoutInflater.inflate(R.layout.rv_item_hotel, parent, false);
             return new SpotAdapter.MyViewHolder(view);
         }
 
