@@ -2,6 +2,7 @@ package com.example.sam.drawerlayoutprac;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -9,12 +10,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -57,7 +61,7 @@ public class PartnerFragment extends Fragment {
         super.onCreateView(inflater, viewGroup, bundle);
         View view = inflater.inflate(R.layout.fragment_partner, viewGroup, false);
         listview = (ListView) view.findViewById(R.id.list_partner);
-
+        // 把大頭貼變成圓的
         sScreenWidth = getResources().getDisplayMetrics().widthPixels;
         sProfileImageHeight = getResources().getDimensionPixelSize(R.dimen.height_profile_image);
         sOverlayShape = buildAvatarCircleOverlay();
@@ -67,9 +71,24 @@ public class PartnerFragment extends Fragment {
             // send request to server and get the response - 重點在new這個動作
             retrievePartnerTask = new RetrievePartnerTask().execute(Common.URL);
         } else {
-            showToast(getActivity(), "no network");
+            Util.showToast(getActivity(), "no network");
         }
         // end of get data
+
+        // set up floatingBtn click Listener
+        LinearLayout ll_view = (LinearLayout)viewGroup.getParent();
+        CoordinatorLayout cdl_view = (CoordinatorLayout)ll_view.getParent();
+        FloatingActionButton floatingBtn = (FloatingActionButton)cdl_view.findViewById(R.id.floatingBtn);
+
+        floatingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showToast(getContext(),"ftBtn clicked");
+                Fragment fragment = new PartnerMapFragment();
+                Util.switchFragment(PartnerFragment.this,fragment);
+            }
+        });
+
         return view;
     }
 

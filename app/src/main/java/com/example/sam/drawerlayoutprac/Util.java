@@ -1,11 +1,13 @@
 package com.example.sam.drawerlayoutprac;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Created by cuser on 2016/10/15.
@@ -39,5 +41,12 @@ public class Util {
         Log.d("Util","2");
         fragmentTransaction.commit();
         Log.d("Util","3");
+    }
+
+    public static void showToast(Context context, String msg){
+        Toast.makeText(context,
+                msg,
+                Toast.LENGTH_SHORT)
+                .show();
     }
 }
