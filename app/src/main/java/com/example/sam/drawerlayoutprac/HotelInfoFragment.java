@@ -22,13 +22,12 @@ public class HotelInfoFragment extends Fragment implements Serializable{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
-
         //get Data
         List<Spot> mySpot = getSpot();
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
         RecyclerView rv_hotelInfo = (RecyclerView) view.findViewById(R.id.rv_hotelDatail);
+        getActivity().findViewById(R.id.fab).setVisibility(View.INVISIBLE);
         if(rv_hotelInfo != null){
             rv_hotelInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
             rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), mySpot));
@@ -73,7 +72,15 @@ public class HotelInfoFragment extends Fragment implements Serializable{
             final Spot myspot = list.get(position);
             holder.ivImage.setImageResource(myspot.getimgId());
             holder.tvHotel.setText(String.valueOf(myspot.getHotelName()));
-            holder.tvPrice.setText(Integer.toString(myspot.getPrice()) + "$");
+            holder.tvPrice.setText("$" + Integer.toString(myspot.getPrice()));
+            holder.itemView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    Fragment fragment = new RoomFragment();
+                    Util.switchFragment(HotelInfoFragment.this, fragment);
+                }
+            });
         }
 
         @Override

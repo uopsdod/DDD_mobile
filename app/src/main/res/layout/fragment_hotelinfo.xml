@@ -15,7 +15,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#666666">
+
+        >
         <ScrollView
             android:id="@+id/ScrollView01"
             android:layout_width="match_parent"
@@ -28,12 +29,13 @@
                 android:text="台北福華大飯店位於仁愛路林蔭大道，2011年經觀光局評鑑為五星級國際觀光旅館。自西元1984年台北福華大飯店開幕以來，一直秉持著穩健踏實的經營理念及豐富的專業知識，致力於發展五星級飯店住房與餐飲的最佳服務，提供國內消費者更多樣化的產品選擇。606間尊爵紅木傢俱客房，環境鬧中取靜，殷勤服務的團隊，讓您彷如置身在家般舒適。館內擁有10家餐廳，提供各式中西佳餚，2009年台北福華大飯店更取得了ISO 22000、HACCP雙項國際認證，為台灣首家取得雙項認證的本土品牌飯店，以提供每位貴賓最高品質的精緻美饌為使命。"/>
 
         </ScrollView>
-    </LinearLayout>>
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_hotelDatail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="#FFFFdd"/>
+
+        />
 
 </LinearLayout>

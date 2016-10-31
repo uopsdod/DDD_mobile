@@ -2,7 +2,9 @@ package com.example.sam.drawerlayoutprac;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.ForwardingListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,11 +20,13 @@ public class HotelFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle){
         super.onCreateView(inflater,viewGroup,bundle);
+
         // get data
         List<Spot> myListSpot = getSpots();
         // get view
         View myLayout = inflater.inflate(R.layout.fragment_hotel,viewGroup,false);
         RecyclerView myRvSpot = (RecyclerView)myLayout.findViewById(R.id.rv_hotel);
+        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
 
         if (myRvSpot != null){
             myRvSpot.setLayoutManager(new LinearLayoutManager(getActivity()));
