@@ -26,7 +26,7 @@ public class HotelFragment extends Fragment {
         // get view
         View myLayout = inflater.inflate(R.layout.fragment_hotel,viewGroup,false);
         RecyclerView myRvSpot = (RecyclerView)myLayout.findViewById(R.id.rv_hotel);
-        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.floatingBtn).setVisibility(View.VISIBLE);
 
         if (myRvSpot != null){
             myRvSpot.setLayoutManager(new LinearLayoutManager(getActivity()));

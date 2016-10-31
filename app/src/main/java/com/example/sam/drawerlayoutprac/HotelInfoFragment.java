@@ -27,7 +27,7 @@ public class HotelInfoFragment extends Fragment implements Serializable{
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
         RecyclerView rv_hotelInfo = (RecyclerView) view.findViewById(R.id.rv_hotelDatail);
-        getActivity().findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+        getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
         if(rv_hotelInfo != null){
             rv_hotelInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
             rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), mySpot));

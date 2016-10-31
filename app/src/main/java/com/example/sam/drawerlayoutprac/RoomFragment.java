@@ -14,7 +14,7 @@ public class RoomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_room, container, false);
-        getActivity().findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+        getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
         return view;
     }
 }
