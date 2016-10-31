@@ -62,7 +62,7 @@ public class HotelInfoFragment extends Fragment implements Serializable{
 
         @Override
         public SpotAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = inflater.inflate(R.layout.recycleview_item, parent, false);
+            View itemView = inflater.inflate(R.layout.rv_item_hotel, parent, false);
             return new ViewHolder(itemView);
         }
 

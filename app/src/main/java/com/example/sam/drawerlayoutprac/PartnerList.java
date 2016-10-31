@@ -1,6 +1,9 @@
 package com.example.sam.drawerlayoutprac;
 
 import android.content.Context;
+import android.graphics.RectF;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
     public static final String KEY_NAME = "name";
     public static final String KEY_DESCRIPTION_SHORT = "description_short";
     public static final String KEY_DESCRIPTION_FULL = "description_full";
+    private static final int CIRCLE_RADIUS_DP = 50;
 
     private final LayoutInflater mInflater;
     private List<Map<String, Object>> mData;
@@ -40,27 +44,29 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_partner, parent, false);
             viewHolder = new PartnerList.ViewHolder();
-            viewHolder.mViewOverlay = convertView.findViewById(com.yalantis.euclid.library.R.id.view_avatar_overlay);
-            viewHolder.mListItemAvatar = (ImageView) convertView.findViewById(com.yalantis.euclid.library.R.id.image_view_avatar);
-            viewHolder.mListItemName = (TextView) convertView.findViewById(com.yalantis.euclid.library.R.id.text_view_name);
-            viewHolder.mListItemDescription = (TextView) convertView.findViewById(com.yalantis.euclid.library.R.id.text_view_description);
+            viewHolder.mViewOverlay = convertView.findViewById(R.id.view_avatar_overlay);
+            viewHolder.mListItemAvatar = (ImageView) convertView.findViewById(R.id.image_view_avatar);
+            viewHolder.mListItemName = (TextView) convertView.findViewById(R.id.text_view_name);
+            viewHolder.mListItemDescription = (TextView) convertView.findViewById(R.id.text_view_description);
             convertView.setTag(viewHolder); // ? what for?
         } else {
             viewHolder = (PartnerList.ViewHolder) convertView.getTag(); // ? what for?
         }
-        int sScreenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-        int sProfileImageHeight = getContext().getResources().getDimensionPixelSize(com.yalantis.euclid.library.R.dimen.height_profile_image);
+
         Picasso.with(getContext()).load((Integer) mData.get(position).get(KEY_AVATAR))
-                .resize(sScreenWidth, sProfileImageHeight).centerCrop()
-                .placeholder(com.yalantis.euclid.library.R.color.blue)
+                .resize(PartnerFragment.sScreenWidth, PartnerFragment.sProfileImageHeight).centerCrop()
+                .placeholder(com.yalantis.euclid.library.R.color.black)
                 .into(viewHolder.mListItemAvatar);
-//
+
+//      viewHolder.mListItemAvatar = (ImageView) mData.get(position).get(KEY_AVATAR);
         viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
         viewHolder.mListItemDescription.setText((String) mData.get(position).get(KEY_DESCRIPTION_SHORT));
-        viewHolder.mViewOverlay.setBackground(EuclidActivity.sOverlayShape);
+        viewHolder.mViewOverlay.setBackground(PartnerFragment.sOverlayShape);
 
         return convertView;
     }
+
+
 
     static class ViewHolder {
         View mViewOverlay;
@@ -68,4 +74,25 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
         TextView mListItemName;
         TextView mListItemDescription;
     }
+
+    private ShapeDrawable buildAvatarCircleOverlay() {
+        int radius = 666;
+        ShapeDrawable overlay = new ShapeDrawable(new RoundRectShape(null,
+                new RectF(
+                        PartnerFragment.sScreenWidth / 2 - dpToPx(CIRCLE_RADIUS_DP * 2),
+                        com.yalantis.euclid.library.R.dimen.height_profile_image / 2 - dpToPx(CIRCLE_RADIUS_DP * 2),
+                        PartnerFragment.sScreenWidth / 2 - dpToPx(CIRCLE_RADIUS_DP * 2),
+                        com.yalantis.euclid.library.R.dimen.height_profile_image / 2 - dpToPx(CIRCLE_RADIUS_DP * 2)),
+                new float[]{radius, radius, radius, radius, radius, radius, radius, radius}));
+        overlay.getPaint().setColor(getContext().getResources().getColor(com.yalantis.euclid.library.R.color.gray));
+
+        return overlay;
+    }
+
+    public int dpToPx(int dp) {
+        return Math.round((float) dp * getContext().getResources().getDisplayMetrics().density);
+    }
+
+
+
 }
