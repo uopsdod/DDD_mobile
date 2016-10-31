@@ -130,14 +130,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void inigDrawerBody() {
         Fragment fragment = new HotelFragment();
-        switchFragment(R.id.drawer_layout_body,fragment);
+        Util.switchFragment(MainActivity.this,fragment);
     }
-    private void switchFragment(int layoutId, Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(layoutId,fragment);
-        fragmentTransaction.commit();
-    }
+
     private void showToast(String msg){
         Toast.makeText(getApplicationContext(),
                 msg,
