@@ -79,10 +79,6 @@ public class HotelFragment extends Fragment {
 
                 @Override
                 public void onClick(View view) {
-//                    if(view != null){
-//                        view
-//                    }
-
                     Fragment fragment = new HotelInfoFragment();
                     Util.switchFragment(HotelFragment.this,fragment);
                 }
