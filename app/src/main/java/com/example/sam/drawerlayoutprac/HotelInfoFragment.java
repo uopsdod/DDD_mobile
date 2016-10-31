@@ -65,8 +65,6 @@ public class HotelInfoFragment extends Fragment implements Serializable{
             return new ViewHolder(itemView);
         }
 
-
-
         @Override
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
             final Spot myspot = list.get(position);
@@ -87,7 +85,6 @@ public class HotelInfoFragment extends Fragment implements Serializable{
         public int getItemCount() {
             return list.size();
         }
-
 
     }
 
