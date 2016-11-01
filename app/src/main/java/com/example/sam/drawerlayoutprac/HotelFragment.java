@@ -94,11 +94,11 @@ public class HotelFragment extends Fragment {
 
     private List<Spot> getSpots() {
         List<Spot> spots = new ArrayList<>();
-        spots.add(new Spot(R.drawable.roombig01,"福華飯店",300));
-        spots.add(new Spot(R.drawable.roombig02,"青年旅館",500));
-        spots.add(new Spot(R.drawable.roombig03,"愛蝶旅館",750));
-        spots.add(new Spot(R.drawable.roombig04,"龍華汽車旅館",1999));
-        spots.add(new Spot(R.drawable.roombig05,"我家三樓房間",50));
+        spots.add(new Spot(R.drawable.roombig01_h200,"福華飯店",300));
+        spots.add(new Spot(R.drawable.roombig02_h200,"青年旅館",500));
+        spots.add(new Spot(R.drawable.roombig03_h200,"愛蝶旅館",750));
+        spots.add(new Spot(R.drawable.roombig04_h200,"龍華汽車旅館",1999));
+        spots.add(new Spot(R.drawable.roombig05_h200,"我家三樓房間",50));
         return spots;
     }
 
