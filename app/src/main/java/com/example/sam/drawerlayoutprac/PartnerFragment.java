@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -92,7 +93,7 @@ public class PartnerFragment extends Fragment {
         return view;
     }
 
-    class RetrievePartnerTask extends AsyncTask<String, Void, List<PartnerVO>> {
+    class RetrievePartnerTask extends AsyncTask<String, Void, List<MemVO>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -102,7 +103,7 @@ public class PartnerFragment extends Fragment {
         }
 
         @Override
-        protected List<PartnerVO> doInBackground(String... params) {
+        protected List<MemVO> doInBackground(String... params) {
             String url = params[0]; // 傳入的Common.URL字串
             String jsonIn;
             JsonObject jsonObject = new JsonObject();
@@ -114,26 +115,28 @@ public class PartnerFragment extends Fragment {
                 return null;
             }
 
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<PartnerVO>>() {}.getType();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                    .create();
+            Type listType = new TypeToken<List<MemVO>>() {}.getType();
 
             return gson.fromJson(jsonIn, listType);
         }
 
         @Override
-        protected void onPostExecute(List<PartnerVO> items) {
+        protected void onPostExecute(List<MemVO> items) {
             Map<String, Object> profileMap;
             List<Map<String, Object>> profilesList = new ArrayList<>();
 
             int[] avatars = getProfilePics();// 在還沒能從server拿到圖片前，先這樣擋著
 
                 for (int i = 0; i < items.size(); i++) {
-                    PartnerVO myVO = items.get(i);
+                    MemVO myVO = items.get(i);
                     profileMap = new HashMap<>();
                     profileMap.put(PartnerList.KEY_AVATAR, avatars[i]); // 這個目前是假資料
-                    profileMap.put(PartnerList.KEY_NAME, myVO.getName());
-                    profileMap.put(PartnerList.KEY_DESCRIPTION_SHORT, myVO.getIntroShort());
-                    profileMap.put(PartnerList.KEY_DESCRIPTION_FULL, myVO.getIntroLong());
+                    profileMap.put(PartnerList.KEY_NAME, myVO.getMemName());
+                    profileMap.put(PartnerList.KEY_DESCRIPTION_SHORT, myVO.getMemIntro());
+                    profileMap.put(PartnerList.KEY_DESCRIPTION_FULL, myVO.getMemIntro());
                     profilesList.add(profileMap);
                 }
 

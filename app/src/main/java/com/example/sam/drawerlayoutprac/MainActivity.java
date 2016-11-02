@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -29,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         // toolbar   setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setBackgroundColor(0xFF666666);
-        myToolbar.setTitleTextColor(0xFFFFFFFF);
+        myToolbar.setBackgroundColor( ContextCompat.getColor(this, R.color.sub1_color));
+        myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         setSupportActionBar(myToolbar);
 
 

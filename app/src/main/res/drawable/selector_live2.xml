@@ -5,7 +5,7 @@
         android:state_checked="true"
         />
     <!-- When not selected, use white-->　
-    <item android:drawable="@drawable/live2_close_red_white2"
+    <item android:drawable="@drawable/live2_close07"
         android:state_checked="false"/>
 
 </selector>

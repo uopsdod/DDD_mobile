@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +77,7 @@ public class HotelFragment extends Fragment {
         @Override
         public void onBindViewHolder(SpotAdapter.MyViewHolder holder, int position) {
             Spot mySpot = myListSpot.get(position);
-
+            holder.ivImage.setAlpha(0.5f);
             holder.ivImage.setImageResource(mySpot.getimgId());
             holder.tvHotel.setText(mySpot.getHotelName());
             holder.tvPrice.setText(Integer.toString(mySpot.getPrice()) + "$");
@@ -92,9 +94,12 @@ public class HotelFragment extends Fragment {
 
     private List<Spot> getSpots() {
         List<Spot> spots = new ArrayList<>();
-        spots.add(new Spot(R.drawable.hotel1,"福華飯店",300));
-        spots.add(new Spot(R.drawable.hotel2,"青年旅館",100));
-        spots.add(new Spot(R.drawable.hotel3,"我家三樓房間",50));
+        spots.add(new Spot(R.drawable.roombig01_h200,"福華飯店",300));
+        spots.add(new Spot(R.drawable.roombig02_h200,"青年旅館",500));
+        spots.add(new Spot(R.drawable.roombig03_h200,"愛蝶旅館",750));
+        spots.add(new Spot(R.drawable.roombig04_h200,"龍華汽車旅館",1999));
+        spots.add(new Spot(R.drawable.roombig05_h200,"我家三樓房間",50));
         return spots;
     }
+
 }
