@@ -7,8 +7,10 @@
     android:padding="10dp">
 
     <ImageView
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="180dp"
         app:srcCompat="@drawable/roombig01" />
 
