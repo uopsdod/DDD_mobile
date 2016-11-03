@@ -2,11 +2,14 @@ package com.example.sam.drawerlayoutprac;
 
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +19,14 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 public class HotelInfoFragment extends Fragment implements Serializable{
+    private static final String TAG = "HotelInfoFragment";
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView rv_hotelInfo;
+    private ImageView ivHotelBig;
+    private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -26,7 +35,16 @@ public class HotelInfoFragment extends Fragment implements Serializable{
         List<Spot> mySpot = getSpot();
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
-        RecyclerView rv_hotelInfo = (RecyclerView) view.findViewById(R.id.rv_hotelDatail);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                showHotelInfo();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        rv_hotelInfo = (RecyclerView) view.findViewById(R.id.rv_hotelDatail);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
         if(rv_hotelInfo != null){
             rv_hotelInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -34,6 +52,22 @@ public class HotelInfoFragment extends Fragment implements Serializable{
         }
         //warp up
         return view;
+    }
+
+    private void showHotelInfo() {
+        if(Common.networkConnected(getActivity())){
+            String url = Common.URL + "HotelServlet";
+            List<HotelVO> hotel = null;
+            try{
+                hotel = new HotelGetAllTask().execute(url).get();
+            }catch(Exception e){
+                Log.e(TAG, e.toString());
+            }
+            if(hotel == null || hotel.isEmpty()){
+                Util.showToast(getActivity(), "No hotel fonnd");
+            }
+        }
+
     }
 
     private class SpotAdapter extends  RecyclerView.Adapter<SpotAdapter.ViewHolder>{

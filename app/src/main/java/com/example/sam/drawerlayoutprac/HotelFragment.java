@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.ForwardingListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,41 +20,62 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HotelFragment extends Fragment {
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle){
-        super.onCreateView(inflater,viewGroup,bundle);
+    String TAG = "HotelFragment";
+    RecyclerView myRvSpot;
 
-        // get data
-        List<Spot> myListSpot = getSpots();
-        // get view
-        View myLayout = inflater.inflate(R.layout.fragment_hotel,viewGroup,false);
-        RecyclerView myRvSpot = (RecyclerView)myLayout.findViewById(R.id.rv_hotel);
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
+        super.onCreateView(inflater, viewGroup, bundle);
+
+        View myLayout = inflater.inflate(R.layout.fragment_hotel, viewGroup, false);
+        myRvSpot = (RecyclerView) myLayout.findViewById(R.id.rv_hotel);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.VISIBLE);
 
-        if (myRvSpot != null){
-            myRvSpot.setLayoutManager(new LinearLayoutManager(getActivity()));
-            myRvSpot.setAdapter(new SpotAdapter(getActivity(), myListSpot));
-        }
-        // wrap up
+        myRvSpot.setLayoutManager(new LinearLayoutManager(getActivity()));
         return myLayout;
     }
 
+    private void  showAllHotel(){
+        if(Common.networkConnected(getActivity())){
+            String url = Common.URL + "/android/hotel.do";
+            List<HotelVO> hotel = null;
+            try{
+                hotel = new HotelGetAllTask().execute(url).get();
+            }catch(Exception e){
+                Log.e(TAG, e.toString());
+            }
+            if(hotel == null || hotel.isEmpty()){
+                Util.showToast(getActivity(), "No hotel fonnd");
+            }else{
+                myRvSpot.setAdapter(new SpotAdapter(getActivity(), hotel));
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showAllHotel();
+    }
     private class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.MyViewHolder> {
         private Context context;
-        private List<Spot> myListSpot;
+        private List<HotelVO> myListSpot;
         private LayoutInflater myLayoutInflater;
 
-        public SpotAdapter(Context context, List<Spot> myListSpot) {
+        public SpotAdapter(Context context, List<HotelVO> myListSpot) {
             this.context = context;
             this.myListSpot = myListSpot;
             myLayoutInflater = LayoutInflater.from(context);
         }
 
         // customed ViewHolder - 裝容器用
-        public class MyViewHolder extends RecyclerView.ViewHolder{
+        public class MyViewHolder extends RecyclerView.ViewHolder {
             ImageView ivImage;
             TextView tvHotel;
             TextView tvPrice;
+
             // 把拿到的到個view的資料一個個存好成實體變數
             public MyViewHolder(View itemView) {
                 super(itemView); // 必須使用這個父建構式，因為RecyclerView.ViewHolder沒有空參數的建構式 - 用父類別的實體變數來指向這個View物件,第90行會用到
@@ -76,30 +98,24 @@ public class HotelFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(SpotAdapter.MyViewHolder holder, int position) {
-            Spot mySpot = myListSpot.get(position);
-            holder.ivImage.setAlpha(0.5f);
-            holder.ivImage.setImageResource(mySpot.getimgId());
-            holder.tvHotel.setText(mySpot.getHotelName());
-            holder.tvPrice.setText(Integer.toString(mySpot.getPrice()) + "$");
-            holder.itemView.setOnClickListener(new View.OnClickListener(){
+            HotelVO myHotel = myListSpot.get(position);
+            final String HotelId = myHotel.getHotelId();
+//            holder.ivImage.setAlpha(0.5f);
+//            holder.ivImage.setImageResource(mySpot.getimgId());
+            holder.tvHotel.setText(myHotel.getHotelName());
+//            holder.tvPrice.setText(Integer.toString(mySpot.getPrice()) + "$");
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
                     Fragment fragment = new HotelInfoFragment();
-                    Util.switchFragment(HotelFragment.this,fragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("hotelId", HotelId);
+                    fragment.setArguments(bundle);
+                    Util.switchFragment(HotelFragment.this, fragment);
                 }
             });
         }
     }// end class SpotAdapter
-
-    private List<Spot> getSpots() {
-        List<Spot> spots = new ArrayList<>();
-        spots.add(new Spot(R.drawable.roombig01_h200,"福華飯店",300));
-        spots.add(new Spot(R.drawable.roombig02_h200,"青年旅館",500));
-        spots.add(new Spot(R.drawable.roombig03_h200,"愛蝶旅館",750));
-        spots.add(new Spot(R.drawable.roombig04_h200,"龍華汽車旅館",1999));
-        spots.add(new Spot(R.drawable.roombig05_h200,"我家三樓房間",50));
-        return spots;
-    }
 
 }

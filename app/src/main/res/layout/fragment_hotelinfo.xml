@@ -1,22 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
 
     android:weightSum="1">
 
 
     <ImageView
+        android:id="@+id/ivHotel"
         android:layout_width="match_parent"
         android:layout_height="190dp"
-        android:src="@drawable/howard"
         android:layout_margin="0px"
-        android:padding="0px"/>
+        android:padding="0px"
+        android:src="@drawable/howard" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvHotelName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="小新茗宿旅館"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvHotelName"
+            android:text="地址: " />
+
+        <TextView
+            android:id="@+id/tvHotelCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tvAddress"
+            android:layout_toRightOf="@id/tvAddress"
+            android:text="台北市" />
+
+        <TextView
+            android:id="@+id/tvHotelCounty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tvAddress"
+            android:layout_toRightOf="@id/tvHotelCity"
+            android:text="信義區" />
+
+        <TextView
+            android:id="@+id/tvHotelRoad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tvAddress"
+            android:layout_toRightOf="@id/tvHotelCounty"
+            android:text="信義路385號" />
+
+        <TextView
+            android:id="@+id/tvHotelTel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tvAddress"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/tvHotelRoad"
+            android:text="聯絡電話: " />
+
+        <TextView
+            android:id="@+id/tvHotelPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tvAddress"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/tvHotelTel"
+            android:text="0925990128" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="15dp"
+            android:maxHeight="12dp"
+            android:numStars="5"
+            android:progressTint="#709ACF"
+            android:rating="2" />
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         >
+
         <ScrollView
             android:id="@+id/ScrollView01"
             android:layout_width="match_parent"
@@ -26,16 +103,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="12px"
-                android:text="台北福華大飯店位於仁愛路林蔭大道，2011年經觀光局評鑑為五星級國際觀光旅館。自西元1984年台北福華大飯店開幕以來，一直秉持著穩健踏實的經營理念及豐富的專業知識，致力於發展五星級飯店住房與餐飲的最佳服務，提供國內消費者更多樣化的產品選擇。606間尊爵紅木傢俱客房，環境鬧中取靜，殷勤服務的團隊，讓您彷如置身在家般舒適。館內擁有10家餐廳，提供各式中西佳餚，2009年台北福華大飯店更取得了ISO 22000、HACCP雙項國際認證，為台灣首家取得雙項認證的本土品牌飯店，以提供每位貴賓最高品質的精緻美饌為使命。"/>
+                android:text="台北福華大飯店位於仁愛路林蔭大道，2011年經觀光局評鑑為五星級國際觀光旅館。自西元1984年台北福華大飯店開幕以來，一直秉持著穩健踏實的經營理念及豐富的專業知識，致力於發展五星級飯店住房與餐飲的最佳服務，提供國內消費者更多樣化的產品選擇。606間尊爵紅木傢俱客房，環境鬧中取靜，殷勤服務的團隊，讓您彷如置身在家般舒適。館內擁有10家餐廳，提供各式中西佳餚，2009年台北福華大飯店更取得了ISO 22000、HACCP雙項國際認證，為台灣首家取得雙項認證的本土品牌飯店，以提供每位貴賓最高品質的精緻美饌為使命。" />
 
         </ScrollView>
     </LinearLayout>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_hotelDatail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
 
-        />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_hotelDatail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>
