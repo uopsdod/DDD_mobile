@@ -70,7 +70,10 @@ public class PartnerFragment extends Fragment {
         // get data
         if (networkConnected()) {
             // send request to server and get the response - 重點在new這個動作
-            retrievePartnerTask = new RetrievePartnerTask().execute(Common.URL);
+            String url = Common.URL + "/live2/Partner";
+            Log.d("url",url);
+            Util.showToast(getContext(),url);
+            retrievePartnerTask = new RetrievePartnerTask().execute(url);
         } else {
             Util.showToast(getActivity(), "no network");
         }
@@ -132,8 +135,12 @@ public class PartnerFragment extends Fragment {
 
                 for (int i = 0; i < items.size(); i++) {
                     MemVO myVO = items.get(i);
+
                     profileMap = new HashMap<>();
-                    profileMap.put(PartnerList.KEY_AVATAR, avatars[i]); // 這個目前是假資料
+
+                    //profileMap.put(PartnerList.KEY_AVATAR, avatars[i]); // 這個目前是假資料
+                    // KEY_MEMID
+                    profileMap.put(PartnerList.KEY_MEMID, myVO.getMemId());
                     profileMap.put(PartnerList.KEY_NAME, myVO.getMemName());
                     profileMap.put(PartnerList.KEY_DESCRIPTION_SHORT, myVO.getMemIntro());
                     profileMap.put(PartnerList.KEY_DESCRIPTION_FULL, myVO.getMemIntro());

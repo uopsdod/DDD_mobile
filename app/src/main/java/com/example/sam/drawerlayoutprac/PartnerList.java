@@ -23,7 +23,8 @@ import java.util.Map;
  */
 
 public class PartnerList extends ArrayAdapter<Map<String, Object>> {
-    public static final String KEY_AVATAR = "avatar";
+    public static final String KEY_PROFILE = "profile";
+    public static final String KEY_MEMID = "MEMID";
     public static final String KEY_NAME = "name";
     public static final String KEY_DESCRIPTION_SHORT = "description_short";
     public static final String KEY_DESCRIPTION_FULL = "description_full";
@@ -41,11 +42,11 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final PartnerList.ViewHolder viewHolder;
+        // 開始拿view
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_partner, parent, false);
             viewHolder = new PartnerList.ViewHolder();
             viewHolder.mViewOverlay = convertView.findViewById(R.id.view_avatar_overlay);
-            viewHolder.mListItemAvatar = (ImageView) convertView.findViewById(R.id.image_view_avatar);
             viewHolder.mListItemName = (TextView) convertView.findViewById(R.id.text_view_name);
             viewHolder.mListItemDescription = (TextView) convertView.findViewById(R.id.text_view_description);
             convertView.setTag(viewHolder); // ? what for?
@@ -53,12 +54,19 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
             viewHolder = (PartnerList.ViewHolder) convertView.getTag(); // ? what for?
         }
 
-        Picasso.with(getContext()).load((Integer) mData.get(position).get(KEY_AVATAR))
-                .resize(PartnerFragment.sScreenWidth, PartnerFragment.sProfileImageHeight).centerCrop()
-                .placeholder(com.yalantis.euclid.library.R.color.black)
-                .into(viewHolder.mListItemAvatar);
+        // 把圖片data放上view
+//        Picasso.with(getContext()).load((Integer) mData.get(position).get(KEY_PROFILE))
+//                .resize(PartnerFragment.sScreenWidth, PartnerFragment.sProfileImageHeight).centerCrop()
+//                .placeholder(com.yalantis.euclid.library.R.color.black)
+//                .into(viewHolder.mListItemAvatar);
 
-//      viewHolder.mListItemAvatar = (ImageView) mData.get(position).get(KEY_AVATAR);
+//      viewHolder.mListItemAvatar = (ImageView) mData.get(position).get(KEY_PROFILE);
+        // 開始binding data
+        // 每次都開另一個thread去抓圖片
+        String url = Common.URL + "/live2/Partner";
+        String memId = mData.get(position).get(KEY_MEMID).toString().toUpperCase();
+        int imageSize = 250;
+        //new PartnerGetImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);//
         viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
         viewHolder.mListItemDescription.setText((String) mData.get(position).get(KEY_DESCRIPTION_SHORT));
         viewHolder.mViewOverlay.setBackground(PartnerFragment.sOverlayShape);
@@ -70,7 +78,7 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
 
     static class ViewHolder {
         View mViewOverlay;
-        ImageView mListItemAvatar;
+        ImageView mListItemProfile;
         TextView mListItemName;
         TextView mListItemDescription;
     }
