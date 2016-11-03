@@ -19,7 +19,7 @@ import java.net.URL;
  * Created by cuser on 2016/11/3.
  */
 public class PartnerGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
-    private final static String TAG = "SpotGetImageTask";
+    private final static String TAG = "PartnerGetImageTask";
     private final static String ACTION = "getImage";
     private final WeakReference<ImageView> imageViewWeakReference;
 
@@ -30,11 +30,11 @@ public class PartnerGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
     @Override
     protected Bitmap doInBackground(Object... params) {
         String url = params[0].toString();
-        int id = Integer.parseInt(params[1].toString());
+        int memId = Integer.parseInt(params[1].toString());
         int imageSize = Integer.parseInt(params[2].toString());
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", ACTION);
-        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("memId", memId);
         jsonObject.addProperty("imageSize", imageSize);
 
         Bitmap bitmap;

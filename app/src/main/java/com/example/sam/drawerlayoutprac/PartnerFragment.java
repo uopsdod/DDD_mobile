@@ -72,7 +72,6 @@ public class PartnerFragment extends Fragment {
             // send request to server and get the response - 重點在new這個動作
             String url = Common.URL + "/live2/Partner";
             Log.d("url",url);
-            Util.showToast(getContext(),url);
             retrievePartnerTask = new RetrievePartnerTask().execute(url);
         } else {
             Util.showToast(getActivity(), "no network");
@@ -87,7 +86,7 @@ public class PartnerFragment extends Fragment {
         floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showToast(getContext(),"ftBtn clicked");
+                Util.showToast(getContext(),"ftBtn clicked");
                 Fragment fragment = new PartnerMapFragment();
                 Util.switchFragment(PartnerFragment.this,fragment);
             }
@@ -110,7 +109,7 @@ public class PartnerFragment extends Fragment {
             String url = params[0]; // 傳入的Common.URL字串
             String jsonIn;
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("param", "partner"); // 在這邊控制請求參數
+            jsonObject.addProperty("action", "getAll"); // 在這邊控制請求參數
             try {
                 jsonIn = getRemoteData(url, jsonObject.toString());
             } catch (IOException e) {
@@ -229,9 +228,4 @@ public class PartnerFragment extends Fragment {
         return CIRCLE_RADIUS_DP;
     }
 
-
-
-    private void showToast(Context context, String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-    }
 }

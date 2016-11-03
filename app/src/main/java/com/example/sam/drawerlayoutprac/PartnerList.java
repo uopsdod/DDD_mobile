@@ -46,6 +46,7 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_partner, parent, false);
             viewHolder = new PartnerList.ViewHolder();
+            viewHolder.mListItemProfile = (ImageView) convertView.findViewById(R.id.image_view_profile);
             viewHolder.mViewOverlay = convertView.findViewById(R.id.view_avatar_overlay);
             viewHolder.mListItemName = (TextView) convertView.findViewById(R.id.text_view_name);
             viewHolder.mListItemDescription = (TextView) convertView.findViewById(R.id.text_view_description);
@@ -64,9 +65,9 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
         // 開始binding data
         // 每次都開另一個thread去抓圖片
         String url = Common.URL + "/live2/Partner";
-        String memId = mData.get(position).get(KEY_MEMID).toString().toUpperCase();
-        int imageSize = 250;
-        //new PartnerGetImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);//
+        Integer memId = Integer.parseInt(mData.get(position).get(KEY_MEMID).toString().toUpperCase());
+        Integer imageSize = 250;
+        new PartnerGetImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);//
         viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
         viewHolder.mListItemDescription.setText((String) mData.get(position).get(KEY_DESCRIPTION_SHORT));
         viewHolder.mViewOverlay.setBackground(PartnerFragment.sOverlayShape);

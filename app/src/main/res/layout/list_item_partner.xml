@@ -9,7 +9,7 @@
     android:background="@color/gray">
 
     <ImageView
-        android:id="@+id/image_view_avatar"
+        android:id="@+id/image_view_profile"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_profile_image"
         android:layout_gravity="center_horizontal"
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/image_view_avatar"
+        android:layout_below="@+id/image_view_profile"
         tools:text="RICHARD"
         android:layout_margin="10dp" />
 
