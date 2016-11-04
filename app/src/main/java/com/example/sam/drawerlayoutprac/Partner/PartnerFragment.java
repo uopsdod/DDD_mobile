@@ -73,7 +73,6 @@ public class PartnerFragment extends Fragment {
     protected LinearLayout mProfileDetails;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
@@ -96,9 +95,9 @@ public class PartnerFragment extends Fragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Util.showToast(getContext(),"listview clicked");
+                //Util.showToast(getContext(), "listview clicked");
                 Map<String, Object> mItem = (Map<String, Object>) parent.getItemAtPosition(position);
-                Util.showToast(getContext(),mItem.get(PartnerListAdapter.KEY_NAME).toString()+"***");
+                //Util.showToast(getContext(), mItem.get(PartnerListAdapter.KEY_NAME).toString() + "***");
                 mState = EuclidState.Opening;
                 try {
                     showProfileDetails(mItem, view);
@@ -112,12 +111,12 @@ public class PartnerFragment extends Fragment {
 
 
         // get data
-            // 檢查使用者是否有連線功能
+        // 檢查使用者是否有連線功能
         if (Common.networkConnected(getActivity())) {
             // send request to server and get the response - 重點在new這個動作
             String url = Common.URL + "/live2/Partner";
             Log.d("url", url);
-            retrievePartnerTask = new PartnerGetTextTask(getContext(),this.listview).execute(url);
+            retrievePartnerTask = new PartnerGetTextTask(getContext(), this.listview).execute(url);
         } else {
             Util.showToast(getActivity(), "no network");
         }
@@ -144,16 +143,11 @@ public class PartnerFragment extends Fragment {
         listview.setEnabled(false);
         int sScreenWidth = getResources().getDisplayMetrics().widthPixels;
 
-        int profileDetailsAnimationDelay = getMaxDelayShowDetailsAnimation() * Math.abs(view.getTop())
-                / sScreenWidth;
+        int profileDetailsAnimationDelay = PartnerFragment.MAX_DELAY_SHOW_DETAILS_ANIMATION * Math.abs(view.getTop()) / sScreenWidth;
 
         addOverlayListItem(item, view);
         startRevealAnimation(profileDetailsAnimationDelay);
         animateOpenProfileDetails(profileDetailsAnimationDelay);
-    }
-
-    protected int getMaxDelayShowDetailsAnimation() {
-        return MAX_DELAY_SHOW_DETAILS_ANIMATION;
     }
 
     private void addOverlayListItem(Map<String, Object> item, View view) throws ExecutionException, InterruptedException {
@@ -165,29 +159,21 @@ public class PartnerFragment extends Fragment {
 
         mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.view_avatar_overlay).setBackground(buildAvatarCircleOverlay());
 
+        // 建立新的Thread去DB抓圖片
         ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_reveal_avatar);
         ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_avatar);
-        String memId = (String)item.get(PartnerListAdapter.KEY_MEMID);
+        String memId = (String) item.get(PartnerListAdapter.KEY_MEMID);
         String url = Common.URL + "/live2/Partner";
         int imageSize = 250;
         new PartnerGetImageTask(profileImg).execute(url, memId, imageSize);
         new PartnerGetImageTask(profileOverlay).execute(url, memId, imageSize);
-        //profileOverlay.setImageResource(R.drawable.mem10000001);
+        // end of 建立新的Thread去DB抓圖片
 
-
-
-//        Picasso.with(getContext()).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
-//                .resize(sScreenWidth, sProfileImageHeight).centerCrop()
-//                .placeholder(com.yalantis.euclid.library.R.color.blue)
-//                .into((ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_reveal_avatar));
-//        Picasso.with(getContext()).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
-//                .resize(sScreenWidth, sProfileImageHeight).centerCrop()
-//                .placeholder(com.yalantis.euclid.library.R.color.blue)
-//                .into((ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_avatar));
-
+        // 將文字data放上view
         ((TextView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.text_view_name)).setText((String) item.get(EuclidListAdapter.KEY_NAME));
         ((TextView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.text_view_description)).setText((String) item.get(EuclidListAdapter.KEY_DESCRIPTION_SHORT));
         setProfileDetailsInfo(item);
+        // end of 將文字data放上view
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.topMargin = view.getTop() + mToolbar.getHeight();
@@ -195,6 +181,7 @@ public class PartnerFragment extends Fragment {
         mWrapper.addView(mOverlayListItemView, params);
         mToolbar.bringToFront();
     }
+
     private void startRevealAnimation(final int profileDetailsAnimationDelay) {
         mOverlayListItemView.post(new Runnable() {
             @Override
@@ -262,7 +249,6 @@ public class PartnerFragment extends Fragment {
         createOpenProfileButtonAnimation();
         getOpenProfileAnimatorSet(profileDetailsAnimationDelay).start();
     }
-
 
     private void createOpenProfileButtonAnimation() {
         if (mProfileButtonShowAnimation == null) {
@@ -367,15 +353,16 @@ public class PartnerFragment extends Fragment {
 
         return overlay;
     }
+
     // 把大頭貼變成圓的 - 方法2
     public int dpToPx(int dp) {
         return Math.round((float) dp * getContext().getResources().getDisplayMetrics().density);
     }
+
     // 把大頭貼變成圓的 - 方法3
     protected int getCircleRadiusDp() {
         return CIRCLE_RADIUS_DP;
     }
-
 
     private void setProfileDetailsInfo(Map<String, Object> item) {
         mTextViewProfileName.setText("profileNameHere");

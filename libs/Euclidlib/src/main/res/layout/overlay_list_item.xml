@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_profile_image"
             android:clickable="true"
+            android:scaleType="fitXY"
             tools:src="@drawable/nicolas_cage" />
 
     </LinearLayout>
