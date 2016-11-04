@@ -85,12 +85,15 @@ public class MainActivity extends AppCompatActivity {
                         showToast("partner clicked");
                         fragment = new PartnerFragment();
                         Util.switchFragment(MainActivity.this,fragment);
-//                        Intent intent = new Intent(getApplication(),EuclidTest.class);
-//                        startActivity(intent);
                         break;
                     case R.id.my_member:
                         fragment = new MemberFragment();
                         Util.switchFragment(MainActivity.this, fragment);
+                        break;
+
+                    case R.id.test_yo:
+                        Intent intent = new Intent(getApplication(),EuclidTest.class);
+                        startActivity(intent);
                         break;
 
                 }

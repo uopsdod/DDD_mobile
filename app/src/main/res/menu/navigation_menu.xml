@@ -32,6 +32,10 @@
             android:id="@+id/info"
             android:icon="@drawable/info"
             android:title="訂房須知" />
+        <item
+            android:id="@+id/test_yo"
+            android:icon="@drawable/info"
+            android:title="測試業面_柚" />
 
     </group>
 </menu>
