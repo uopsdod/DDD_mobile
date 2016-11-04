@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Hotel;
 
 
 import android.os.AsyncTask;
@@ -6,27 +6,27 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
-public class HotelGetAllTask extends AsyncTask<Object, Integer, List<HotelVO>>{
+public class HotelGetOneTask extends AsyncTask<Object, Integer, HotelVO>{
     private final static String TAG = "HotelGetAllTask";
-    private final static String ACTION = "getAll";
+    private final static String ACTION = "getOne";
     @Override
-    protected List<HotelVO> doInBackground(Object... params) {
+    protected HotelVO doInBackground(Object... params) {
         String url = params[0].toString();
+        String id = params[1].toString();
         String jsonIn;
         JsonObject jsonObject = new JsonObject();
+
         jsonObject.addProperty("action",ACTION);
+        jsonObject.addProperty("id", id);
         try{
             jsonIn = getRemoteData(url, jsonObject.toString());
         }catch (IOException e){
@@ -35,8 +35,8 @@ public class HotelGetAllTask extends AsyncTask<Object, Integer, List<HotelVO>>{
         }
 
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<HotelVO>>(){} .getType();
-        return gson.fromJson(jsonIn, listType);
+
+        return gson.fromJson(jsonIn, HotelVO.class);
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {

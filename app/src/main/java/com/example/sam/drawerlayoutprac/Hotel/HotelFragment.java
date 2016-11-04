@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Hotel;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Util;
 
 import java.util.List;
 

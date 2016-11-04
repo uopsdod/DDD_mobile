@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Room;
 
 public class RoomVO implements java.io.Serializable{
 	private String roomId;

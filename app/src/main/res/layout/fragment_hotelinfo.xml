@@ -71,6 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tvAddress"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/tvHotelTel"
             android:text="0925990128" />
@@ -100,6 +101,7 @@
             android:layout_height="150dip">
 
             <TextView
+                android:id="@+id/tvHotelIntro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="12px"
