@@ -28,6 +28,9 @@ public class PartnerGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
     public PartnerGetImageTask(ImageView imageView) {
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
+    public PartnerGetImageTask() {
+        this.imageViewWeakReference = null;
+    }
 
     @Override
     protected Bitmap doInBackground(Object... params) {

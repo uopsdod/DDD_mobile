@@ -11,10 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-import com.yalantis.euclid.library.EuclidActivity;
-import com.yalantis.euclid.library.EuclidListAdapter;
-
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +18,7 @@ import java.util.Map;
  * Created by cuser on 2016/10/29.
  */
 
-public class PartnerList extends ArrayAdapter<Map<String, Object>> {
+public class PartnerListAdapter extends ArrayAdapter<Map<String, Object>> {
     public static final String KEY_MEMID = "memId";
     public static final String KEY_NAME = "name";
     public static final String KEY_DESCRIPTION_SHORT = "description_short";
@@ -33,34 +29,45 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
     private final LayoutInflater mInflater;
     private List<Map<String, Object>> mData;
 
-    public PartnerList(Context context, int layoutResourceId, List<Map<String, Object>> data) {
+    public PartnerListAdapter(Context context, int layoutResourceId, List<Map<String, Object>> data) {
         super(context, layoutResourceId, data);
         this.mData = data;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
     }
+
+    @Override
+    public int getCount() {
+        return mData.size();
+    }
+
+    @Override
+    public Map<String, Object> getItem(int position) {
+        return mData.get(position);
+    }
+
     // LIST如何知道要呼叫幾次getView()方法?
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final PartnerList.ViewHolder viewHolder;
+        final PartnerListAdapter.ViewHolder viewHolder;
         // 開始拿view
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_partner, parent, false);
-            viewHolder = new PartnerList.ViewHolder();
+            viewHolder = new PartnerListAdapter.ViewHolder();
             viewHolder.mListItemProfile = (ImageView) convertView.findViewById(R.id.image_view_profile);
             viewHolder.mViewOverlay = convertView.findViewById(R.id.view_avatar_overlay);
             viewHolder.mListItemName = (TextView) convertView.findViewById(R.id.text_view_name);
             viewHolder.mListItemDescription = (TextView) convertView.findViewById(R.id.text_view_description);
             convertView.setTag(viewHolder); // ? what for?
         } else {
-            viewHolder = (PartnerList.ViewHolder) convertView.getTag(); // ? what for?
+            viewHolder = (PartnerListAdapter.ViewHolder) convertView.getTag(); // ? what for?
         }
         // end of 開始拿view
 
         // 開始binding data
         String url = Common.URL + "/live2/Partner";
         Integer memId = Integer.parseInt(mData.get(position).get(KEY_MEMID).toString().toUpperCase());
-        Integer imageSize = 250;
+        Integer imageSize = 300;
             // 每次都開另一個thread去抓圖片
         new PartnerGetImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);
         viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
