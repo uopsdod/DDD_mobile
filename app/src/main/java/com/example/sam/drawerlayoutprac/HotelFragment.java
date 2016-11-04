@@ -1,11 +1,8 @@
 package com.example.sam.drawerlayoutprac;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.ForwardingListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class HotelFragment extends Fragment {
@@ -110,7 +105,7 @@ public class HotelFragment extends Fragment {
                 public void onClick(View view) {
                     Fragment fragment = new HotelInfoFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("hotelId", HotelId);
+                    bundle.putString("hotelId", HotelId);
                     fragment.setArguments(bundle);
                     Util.switchFragment(HotelFragment.this, fragment);
                 }
