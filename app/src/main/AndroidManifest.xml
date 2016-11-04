@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EuclidTest"
+            android:name=".Partner.EuclidTest"
             android:label="EuclidTest"
             >
 

@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Partner;
 
 import android.content.Context;
 import android.graphics.RectF;
@@ -11,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.R;
+
 import java.util.List;
 import java.util.Map;
 
@@ -18,60 +21,66 @@ import java.util.Map;
  * Created by cuser on 2016/10/29.
  */
 
-public class PartnerList extends ArrayAdapter<Map<String, Object>> {
-    public static final String KEY_PROFILE = "profile";
-    public static final String KEY_MEMID = "MEMID";
+public class PartnerListAdapter extends ArrayAdapter<Map<String, Object>> {
+    public static final String KEY_MEMID = "memId";
     public static final String KEY_NAME = "name";
     public static final String KEY_DESCRIPTION_SHORT = "description_short";
     public static final String KEY_DESCRIPTION_FULL = "description_full";
     private static final int CIRCLE_RADIUS_DP = 50;
 
+    private Context context;
     private final LayoutInflater mInflater;
     private List<Map<String, Object>> mData;
 
-    public PartnerList(Context context, int layoutResourceId, List<Map<String, Object>> data) {
+    public PartnerListAdapter(Context context, int layoutResourceId, List<Map<String, Object>> data) {
         super(context, layoutResourceId, data);
-        mData = data;
-        mInflater = LayoutInflater.from(context);
+        this.mData = data;
+        this.context = context;
+        this.mInflater = LayoutInflater.from(context);
     }
-    // LIST如何知道要呼叫幾次getView()方法
+
+    @Override
+    public int getCount() {
+        return mData.size();
+    }
+
+    @Override
+    public Map<String, Object> getItem(int position) {
+        return mData.get(position);
+    }
+
+    // LIST如何知道要呼叫幾次getView()方法?
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final PartnerList.ViewHolder viewHolder;
+        final PartnerListAdapter.ViewHolder viewHolder;
         // 開始拿view
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_partner, parent, false);
-            viewHolder = new PartnerList.ViewHolder();
+            viewHolder = new PartnerListAdapter.ViewHolder();
             viewHolder.mListItemProfile = (ImageView) convertView.findViewById(R.id.image_view_profile);
             viewHolder.mViewOverlay = convertView.findViewById(R.id.view_avatar_overlay);
             viewHolder.mListItemName = (TextView) convertView.findViewById(R.id.text_view_name);
             viewHolder.mListItemDescription = (TextView) convertView.findViewById(R.id.text_view_description);
             convertView.setTag(viewHolder); // ? what for?
         } else {
-            viewHolder = (PartnerList.ViewHolder) convertView.getTag(); // ? what for?
+            viewHolder = (PartnerListAdapter.ViewHolder) convertView.getTag(); // ? what for?
         }
+        // end of 開始拿view
 
-        // 把圖片data放上view
-//        Picasso.with(getContext()).load((Integer) mData.get(position).get(KEY_PROFILE))
-//                .resize(PartnerFragment.sScreenWidth, PartnerFragment.sProfileImageHeight).centerCrop()
-//                .placeholder(com.yalantis.euclid.library.R.color.black)
-//                .into(viewHolder.mListItemAvatar);
-
-//      viewHolder.mListItemAvatar = (ImageView) mData.get(position).get(KEY_PROFILE);
         // 開始binding data
-        // 每次都開另一個thread去抓圖片
         String url = Common.URL + "/live2/Partner";
         Integer memId = Integer.parseInt(mData.get(position).get(KEY_MEMID).toString().toUpperCase());
-        Integer imageSize = 250;
-        new PartnerGetImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);//
+        Integer imageSize = 300;
+            // 每次都開另一個thread去抓圖片
+        new PartnerGetImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);
         viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
         viewHolder.mListItemDescription.setText((String) mData.get(position).get(KEY_DESCRIPTION_SHORT));
-        viewHolder.mViewOverlay.setBackground(PartnerFragment.sOverlayShape);
+            // 將大頭貼設成圓的
+        viewHolder.mViewOverlay.setBackground(buildAvatarCircleOverlay());
+        // end of binding data
 
         return convertView;
     }
-
-
 
     static class ViewHolder {
         View mViewOverlay;
@@ -80,24 +89,31 @@ public class PartnerList extends ArrayAdapter<Map<String, Object>> {
         TextView mListItemDescription;
     }
 
+
+    // 把大頭貼變成圓的 - 方法1
     private ShapeDrawable buildAvatarCircleOverlay() {
         int radius = 666;
+        int sScreenWidth = this.context.getResources().getDisplayMetrics().widthPixels;
+        int sProfileImageHeight = this.context.getResources().getDimensionPixelSize(R.dimen.height_profile_image);
+
         ShapeDrawable overlay = new ShapeDrawable(new RoundRectShape(null,
                 new RectF(
-                        PartnerFragment.sScreenWidth / 2 - dpToPx(CIRCLE_RADIUS_DP * 2),
-                        com.yalantis.euclid.library.R.dimen.height_profile_image / 2 - dpToPx(CIRCLE_RADIUS_DP * 2),
-                        PartnerFragment.sScreenWidth / 2 - dpToPx(CIRCLE_RADIUS_DP * 2),
-                        com.yalantis.euclid.library.R.dimen.height_profile_image / 2 - dpToPx(CIRCLE_RADIUS_DP * 2)),
+                        sScreenWidth / 2 - dpToPx(getCircleRadiusDp() * 2),
+                        sProfileImageHeight / 2 - dpToPx(getCircleRadiusDp() * 2),
+                        sScreenWidth / 2 - dpToPx(getCircleRadiusDp() * 2),
+                        sProfileImageHeight / 2 - dpToPx(getCircleRadiusDp() * 2)),
                 new float[]{radius, radius, radius, radius, radius, radius, radius, radius}));
-        overlay.getPaint().setColor(getContext().getResources().getColor(com.yalantis.euclid.library.R.color.gray));
+        overlay.getPaint().setColor(this.context.getResources().getColor(com.yalantis.euclid.library.R.color.gray));
 
         return overlay;
     }
-
+    // 把大頭貼變成圓的 - 方法2
     public int dpToPx(int dp) {
-        return Math.round((float) dp * getContext().getResources().getDisplayMetrics().density);
+        return Math.round((float) dp * this.context.getResources().getDisplayMetrics().density);
     }
-
-
+    // 把大頭貼變成圓的 - 方法3
+    protected int getCircleRadiusDp() {
+        return CIRCLE_RADIUS_DP;
+    }
 
 }

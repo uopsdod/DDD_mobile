@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Partner;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.example.sam.drawerlayoutprac.R;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedWriter;
@@ -15,16 +16,21 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 /**
  * Created by cuser on 2016/11/3.
  */
 public class PartnerGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
     private final static String TAG = "PartnerGetImageTask";
     private final static String ACTION = "getImage";
+    // 使用WeakReference，讓圖片只要滿足一項條件，就釋放記憶體。ex. 參考=null
     private final WeakReference<ImageView> imageViewWeakReference;
 
     public PartnerGetImageTask(ImageView imageView) {
         this.imageViewWeakReference = new WeakReference<>(imageView);
+    }
+    public PartnerGetImageTask() {
+        this.imageViewWeakReference = null;
     }
 
     @Override
@@ -32,10 +38,12 @@ public class PartnerGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
         String url = params[0].toString();
         int memId = Integer.parseInt(params[1].toString());
         int imageSize = Integer.parseInt(params[2].toString());
+        // 設定請求參數
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", ACTION);
         jsonObject.addProperty("memId", memId);
         jsonObject.addProperty("imageSize", imageSize);
+        // end of 設定請求參數
 
         Bitmap bitmap;
         try {
@@ -57,7 +65,7 @@ public class PartnerGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
-                //imageView.setImageResource(R.drawable.default_image);
+                imageView.setImageResource(R.drawable.mem10000001);
             }
         }
         super.onPostExecute(bitmap);

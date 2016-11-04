@@ -1,5 +1,6 @@
 package com.example.sam.drawerlayoutprac;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.Partner.EuclidTest;
+import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,12 +86,15 @@ public class MainActivity extends AppCompatActivity {
                         showToast("partner clicked");
                         fragment = new PartnerFragment();
                         Util.switchFragment(MainActivity.this,fragment);
-//                        Intent intent = new Intent(getApplication(),EuclidTest.class);
-//                        startActivity(intent);
                         break;
                     case R.id.my_member:
                         fragment = new MemberFragment();
                         Util.switchFragment(MainActivity.this, fragment);
+                        break;
+
+                    case R.id.test_yo:
+                        Intent intent = new Intent(getApplication(),EuclidTest.class);
+                        startActivity(intent);
                         break;
 
                 }

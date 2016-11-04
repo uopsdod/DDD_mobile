@@ -1,10 +1,11 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Partner;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
+import com.example.sam.drawerlayoutprac.R;
 import com.yalantis.euclid.library.EuclidActivity;
 import com.yalantis.euclid.library.EuclidListAdapter;
 
