@@ -31,23 +31,10 @@ import android.widget.TextView;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.yalantis.euclid.library.EuclidListAdapter;
 import com.yalantis.euclid.library.EuclidState;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -70,21 +57,20 @@ public class PartnerFragment extends Fragment {
     private EuclidState mState = EuclidState.Closed;
     private static final int MAX_DELAY_SHOW_DETAILS_ANIMATION = 500;
     private static final int CIRCLE_RADIUS_DP = 50;
+    private static final int REVEAL_ANIMATION_DURATION = 1000;
+    private static final int ANIMATION_DURATION_SHOW_PROFILE_DETAILS = 500;
+    private static final int ANIMATION_DURATION_SHOW_PROFILE_BUTTON = 300;
     protected RelativeLayout mWrapper;
     private View mOverlayListItemView;
     protected TextView mTextViewProfileName;
     protected TextView mTextViewProfileDescription;
     protected FrameLayout mToolbar;
-    private static final int REVEAL_ANIMATION_DURATION = 1000;
-    private static final int ANIMATION_DURATION_SHOW_PROFILE_DETAILS = 500;
     protected RelativeLayout mToolbarProfile;
     private Animation mProfileButtonShowAnimation;
-    private static final int ANIMATION_DURATION_SHOW_PROFILE_BUTTON = 300;
     protected View mButtonProfile;
     private float mInitialProfileButtonX;
     private AnimatorSet mOpenProfileAnimatorSet;
     protected LinearLayout mProfileDetails;
-
 
 
     @Override
@@ -109,9 +95,9 @@ public class PartnerFragment extends Fragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Util.showToast(getContext(),"listview clicked");
+                //Util.showToast(getContext(), "listview clicked");
                 Map<String, Object> mItem = (Map<String, Object>) parent.getItemAtPosition(position);
-                Util.showToast(getContext(),mItem.get(PartnerListAdapter.KEY_NAME).toString()+"***");
+                //Util.showToast(getContext(), mItem.get(PartnerListAdapter.KEY_NAME).toString() + "***");
                 mState = EuclidState.Opening;
                 try {
                     showProfileDetails(mItem, view);
@@ -125,12 +111,12 @@ public class PartnerFragment extends Fragment {
 
 
         // get data
-            // 檢查使用者是否有連線功能
+        // 檢查使用者是否有連線功能
         if (Common.networkConnected(getActivity())) {
             // send request to server and get the response - 重點在new這個動作
             String url = Common.URL + "/live2/Partner";
             Log.d("url", url);
-            retrievePartnerTask = new RetrievePartnerTask().execute(url);
+            retrievePartnerTask = new PartnerGetTextTask(getContext(), this.listview).execute(url);
         } else {
             Util.showToast(getActivity(), "no network");
         }
@@ -153,109 +139,15 @@ public class PartnerFragment extends Fragment {
         return view;
     }
 
-    class RetrievePartnerTask extends AsyncTask<String, Void, List<MemVO>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(PartnerFragment.this.getActivity());
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected List<MemVO> doInBackground(String... params) {
-            String url = params[0]; // 傳入的Common.URL字串
-            String jsonIn;
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("action", "getAll"); // 在這邊控制請求參數
-            try {
-                jsonIn = getRemoteData(url, jsonObject.toString());
-            } catch (IOException e) {
-                Log.e(TAG, e.toString());
-                return null;
-            }
-
-            // 處理Oracle Date型態與gson之間的格式問題
-            Gson gson = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                    .create();
-            Type listType = new TypeToken<List<MemVO>>() {
-            }.getType();
-            // end of // 處理Oracle Date型態與gson之間的格式問題
-
-            // 回傳至onPostExecute(List<MemVO> items) - 備註:此為 UI main thread在呼叫的
-            return gson.fromJson(jsonIn, listType);
-        }
-
-        @Override
-        protected void onPostExecute(List<MemVO> items) {
-            Map<String, Object> profileMap;
-            List<Map<String, Object>> profilesList = new ArrayList<>();
-
-            for (int i = 0; i < items.size(); i++) {
-                MemVO myVO = items.get(i);
-
-                profileMap = new HashMap<>();
-
-                //放入文字資料
-                profileMap.put(PartnerListAdapter.KEY_MEMID, myVO.getMemId());
-                profileMap.put(PartnerListAdapter.KEY_NAME, myVO.getMemName());
-                profileMap.put(PartnerListAdapter.KEY_DESCRIPTION_SHORT, myVO.getMemIntro());
-                profileMap.put(PartnerListAdapter.KEY_DESCRIPTION_FULL, myVO.getMemIntro());
-                profilesList.add(profileMap);
-            }
-            // 放入ListView的Adapter
-            listview.setAdapter(new PartnerListAdapter(getContext(), R.layout.list_item, profilesList));
-
-            progressDialog.cancel();
-        }
-
-        private String getRemoteData(String url, String jsonOut) throws IOException {
-            StringBuilder jsonIn = new StringBuilder();
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setDoInput(true); // allow inputs
-            connection.setDoOutput(true); // allow outputs
-            connection.setUseCaches(false); // do not use a cached copy
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("charset", "UTF-8");
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-            bw.write(jsonOut); // 塞入請求參數
-            Log.d(TAG, "jsonOut: " + jsonOut);
-            bw.close(); // 送出request
-
-            int responseCode = connection.getResponseCode();
-            // 確認能與server建立Socket連線
-            if (responseCode == 200) {
-                // connection.getInputStream() - 等待server回應，如果還沒有回應就hold在這邊
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    jsonIn.append(line); // 重點:把server的資料拿到手
-                }
-            } else {
-                Log.d(TAG, "response code: " + responseCode);
-            }
-            connection.disconnect();
-            Log.d(TAG, "jsonIn: " + jsonIn);
-            return jsonIn.toString();
-        }
-    }
-
-
     private void showProfileDetails(Map<String, Object> item, final View view) throws ExecutionException, InterruptedException {
         listview.setEnabled(false);
         int sScreenWidth = getResources().getDisplayMetrics().widthPixels;
 
-        int profileDetailsAnimationDelay = getMaxDelayShowDetailsAnimation() * Math.abs(view.getTop())
-                / sScreenWidth;
+        int profileDetailsAnimationDelay = PartnerFragment.MAX_DELAY_SHOW_DETAILS_ANIMATION * Math.abs(view.getTop()) / sScreenWidth;
 
         addOverlayListItem(item, view);
         startRevealAnimation(profileDetailsAnimationDelay);
         animateOpenProfileDetails(profileDetailsAnimationDelay);
-    }
-
-    protected int getMaxDelayShowDetailsAnimation() {
-        return MAX_DELAY_SHOW_DETAILS_ANIMATION;
     }
 
     private void addOverlayListItem(Map<String, Object> item, View view) throws ExecutionException, InterruptedException {
@@ -267,29 +159,21 @@ public class PartnerFragment extends Fragment {
 
         mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.view_avatar_overlay).setBackground(buildAvatarCircleOverlay());
 
+        // 建立新的Thread去DB抓圖片
         ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_reveal_avatar);
         ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_avatar);
-        String memId = (String)item.get(PartnerListAdapter.KEY_MEMID);
+        String memId = (String) item.get(PartnerListAdapter.KEY_MEMID);
         String url = Common.URL + "/live2/Partner";
         int imageSize = 250;
         new PartnerGetImageTask(profileImg).execute(url, memId, imageSize);
         new PartnerGetImageTask(profileOverlay).execute(url, memId, imageSize);
-        //profileOverlay.setImageResource(R.drawable.mem10000001);
+        // end of 建立新的Thread去DB抓圖片
 
-
-
-//        Picasso.with(getContext()).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
-//                .resize(sScreenWidth, sProfileImageHeight).centerCrop()
-//                .placeholder(com.yalantis.euclid.library.R.color.blue)
-//                .into((ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_reveal_avatar));
-//        Picasso.with(getContext()).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
-//                .resize(sScreenWidth, sProfileImageHeight).centerCrop()
-//                .placeholder(com.yalantis.euclid.library.R.color.blue)
-//                .into((ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_avatar));
-
+        // 將文字data放上view
         ((TextView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.text_view_name)).setText((String) item.get(EuclidListAdapter.KEY_NAME));
         ((TextView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.text_view_description)).setText((String) item.get(EuclidListAdapter.KEY_DESCRIPTION_SHORT));
         setProfileDetailsInfo(item);
+        // end of 將文字data放上view
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.topMargin = view.getTop() + mToolbar.getHeight();
@@ -297,6 +181,7 @@ public class PartnerFragment extends Fragment {
         mWrapper.addView(mOverlayListItemView, params);
         mToolbar.bringToFront();
     }
+
     private void startRevealAnimation(final int profileDetailsAnimationDelay) {
         mOverlayListItemView.post(new Runnable() {
             @Override
@@ -364,7 +249,6 @@ public class PartnerFragment extends Fragment {
         createOpenProfileButtonAnimation();
         getOpenProfileAnimatorSet(profileDetailsAnimationDelay).start();
     }
-
 
     private void createOpenProfileButtonAnimation() {
         if (mProfileButtonShowAnimation == null) {
@@ -469,15 +353,16 @@ public class PartnerFragment extends Fragment {
 
         return overlay;
     }
+
     // 把大頭貼變成圓的 - 方法2
     public int dpToPx(int dp) {
         return Math.round((float) dp * getContext().getResources().getDisplayMetrics().density);
     }
+
     // 把大頭貼變成圓的 - 方法3
     protected int getCircleRadiusDp() {
         return CIRCLE_RADIUS_DP;
     }
-
 
     private void setProfileDetailsInfo(Map<String, Object> item) {
         mTextViewProfileName.setText("profileNameHere");
