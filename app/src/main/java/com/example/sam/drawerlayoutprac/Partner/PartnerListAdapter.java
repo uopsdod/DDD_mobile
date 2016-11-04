@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Partner;
 
 import android.content.Context;
 import android.graphics.RectF;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.R;
 
 import java.util.List;
 import java.util.Map;
