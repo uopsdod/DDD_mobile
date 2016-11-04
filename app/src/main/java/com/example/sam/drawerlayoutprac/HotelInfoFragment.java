@@ -2,7 +2,6 @@ package com.example.sam.drawerlayoutprac;
 
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 public class HotelInfoFragment extends Fragment implements Serializable{
     private static final String TAG = "HotelInfoFragment";
@@ -27,10 +25,12 @@ public class HotelInfoFragment extends Fragment implements Serializable{
     private RecyclerView rv_hotelInfo;
     private ImageView ivHotelBig;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone;
+    private String hotelId;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        hotelId= getArguments().getString("hotelId");
         //get Data
         List<Spot> mySpot = getSpot();
         //get View
@@ -48,23 +48,31 @@ public class HotelInfoFragment extends Fragment implements Serializable{
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
         if(rv_hotelInfo != null){
             rv_hotelInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
-            rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), mySpot));
+
         }
         //warp up
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
     private void showHotelInfo() {
         if(Common.networkConnected(getActivity())){
-            String url = Common.URL + "HotelServlet";
+            String url = Common.URL + "/android/hotel.do";
+            String id = hotelId;
             List<HotelVO> hotel = null;
             try{
-                hotel = new HotelGetAllTask().execute(url).get();
+                hotel = new HotelGetOneTask().execute(url, id).get();
             }catch(Exception e){
                 Log.e(TAG, e.toString());
             }
             if(hotel == null || hotel.isEmpty()){
                 Util.showToast(getActivity(), "No hotel fonnd");
+            }else{
+                rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), hotel));
             }
         }
 
@@ -72,10 +80,10 @@ public class HotelInfoFragment extends Fragment implements Serializable{
 
     private class SpotAdapter extends  RecyclerView.Adapter<SpotAdapter.ViewHolder>{
         private Context context;
-        private List<Spot> list;
+        private List<HotelVO> list;
         private LayoutInflater inflater;
 
-        public SpotAdapter(Context context, List<Spot> list){
+        public SpotAdapter(Context context, List<HotelVO> list){
             this.context = context;
             this.list = list;
             inflater = LayoutInflater.from(context);
@@ -101,18 +109,18 @@ public class HotelInfoFragment extends Fragment implements Serializable{
 
         @Override
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
-            final Spot myspot = list.get(position);
-            holder.ivImage.setImageResource(myspot.getimgId());
+            final HotelVO myspot = list.get(position);
+//            holder.ivImage.setImageResource(myspot.getimgId());
             holder.tvHotel.setText(String.valueOf(myspot.getHotelName()));
-            holder.tvPrice.setText("$" + Integer.toString(myspot.getPrice()));
-            holder.itemView.setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View view) {
-                    Fragment fragment = new RoomFragment();
-                    Util.switchFragment(HotelInfoFragment.this, fragment);
-                }
-            });
+//            holder.tvPrice.setText("$" + Integer.toString(myspot.getPrice()));
+//            holder.itemView.setOnClickListener(new View.OnClickListener(){
+//
+//                @Override
+//                public void onClick(View view) {
+//                    Fragment fragment = new RoomFragment();
+//                    Util.switchFragment(HotelInfoFragment.this, fragment);
+//                }
+//            });
         }
 
         @Override
