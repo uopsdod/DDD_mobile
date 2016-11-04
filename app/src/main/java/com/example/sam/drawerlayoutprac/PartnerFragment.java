@@ -47,31 +47,25 @@ import java.util.Map;
  */
 public class PartnerFragment extends Fragment {
 
-    private static final int CIRCLE_RADIUS_DP = 50;
     private final static String TAG = "SearchActivity";
 
     private ProgressDialog progressDialog;
     AsyncTask retrievePartnerTask;
     ListView listview;
-    public static int sScreenWidth; // 將大頭照變成圓的
-    public static int sProfileImageHeight; // 將大頭照變成圓的
-    public static ShapeDrawable sOverlayShape; // 將大頭照變成圓的
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
         View view = inflater.inflate(R.layout.fragment_partner, viewGroup, false);
         listview = (ListView) view.findViewById(R.id.list_partner);
-        // 把大頭貼變成圓的
-        sScreenWidth = getResources().getDisplayMetrics().widthPixels;
-        sProfileImageHeight = getResources().getDimensionPixelSize(R.dimen.height_profile_image);
-        sOverlayShape = buildAvatarCircleOverlay();
+
 
         // get data
-        if (networkConnected()) {
+            // 檢查使用者是否有連線功能
+        if (Common.networkConnected(getActivity())) {
             // send request to server and get the response - 重點在new這個動作
             String url = Common.URL + "/live2/Partner";
-            Log.d("url",url);
+            Log.d("url", url);
             retrievePartnerTask = new RetrievePartnerTask().execute(url);
         } else {
             Util.showToast(getActivity(), "no network");
@@ -79,16 +73,16 @@ public class PartnerFragment extends Fragment {
         // end of get data
 
         // set up floatingBtn click Listener
-        LinearLayout ll_view = (LinearLayout)viewGroup.getParent();
-        CoordinatorLayout cdl_view = (CoordinatorLayout)ll_view.getParent();
-        FloatingActionButton floatingBtn = (FloatingActionButton)cdl_view.findViewById(R.id.floatingBtn);
+        LinearLayout ll_view = (LinearLayout) viewGroup.getParent();
+        CoordinatorLayout cdl_view = (CoordinatorLayout) ll_view.getParent();
+        FloatingActionButton floatingBtn = (FloatingActionButton) cdl_view.findViewById(R.id.floatingBtn);
 
         floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.showToast(getContext(),"ftBtn clicked");
+                Util.showToast(getContext(), "ftBtn clicked");
                 Fragment fragment = new PartnerMapFragment();
-                Util.switchFragment(PartnerFragment.this,fragment);
+                Util.switchFragment(PartnerFragment.this, fragment);
             }
         });
 
@@ -117,11 +111,15 @@ public class PartnerFragment extends Fragment {
                 return null;
             }
 
+            // 處理Oracle Date型態與gson之間的格式問題
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd HH:mm:ss")
                     .create();
-            Type listType = new TypeToken<List<MemVO>>() {}.getType();
+            Type listType = new TypeToken<List<MemVO>>() {
+            }.getType();
+            // end of // 處理Oracle Date型態與gson之間的格式問題
 
+            // 回傳至onPostExecute(List<MemVO> items) - 備註:此為 UI main thread在呼叫的
             return gson.fromJson(jsonIn, listType);
         }
 
@@ -130,22 +128,19 @@ public class PartnerFragment extends Fragment {
             Map<String, Object> profileMap;
             List<Map<String, Object>> profilesList = new ArrayList<>();
 
-            int[] avatars = getProfilePics();// 在還沒能從server拿到圖片前，先這樣擋著
+            for (int i = 0; i < items.size(); i++) {
+                MemVO myVO = items.get(i);
 
-                for (int i = 0; i < items.size(); i++) {
-                    MemVO myVO = items.get(i);
+                profileMap = new HashMap<>();
 
-                    profileMap = new HashMap<>();
-
-                    //profileMap.put(PartnerList.KEY_AVATAR, avatars[i]); // 這個目前是假資料
-                    // KEY_MEMID
-                    profileMap.put(PartnerList.KEY_MEMID, myVO.getMemId());
-                    profileMap.put(PartnerList.KEY_NAME, myVO.getMemName());
-                    profileMap.put(PartnerList.KEY_DESCRIPTION_SHORT, myVO.getMemIntro());
-                    profileMap.put(PartnerList.KEY_DESCRIPTION_FULL, myVO.getMemIntro());
-                    profilesList.add(profileMap);
-                }
-
+                //放入文字資料
+                profileMap.put(PartnerList.KEY_MEMID, myVO.getMemId());
+                profileMap.put(PartnerList.KEY_NAME, myVO.getMemName());
+                profileMap.put(PartnerList.KEY_DESCRIPTION_SHORT, myVO.getMemIntro());
+                profileMap.put(PartnerList.KEY_DESCRIPTION_FULL, myVO.getMemIntro());
+                profilesList.add(profileMap);
+            }
+            // 放入ListView的Adapter
             listview.setAdapter(new PartnerList(getContext(), R.layout.list_item, profilesList));
 
             progressDialog.cancel();
@@ -180,52 +175,5 @@ public class PartnerFragment extends Fragment {
             Log.d(TAG, "jsonIn: " + jsonIn);
             return jsonIn.toString();
         }
-
-
-        private int[] getProfilePics() {
-            int[] avatars = {
-                    R.drawable.anastasia,
-                    R.drawable.andriy,
-                    R.drawable.dmitriy,
-                    R.drawable.dmitry_96,
-                    R.drawable.ed,
-                    R.drawable.illya,
-                    R.drawable.kirill,
-                    R.drawable.konstantin,
-                    R.drawable.oleksii,
-                    R.drawable.pavel,
-                    R.drawable.vadim};
-            return avatars;
-        }
     }
-
-    // check if the device connect to the network
-    private boolean networkConnected() {
-        ConnectivityManager conManager =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
-
-    private ShapeDrawable buildAvatarCircleOverlay() {
-        int radius = 666;
-        ShapeDrawable overlay = new ShapeDrawable(new RoundRectShape(null,
-                new RectF(
-                        sScreenWidth / 2 - dpToPx(getCircleRadiusDp() * 2),
-                        sProfileImageHeight / 2 - dpToPx(getCircleRadiusDp() * 2),
-                        sScreenWidth / 2 - dpToPx(getCircleRadiusDp() * 2),
-                        sProfileImageHeight / 2 - dpToPx(getCircleRadiusDp() * 2)),
-                new float[]{radius, radius, radius, radius, radius, radius, radius, radius}));
-        overlay.getPaint().setColor(getResources().getColor(com.yalantis.euclid.library.R.color.gray));
-
-        return overlay;
-    }
-
-    public int dpToPx(int dp) {
-        return Math.round((float) dp * getResources().getDisplayMetrics().density);
-    }
-    protected int getCircleRadiusDp() {
-        return CIRCLE_RADIUS_DP;
-    }
-
 }
