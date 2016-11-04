@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+
 public class MemberFragment extends Fragment {
     TextView tvTroLogin;
     EditText etUserName, etPassword;

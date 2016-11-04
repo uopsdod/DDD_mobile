@@ -12,7 +12,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        app:srcCompat="@drawable/roombig01" />
+        app:srcCompat="@drawable/roombig01_h200" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,25 +23,25 @@
             android:id="@+id/imageView2"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            app:srcCompat="@drawable/roombig02" />
+            app:srcCompat="@drawable/roombig02_h200" />
 
         <ImageView
             android:id="@+id/imageView5"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            app:srcCompat="@drawable/roombig03" />
+            app:srcCompat="@drawable/roombig03_h200" />
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            app:srcCompat="@drawable/roombig04" />
+            app:srcCompat="@drawable/roombig04_h200" />
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            app:srcCompat="@drawable/roombig05" />
+            app:srcCompat="@drawable/roombig05_h200" />
     </LinearLayout>
 
     <RelativeLayout

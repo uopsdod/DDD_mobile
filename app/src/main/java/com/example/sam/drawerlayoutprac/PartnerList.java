@@ -11,10 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-import com.yalantis.euclid.library.EuclidActivity;
-import com.yalantis.euclid.library.EuclidListAdapter;
-
 import java.util.List;
 import java.util.Map;
 

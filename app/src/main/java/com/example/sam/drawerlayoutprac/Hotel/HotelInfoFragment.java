@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Hotel;
 
 
 import android.content.Context;
@@ -16,8 +16,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Room.RoomFragment;
+import com.example.sam.drawerlayoutprac.Room.RoomGetAllTask;
+import com.example.sam.drawerlayoutprac.Room.RoomVO;
+import com.example.sam.drawerlayoutprac.Util;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HotelInfoFragment extends Fragment implements Serializable {
@@ -149,14 +155,14 @@ public class HotelInfoFragment extends Fragment implements Serializable {
 //            holder.ivImage.setImageResource(myspot.getimgId());
             holder.tvHotel.setText(myspot.getRoomName());
 //            holder.tvPrice.setText("$" + Integer.toString(myspot.getPrice()));
-//            holder.itemView.setOnClickListener(new View.OnClickListener(){
-//
-//                @Override
-//                public void onClick(View view) {
-//                    Fragment fragment = new RoomFragment();
-//                    Util.switchFragment(HotelInfoFragment.this, fragment);
-//                }
-//            });
+            holder.itemView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    Fragment fragment = new RoomFragment();
+                    Util.switchFragment(HotelInfoFragment.this, fragment);
+                }
+            });
         }
 
         @Override

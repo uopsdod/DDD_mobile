@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Hotel;
 
 
 import android.os.AsyncTask;
@@ -18,18 +18,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class HotelGetOneTask extends AsyncTask<Object, Integer, HotelVO>{
+public class HotelGetAllTask extends AsyncTask<Object, Integer, List<HotelVO>>{
     private final static String TAG = "HotelGetAllTask";
-    private final static String ACTION = "getOne";
+    private final static String ACTION = "getAll";
     @Override
-    protected HotelVO doInBackground(Object... params) {
+    protected List<HotelVO> doInBackground(Object... params) {
         String url = params[0].toString();
-        String id = params[1].toString();
         String jsonIn;
         JsonObject jsonObject = new JsonObject();
-
         jsonObject.addProperty("action",ACTION);
-        jsonObject.addProperty("id", id);
         try{
             jsonIn = getRemoteData(url, jsonObject.toString());
         }catch (IOException e){
@@ -38,8 +35,8 @@ public class HotelGetOneTask extends AsyncTask<Object, Integer, HotelVO>{
         }
 
         Gson gson = new Gson();
-
-        return gson.fromJson(jsonIn, HotelVO.class);
+        Type listType = new TypeToken<List<HotelVO>>(){} .getType();
+        return gson.fromJson(jsonIn, listType);
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {

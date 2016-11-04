@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Hotel;
 
 
 public class HotelVO implements java.io.Serializable{
