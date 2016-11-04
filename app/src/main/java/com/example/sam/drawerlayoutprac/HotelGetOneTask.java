@@ -18,11 +18,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class HotelGetOneTask extends AsyncTask<Object, Integer, List<HotelVO>>{
+public class HotelGetOneTask extends AsyncTask<Object, Integer, HotelVO>{
     private final static String TAG = "HotelGetAllTask";
     private final static String ACTION = "getOne";
     @Override
-    protected List<HotelVO> doInBackground(Object... params) {
+    protected HotelVO doInBackground(Object... params) {
         String url = params[0].toString();
         String id = params[1].toString();
         String jsonIn;
@@ -38,8 +38,8 @@ public class HotelGetOneTask extends AsyncTask<Object, Integer, List<HotelVO>>{
         }
 
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<HotelVO>>(){} .getType();
-        return gson.fromJson(jsonIn, listType);
+
+        return gson.fromJson(jsonIn, HotelVO.class);
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {

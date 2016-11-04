@@ -13,43 +13,52 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelInfoFragment extends Fragment implements Serializable{
+public class HotelInfoFragment extends Fragment implements Serializable {
     private static final String TAG = "HotelInfoFragment";
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rv_hotelInfo;
     private ImageView ivHotelBig;
-    private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone;
+    private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvHotelIntro;
+    private RatingBar ratingBar;
     private String hotelId;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        hotelId= getArguments().getString("hotelId");
-        //get Data
-        List<Spot> mySpot = getSpot();
+        hotelId = getArguments().getString("hotelId");
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
+
+        tvHotelName = (TextView) view.findViewById(R.id.tvHotelName);
+        tvHotelCity = (TextView) view.findViewById(R.id.tvHotelCity);
+        tvHotelCounty = (TextView) view.findViewById(R.id.tvHotelCounty);
+        tvHotelRoad = (TextView) view.findViewById(R.id.tvHotelRoad);
+        tvHotelPhone = (TextView) view.findViewById(R.id.tvHotelPhone);
+        tvHotelIntro = (TextView) view.findViewById(R.id.tvHotelIntro);
+        ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                showHotelInfo();
+                showRoomInfo();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
         rv_hotelInfo = (RecyclerView) view.findViewById(R.id.rv_hotelDatail);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
-        if(rv_hotelInfo != null){
-            rv_hotelInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        }
+        rv_hotelInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         //warp up
         return view;
     }
@@ -57,39 +66,66 @@ public class HotelInfoFragment extends Fragment implements Serializable{
     @Override
     public void onStart() {
         super.onStart();
+        showHotelInfo();
+        showRoomInfo();
     }
 
     private void showHotelInfo() {
-        if(Common.networkConnected(getActivity())){
+        if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/hotel.do";
             String id = hotelId;
-            List<HotelVO> hotel = null;
-            try{
+            HotelVO hotel = null;
+            try {
                 hotel = new HotelGetOneTask().execute(url, id).get();
-            }catch(Exception e){
+            } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-            if(hotel == null || hotel.isEmpty()){
+            if (hotel == null) {
                 Util.showToast(getActivity(), "No hotel fonnd");
-            }else{
-                rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), hotel));
+            } else {
+                tvHotelName.setText(hotel.getHotelName());
+                tvHotelCity.setText(hotel.getHotelCity());
+                tvHotelCounty.setText(hotel.getHotelCounty());
+                tvHotelPhone.setText(hotel.getHotelPhone());
+                tvHotelRoad.setText(hotel.getHotelRoad());
+                tvHotelIntro.setText(hotel.getHotelIntro());
+                ratingBar.setNumStars(hotel.getHotelRatingResult());
             }
         }
 
     }
 
-    private class SpotAdapter extends  RecyclerView.Adapter<SpotAdapter.ViewHolder>{
+    private void showRoomInfo() {
+        if(Common.networkConnected(getActivity())){
+            String url = Common.URL + "/android/room.do";
+            String id = hotelId;
+            List<RoomVO> room = null;
+            try{
+                room = new RoomGetAllTask().execute(url, id).get();
+            }catch(Exception e){
+                Log.e(TAG, e.toString());
+            }
+            if(room == null || room.isEmpty()){
+                Util.showToast(getActivity(), "No hotel fonnd");
+            }else{
+                rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), room));
+            }
+        }
+
+    }
+
+    private class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
         private Context context;
-        private List<HotelVO> list;
+        private List<RoomVO> list;
         private LayoutInflater inflater;
 
-        public SpotAdapter(Context context, List<HotelVO> list){
+        public SpotAdapter(Context context, List<RoomVO> list) {
             this.context = context;
             this.list = list;
             inflater = LayoutInflater.from(context);
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder{
+        public class ViewHolder extends RecyclerView.ViewHolder {
             ImageView ivImage;
             TextView tvHotel, tvPrice;
 
@@ -109,9 +145,9 @@ public class HotelInfoFragment extends Fragment implements Serializable{
 
         @Override
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
-            final HotelVO myspot = list.get(position);
+            final RoomVO myspot = list.get(position);
 //            holder.ivImage.setImageResource(myspot.getimgId());
-            holder.tvHotel.setText(String.valueOf(myspot.getHotelName()));
+            holder.tvHotel.setText(myspot.getRoomName());
 //            holder.tvPrice.setText("$" + Integer.toString(myspot.getPrice()));
 //            holder.itemView.setOnClickListener(new View.OnClickListener(){
 //
@@ -130,11 +166,4 @@ public class HotelInfoFragment extends Fragment implements Serializable{
 
     }
 
-    private List<Spot> getSpot(){
-        List<Spot> mySpot = new ArrayList<>();
-        mySpot.add(new Spot(R.drawable.room03, "豪華雙人間", 2860));
-        mySpot.add(new Spot(R.drawable.room02, "尊貴行政雙床間", 3802));
-        mySpot.add(new Spot(R.drawable.room03, "一臥室公寓(4位成人)", 6858));
-        return mySpot;
-    }
 }

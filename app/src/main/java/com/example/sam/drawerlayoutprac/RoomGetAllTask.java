@@ -23,9 +23,11 @@ public class RoomGetAllTask extends AsyncTask<Object, String, List<RoomVO>>{
     @Override
     protected List<RoomVO> doInBackground(Object... params) {
         String url = params[0].toString();
+        String id = params[1].toString();
         String jsonIn;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action",ACTION);
+        jsonObject.addProperty("id", id);
         try{
             jsonIn = getRemoteData(url, jsonObject.toString());
         }catch (IOException e){
@@ -34,7 +36,7 @@ public class RoomGetAllTask extends AsyncTask<Object, String, List<RoomVO>>{
         }
 
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<HotelVO>>(){} .getType();
+        Type listType = new TypeToken<List<RoomVO>>(){} .getType();
         return gson.fromJson(jsonIn, listType);
     }
 
