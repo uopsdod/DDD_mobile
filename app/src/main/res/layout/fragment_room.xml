@@ -7,11 +7,11 @@
     android:padding="10dp">
 
     <ImageView
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="180dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/roombig01_h200" />
 
     <LinearLayout
@@ -60,6 +60,7 @@
             android:textSize="28sp" />
 
         <TextView
+            android:id="@+id/tvPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -69,7 +70,6 @@
             android:textSize="24dp" />
 
         <RatingBar
-            android:progressTint="#709ACF"
             android:id="@+id/ratingBar"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
@@ -78,6 +78,7 @@
             android:layout_marginLeft="15dp"
             android:maxHeight="12dp"
             android:numStars="5"
+            android:progressTint="#709ACF"
             android:rating="2" />
     </RelativeLayout>
 
@@ -114,14 +115,19 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvFacilitiesDetail"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvRmFacilities"
-            android:layout_marginTop="15dp"
-            android:text="景觀, 電話, 衛星頻道, 有線頻道, 平面電視, 保險箱, 空調, 熨斗, 書桌, 燙衣設備, 休息區, 地毯, 衣櫃/衣櫥, 淋浴, 浴缸, 吹風機, 免費盥洗用品, 洗手間, 浴室, 拖鞋, 冰箱, 電熱水壺, 喚醒服務"
-            android:textSize="16sp" />
+            android:layout_below="@id/tvRmFacilities">
+
+            <TextView
+                android:id="@+id/tvFacilitiesDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="景觀, 電話, 衛星頻道, 有線頻道, 平面電視, 保險箱, 空調, 熨斗, 書桌, 燙衣設備, 休息區, 地毯, 衣櫃/衣櫥, 淋浴, 浴缸, 吹風機, 免費盥洗用品, 洗手間, 浴室, 拖鞋, 冰箱, 電熱水壺, 喚醒服務"
+                android:textSize="16sp" />
+        </ScrollView>
 
     </RelativeLayout>
 

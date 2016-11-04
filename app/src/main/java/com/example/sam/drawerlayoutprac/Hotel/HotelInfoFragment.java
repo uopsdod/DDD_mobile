@@ -152,6 +152,7 @@ public class HotelInfoFragment extends Fragment implements Serializable {
         @Override
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
             final RoomVO myspot = list.get(position);
+            final String RoomId = myspot.getRoomId();
 //            holder.ivImage.setImageResource(myspot.getimgId());
             holder.tvHotel.setText(myspot.getRoomName());
 //            holder.tvPrice.setText("$" + Integer.toString(myspot.getPrice()));
@@ -160,6 +161,9 @@ public class HotelInfoFragment extends Fragment implements Serializable {
                 @Override
                 public void onClick(View view) {
                     Fragment fragment = new RoomFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("RoomId", RoomId);
+                    fragment.setArguments(bundle);
                     Util.switchFragment(HotelInfoFragment.this, fragment);
                 }
             });
