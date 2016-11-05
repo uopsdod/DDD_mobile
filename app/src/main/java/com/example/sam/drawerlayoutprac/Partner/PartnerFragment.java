@@ -152,13 +152,12 @@ public class PartnerFragment extends Fragment {
 
     private void addOverlayListItem(Map<String, Object> item, View view) throws ExecutionException, InterruptedException {
         if (mOverlayListItemView == null) {
-            mOverlayListItemView = getActivity().getLayoutInflater().inflate(com.yalantis.euclid.library.R.layout.overlay_list_item, mWrapper, false);
+            // 載入overlay_list_item
+            mOverlayListItemView = getActivity().getLayoutInflater().inflate(R.layout.overlay_list_item_partner, mWrapper, false);
         } else {
             mWrapper.removeView(mOverlayListItemView);
         }
-
         mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.view_avatar_overlay).setBackground(buildAvatarCircleOverlay());
-
         // 建立新的Thread去DB抓圖片
         ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_reveal_avatar);
         ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_avatar);
