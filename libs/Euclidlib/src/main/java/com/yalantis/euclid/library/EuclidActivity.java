@@ -77,7 +77,6 @@ public abstract class EuclidActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_euclid);
-
         mWrapper = (RelativeLayout) findViewById(R.id.wrapper);
         mListView = (ListView) findViewById(R.id.list_view);
         mToolbar = (FrameLayout) findViewById(R.id.toolbar_list);
