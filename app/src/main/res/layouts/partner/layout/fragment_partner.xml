@@ -35,7 +35,7 @@
         android:background="@color/gray"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_toolbar"
+        android:layout_height="0dp"
         android:clickable="true"
         android:visibility="invisible">
 

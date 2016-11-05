@@ -77,15 +77,15 @@ public class PartnerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
         View view = inflater.inflate(R.layout.fragment_partner, viewGroup, false);
-        listview = (ListView) view.findViewById(R.id.list_partner);
+        listview = (ListView) view.findViewById(com.example.sam.drawerlayoutprac.R.id.list_partner);
         // testing
-        mWrapper = (RelativeLayout) view.findViewById(com.yalantis.euclid.library.R.id.wrapper);
-        mTextViewProfileName = (TextView) view.findViewById(com.yalantis.euclid.library.R.id.text_view_profile_name);
-        mTextViewProfileDescription = (TextView) view.findViewById(com.yalantis.euclid.library.R.id.text_view_profile_description);
-        mToolbar = (FrameLayout) view.findViewById(com.yalantis.euclid.library.R.id.toolbar_list);
-        mToolbarProfile = (RelativeLayout) view.findViewById(com.yalantis.euclid.library.R.id.toolbar_profile);
-        mButtonProfile = view.findViewById(com.yalantis.euclid.library.R.id.button_profile);
-        mProfileDetails = (LinearLayout) view.findViewById(com.yalantis.euclid.library.R.id.wrapper_profile_details);
+        mWrapper = (RelativeLayout) view.findViewById(com.example.sam.drawerlayoutprac.R.id.wrapper);
+        mTextViewProfileName = (TextView) view.findViewById(com.example.sam.drawerlayoutprac.R.id.text_view_profile_name);
+        mTextViewProfileDescription = (TextView) view.findViewById(com.example.sam.drawerlayoutprac.R.id.text_view_profile_description);
+        mToolbar = (FrameLayout) view.findViewById(com.example.sam.drawerlayoutprac.R.id.toolbar_list);
+        mToolbarProfile = (RelativeLayout) view.findViewById(com.example.sam.drawerlayoutprac.R.id.toolbar_profile);
+        mButtonProfile = view.findViewById(com.example.sam.drawerlayoutprac.R.id.button_profile);
+        mProfileDetails = (LinearLayout) view.findViewById(com.example.sam.drawerlayoutprac.R.id.wrapper_profile_details);
         mButtonProfile.post(new Runnable() {
             @Override
             public void run() {
@@ -157,10 +157,10 @@ public class PartnerFragment extends Fragment {
         } else {
             mWrapper.removeView(mOverlayListItemView);
         }
-        mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.view_avatar_overlay).setBackground(buildAvatarCircleOverlay());
+        mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.view_avatar_overlay).setBackground(buildAvatarCircleOverlay());
         // 建立新的Thread去DB抓圖片
-        ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_reveal_avatar);
-        ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.image_view_avatar);
+        ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_reveal_avatar);
+        ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_avatar);
         String memId = (String) item.get(PartnerListAdapter.KEY_MEMID);
         String url = Common.URL + "/live2/Partner";
         int imageSize = 250;
@@ -169,8 +169,8 @@ public class PartnerFragment extends Fragment {
         // end of 建立新的Thread去DB抓圖片
 
         // 將文字data放上view
-        ((TextView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.text_view_name)).setText((String) item.get(EuclidListAdapter.KEY_NAME));
-        ((TextView) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.text_view_description)).setText((String) item.get(EuclidListAdapter.KEY_DESCRIPTION_SHORT));
+        ((TextView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.text_view_name)).setText((String) item.get(EuclidListAdapter.KEY_NAME));
+        ((TextView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.text_view_description)).setText((String) item.get(EuclidListAdapter.KEY_DESCRIPTION_SHORT));
         setProfileDetailsInfo(item);
         // end of 將文字data放上view
 
@@ -192,7 +192,7 @@ public class PartnerFragment extends Fragment {
     }
 
     private SupportAnimator getAvatarRevealAnimator() {
-        final LinearLayout mWrapperListItemReveal = (LinearLayout) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.wrapper_list_item_reveal);
+        final LinearLayout mWrapperListItemReveal = (LinearLayout) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.wrapper_list_item_reveal);
 
         int finalRadius = Math.max(mOverlayListItemView.getWidth(), mOverlayListItemView.getHeight());
         int sScreenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -251,7 +251,7 @@ public class PartnerFragment extends Fragment {
 
     private void createOpenProfileButtonAnimation() {
         if (mProfileButtonShowAnimation == null) {
-            mProfileButtonShowAnimation = AnimationUtils.loadAnimation(getContext(), com.yalantis.euclid.library.R.anim.profile_button_scale);
+            mProfileButtonShowAnimation = AnimationUtils.loadAnimation(getContext(), com.example.sam.drawerlayoutprac.R.anim.profile_button_scale);
             mProfileButtonShowAnimation.setDuration(getAnimationDurationShowProfileButton());
             mProfileButtonShowAnimation.setInterpolator(new AccelerateInterpolator());
             mProfileButtonShowAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -331,7 +331,7 @@ public class PartnerFragment extends Fragment {
     private Animator getOpenProfileDetailsAnimator() {
         Animator mOpenProfileDetailsAnimator = ObjectAnimator.ofFloat(mProfileDetails, View.Y,
                 getResources().getDisplayMetrics().heightPixels,
-                getResources().getDimensionPixelSize(com.yalantis.euclid.library.R.dimen.height_profile_picture_with_toolbar));
+                getResources().getDimensionPixelSize(com.example.sam.drawerlayoutprac.R.dimen.height_profile_picture_with_toolbar)); // 在這邊設定profile detail要有多高
         return mOpenProfileDetailsAnimator;
     }
 
@@ -348,7 +348,7 @@ public class PartnerFragment extends Fragment {
                         sScreenWidth / 2 - dpToPx(getCircleRadiusDp() * 2),
                         sProfileImageHeight / 2 - dpToPx(getCircleRadiusDp() * 2)),
                 new float[]{radius, radius, radius, radius, radius, radius, radius, radius}));
-        overlay.getPaint().setColor(getContext().getResources().getColor(com.yalantis.euclid.library.R.color.gray));
+        overlay.getPaint().setColor(getContext().getResources().getColor(com.example.sam.drawerlayoutprac.R.color.gray));
 
         return overlay;
     }
