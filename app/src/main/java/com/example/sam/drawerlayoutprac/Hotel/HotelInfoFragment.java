@@ -2,6 +2,8 @@ package com.example.sam.drawerlayoutprac.Hotel;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Room.RoomFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomGetAllTask;
+import com.example.sam.drawerlayoutprac.Room.RoomGetImageTask;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.example.sam.drawerlayoutprac.Util;
 
@@ -43,6 +46,7 @@ public class HotelInfoFragment extends Fragment implements Serializable {
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
 
+        ivHotelBig = (ImageView) view.findViewById(R.id.ivHotel);
         tvHotelName = (TextView) view.findViewById(R.id.tvHotelName);
         tvHotelCity = (TextView) view.findViewById(R.id.tvHotelCity);
         tvHotelCounty = (TextView) view.findViewById(R.id.tvHotelCounty);
@@ -83,12 +87,16 @@ public class HotelInfoFragment extends Fragment implements Serializable {
             HotelVO hotel = null;
             try {
                 hotel = new HotelGetOneTask().execute(url, id).get();
+
+//                byte[] pic =hotel.getHotelCoverPic();
+
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
             if (hotel == null) {
                 Util.showToast(getActivity(), "No hotel fonnd");
             } else {
+
                 tvHotelName.setText(hotel.getHotelName());
                 tvHotelCity.setText(hotel.getHotelCity());
                 tvHotelCounty.setText(hotel.getHotelCounty());
@@ -97,6 +105,11 @@ public class HotelInfoFragment extends Fragment implements Serializable {
                 tvHotelIntro.setText(hotel.getHotelIntro());
                 ratingBar.setNumStars(hotel.getHotelRatingResult());
             }
+//            if(bitmap == null){
+//                Util.showToast(getActivity(), "No image fonnd");
+//            }else{
+//                bitmap = BitmapFactory.decodeByteArray(pic,0,pic.length);
+//            }
         }
 
     }
@@ -153,9 +166,22 @@ public class HotelInfoFragment extends Fragment implements Serializable {
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
             final RoomVO myspot = list.get(position);
             final String RoomId = myspot.getRoomId();
+            String url = Common.URL + "/android/room.do";
+            int imageSize = 250;
+            Bitmap bitmap = null;
+            try{
+                bitmap = new RoomGetImageTask(null).execute(url, RoomId, imageSize).get();
+            }catch (Exception e){
+                Log.e(TAG, e.toString());
+            }
+            if(bitmap != null){
+                holder.ivImage.setImageBitmap(bitmap);
+            }else{
+                holder.ivImage.setImageResource(R.drawable.search);
+            }
 //            holder.ivImage.setImageResource(myspot.getimgId());
             holder.tvHotel.setText(myspot.getRoomName());
-//            holder.tvPrice.setText("$" + Integer.toString(myspot.getPrice()));
+            holder.tvPrice.setText("$" + Integer.toString(myspot.getRoomPrice()));
             holder.itemView.setOnClickListener(new View.OnClickListener(){
 
                 @Override

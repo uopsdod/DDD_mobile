@@ -99,8 +99,9 @@ public class HotelFragment extends Fragment {
         public void onBindViewHolder(SpotAdapter.MyViewHolder holder, int position) {
             HotelVO myHotel = myListSpot.get(position);
             final String HotelId = myHotel.getHotelId();
-//            holder.ivImage.setAlpha(0.5f);
-//            holder.ivImage.setImageResource(mySpot.getimgId());
+            String url = Common.URL + "/android/hotel.do";
+            int imageSize = 250;
+            new HotelGetImageTask(holder.ivImage).execute(url, HotelId, imageSize);
             holder.tvHotel.setText(myHotel.getHotelName());
 //            holder.tvPrice.setText(Integer.toString(mySpot.getPrice()) + "$");
             holder.itemView.setOnClickListener(new View.OnClickListener() {
