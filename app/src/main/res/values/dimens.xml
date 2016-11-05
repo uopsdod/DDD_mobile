@@ -8,4 +8,7 @@
 
     <!-- sum of *height_toolbar* and *height_profile_image* -->
     <dimen name="height_profile_picture_with_toolbar">270dp</dimen>
+
+    <!-- *height_profile_picture_with_toolbar* - half of *size_button_message* -->
+    <dimen name="margin_top_button_message">240dp</dimen>
 </resources>
