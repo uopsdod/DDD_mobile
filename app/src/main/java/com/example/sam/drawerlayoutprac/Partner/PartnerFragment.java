@@ -58,7 +58,7 @@ public class PartnerFragment extends Fragment {
     AsyncTask retrievePartnerTask;
     ListView listview;
 
-    //testing
+    //進入個人詳細頁面動畫屬性
     private static final int MAX_DELAY_SHOW_DETAILS_ANIMATION = 500;
     private static final int CIRCLE_RADIUS_DP = 50;
     private static final int REVEAL_ANIMATION_DURATION = 1000;
@@ -76,7 +76,7 @@ public class PartnerFragment extends Fragment {
     private AnimatorSet mOpenProfileAnimatorSet;
     protected LinearLayout mProfileDetails;
 
-    // testing
+    // closing動畫屬性
     private EuclidState mState = EuclidState.Closed;
     private AnimatorSet mCloseProfileAnimatorSet;
     private static final int STEP_DELAY_HIDE_DETAILS_ANIMATION = 80;
@@ -94,8 +94,15 @@ public class PartnerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
         View view = inflater.inflate(R.layout.fragment_partner, viewGroup, false);
+        findViews(view);
+        setFloatingBtnClickListener(viewGroup);
+        initList();
+        return view;
+    }// end of onCreateView
+
+    // onCreateView方法01
+    private void findViews(View view){
         listview = (ListView) view.findViewById(com.example.sam.drawerlayoutprac.R.id.list_partner);
-        // testing
         mWrapper = (RelativeLayout) view.findViewById(com.example.sam.drawerlayoutprac.R.id.wrapper);
         mTextViewProfileName = (TextView) view.findViewById(com.example.sam.drawerlayoutprac.R.id.text_view_profile_name);
         mTextViewProfileDescription = (TextView) view.findViewById(com.example.sam.drawerlayoutprac.R.id.text_view_profile_description);
@@ -111,20 +118,9 @@ public class PartnerFragment extends Fragment {
         });
 
 
-
-        // get data
-        // 檢查使用者是否有連線功能
-//        if (Common.networkConnected(getActivity())) {
-//            // send request to server and get the response - 重點在new這個動作
-//            String url = Common.URL + "/live2/Partner";
-//            Log.d("url", url);
-//            // 注意:listview的setAdapter是在PartnerGetTextTask裡面設定的
-//            retrievePartnerTask = new PartnerGetTextTask(getContext(), this.listview).execute(url);
-//        } else {
-//            Util.showToast(getActivity(), "no network");
-//        }
-        // end of get data
-
+    }
+    // onCreateView方法02
+    private void setFloatingBtnClickListener(ViewGroup viewGroup) {
         // set up floatingBtn click Listener
         LinearLayout ll_view = (LinearLayout) viewGroup.getParent();
         CoordinatorLayout cdl_view = (CoordinatorLayout) ll_view.getParent();
@@ -133,25 +129,33 @@ public class PartnerFragment extends Fragment {
         floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.showToast(getContext(), "ftBtn clicked");
+                //Util.showToast(getContext(), "ftBtn clicked");
                 Fragment fragment = new PartnerMapFragment();
                 Util.switchFragment(PartnerFragment.this, fragment);
             }
         });
-        try {
-            initList();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+    }
+    // onCreateView方法03
+    private void initList() {
+        // get data
+        // 檢查使用者是否有連線功能
+        List<MemVO> memVOList = null;
+        if (Common.networkConnected(getActivity())) {
+            // send request to server and get the response - 重點在new這個動作
+            String url = Common.URL + "/live2/Partner";
+            Log.d("url", url);
+            try {
+                memVOList = (List<MemVO>)new PartnerGetTextTask(getContext(), this.listview).execute(url).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }else{
+            Util.showToast(getActivity(), "no network");
         }
-
-        return view;
-    }// end of onCreateView
-
-    private void initList() throws ExecutionException, InterruptedException {
-        String url = Common.URL + "/live2/Partner";
-        List<MemVO> memVOList = (List<MemVO>)new PartnerGetTextTask(getContext(), this.listview).execute(url).get();
+        // end of get data
         Map<String, Object> profileMap;
         List<Map<String, Object>> profilesList = new ArrayList<>();
 
@@ -168,8 +172,9 @@ public class PartnerFragment extends Fragment {
             profilesList.add(profileMap);
         }
 
+        // mListViewAnimationAdapter - 是當進入個人詳細頁面後，返回時所用到的animator。而這個animator會放在此mListViewAnimationAdapter裡面。而我們會將真正屬於自己要用的dapter再放入此adpater裡面。
         mListViewAnimationAdapter = new SwingLeftInAnimationAdapter(new PartnerListAdapter(getContext(), R.layout.list_item, profilesList));
-        mListViewAnimationAdapter.setAbsListView(this.listview);
+        mListViewAnimationAdapter.setAbsListView(PartnerFragment.this.listview);
         mListViewAnimator = mListViewAnimationAdapter.getViewAnimator();
         if (mListViewAnimator != null) {
             mListViewAnimator.setAnimationDurationMillis(getAnimationDurationCloseProfileDetails());
@@ -177,7 +182,7 @@ public class PartnerFragment extends Fragment {
         }
 
         PartnerFragment.this.listview.setAdapter(mListViewAnimationAdapter);
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        PartnerFragment.this.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Util.showToast(getContext(), "listview clicked");
@@ -195,6 +200,8 @@ public class PartnerFragment extends Fragment {
         });
     }
 
+    // 此方法由initList() -> PartnerFragment.this.listview.setOnItemClickListener事件觸發到這邊
+    // 進入個人詳細頁面動畫01
     private void showProfileDetails(Map<String, Object> item, final View view) throws ExecutionException, InterruptedException {
         listview.setEnabled(false);
         int sScreenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -205,7 +212,7 @@ public class PartnerFragment extends Fragment {
         startRevealAnimation(profileDetailsAnimationDelay);
         animateOpenProfileDetails(profileDetailsAnimationDelay);
     }
-
+    // 進入個人詳細頁面動畫02
     private void addOverlayListItem(Map<String, Object> item, View view) throws ExecutionException, InterruptedException {
         if (mOverlayListItemView == null) {
             // 載入overlay_list_item
@@ -236,7 +243,7 @@ public class PartnerFragment extends Fragment {
         mWrapper.addView(mOverlayListItemView, params);
         mToolbar.bringToFront();
     }
-
+    // 進入個人詳細頁面動畫03
     private void startRevealAnimation(final int profileDetailsAnimationDelay) {
         mOverlayListItemView.post(new Runnable() {
             @Override
@@ -246,7 +253,7 @@ public class PartnerFragment extends Fragment {
             }
         });
     }
-
+    // 進入個人詳細頁面動畫03
     private SupportAnimator getAvatarRevealAnimator() {
         final LinearLayout mWrapperListItemReveal = (LinearLayout) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.wrapper_list_item_reveal);
 
@@ -259,7 +266,7 @@ public class PartnerFragment extends Fragment {
                 sProfileImageHeight / 2,
                 dpToPx(getCircleRadiusDp() * 2),
                 finalRadius);
-        mRevealAnimator.setDuration(getRevealAnimationDuration());
+        mRevealAnimator.setDuration(PartnerFragment.REVEAL_ANIMATION_DURATION);
         mRevealAnimator.addListener(new SupportAnimator.AnimatorListener() {
             @Override
             public void onAnimationStart() {
@@ -284,31 +291,23 @@ public class PartnerFragment extends Fragment {
         });
         return mRevealAnimator;
     }
-
-    protected int getRevealAnimationDuration() {
-        return REVEAL_ANIMATION_DURATION;
-    }
-
+    // 進入個人詳細頁面動畫04
     private Animator getAvatarShowAnimator(int profileDetailsAnimationDelay) {
         final Animator mAvatarShowAnimator = ObjectAnimator.ofFloat(mOverlayListItemView, View.Y, mOverlayListItemView.getTop(), mToolbarProfile.getBottom());
-        mAvatarShowAnimator.setDuration(profileDetailsAnimationDelay + getAnimationDurationShowProfileDetails());
+        mAvatarShowAnimator.setDuration(profileDetailsAnimationDelay + PartnerFragment.ANIMATION_DURATION_SHOW_PROFILE_DETAILS);
         mAvatarShowAnimator.setInterpolator(new DecelerateInterpolator());
         return mAvatarShowAnimator;
     }
-
-    protected int getAnimationDurationShowProfileDetails() {
-        return ANIMATION_DURATION_SHOW_PROFILE_DETAILS;
-    }
-
+    // 進入個人詳細頁面動畫05
     private void animateOpenProfileDetails(int profileDetailsAnimationDelay) {
         createOpenProfileButtonAnimation();
         getOpenProfileAnimatorSet(profileDetailsAnimationDelay).start();
     }
-
+    // 進入個人詳細頁面動畫06
     private void createOpenProfileButtonAnimation() {
         if (mProfileButtonShowAnimation == null) {
             mProfileButtonShowAnimation = AnimationUtils.loadAnimation(getContext(), com.example.sam.drawerlayoutprac.R.anim.profile_button_scale);
-            mProfileButtonShowAnimation.setDuration(getAnimationDurationShowProfileButton());
+            mProfileButtonShowAnimation.setDuration(PartnerFragment.ANIMATION_DURATION_SHOW_PROFILE_BUTTON);
             mProfileButtonShowAnimation.setInterpolator(new AccelerateInterpolator());
             mProfileButtonShowAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -328,11 +327,7 @@ public class PartnerFragment extends Fragment {
             });
         }
     }
-
-    protected int getAnimationDurationShowProfileButton() {
-        return ANIMATION_DURATION_SHOW_PROFILE_BUTTON;
-    }
-
+    // 進入個人詳細頁面動畫07
     private AnimatorSet getOpenProfileAnimatorSet(int profileDetailsAnimationDelay) {
         if (mOpenProfileAnimatorSet == null) {
             List<Animator> profileAnimators = new ArrayList<>();
@@ -341,13 +336,13 @@ public class PartnerFragment extends Fragment {
 
             mOpenProfileAnimatorSet = new AnimatorSet();
             mOpenProfileAnimatorSet.playTogether(profileAnimators);
-            mOpenProfileAnimatorSet.setDuration(getAnimationDurationShowProfileDetails());
+            mOpenProfileAnimatorSet.setDuration(PartnerFragment.ANIMATION_DURATION_SHOW_PROFILE_DETAILS);
         }
         mOpenProfileAnimatorSet.setStartDelay(profileDetailsAnimationDelay);
         mOpenProfileAnimatorSet.setInterpolator(new DecelerateInterpolator());
         return mOpenProfileAnimatorSet;
     }
-
+    // 進入個人詳細頁面動畫08
     private Animator getOpenProfileToolbarAnimator() {
         Animator mOpenProfileToolbarAnimator = ObjectAnimator.ofFloat(mToolbarProfile, View.Y, -mToolbarProfile.getHeight(), 0);
         mOpenProfileToolbarAnimator.addListener(new Animator.AnimatorListener() {
@@ -383,7 +378,7 @@ public class PartnerFragment extends Fragment {
         });
         return mOpenProfileToolbarAnimator;
     }
-
+    // 進入個人詳細頁面動畫09
     private Animator getOpenProfileDetailsAnimator() {
         Animator mOpenProfileDetailsAnimator = ObjectAnimator.ofFloat(mProfileDetails, View.Y,
                 getResources().getDisplayMetrics().heightPixels,
@@ -408,12 +403,10 @@ public class PartnerFragment extends Fragment {
 
         return overlay;
     }
-
     // 把大頭貼變成圓的 - 方法2
     public int dpToPx(int dp) {
         return Math.round((float) dp * getContext().getResources().getDisplayMetrics().density);
     }
-
     // 把大頭貼變成圓的 - 方法3
     protected int getCircleRadiusDp() {
         return CIRCLE_RADIUS_DP;
@@ -427,7 +420,7 @@ public class PartnerFragment extends Fragment {
     }
 
 
-
+    // closing動畫01
     private void backBtnPressed() {
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -435,12 +428,7 @@ public class PartnerFragment extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    Util.showToast(getContext(),"backBtnPressed");
-//                    mWrapper.removeView(mOverlayListItemView);
-//                    mToolbarProfile.setVisibility(View.INVISIBLE);
-//                    mProfileDetails.setVisibility(View.INVISIBLE);
-//                    PartnerFragment.this.listview.bringToFront();
-//                    return true;
+                    //Util.showToast(getContext(),"backBtnPressed");
 
                     if (getState() == EuclidState.Opened) {
                         animateCloseProfileDetails();
@@ -453,16 +441,16 @@ public class PartnerFragment extends Fragment {
             }
         });
     }
-
+    // closing動畫02
     public EuclidState getState() {
         return mState;
     }
-
+    // closing動畫03
     private void animateCloseProfileDetails() {
         mState = EuclidState.Closing;
         getCloseProfileAnimatorSet().start();
     }
-
+    // closing動畫04
     private AnimatorSet getCloseProfileAnimatorSet() {
         if (mCloseProfileAnimatorSet == null) {
             Animator profileToolbarAnimator = ObjectAnimator.ofFloat(mToolbarProfile, View.X,
@@ -524,11 +512,11 @@ public class PartnerFragment extends Fragment {
         }
         return mCloseProfileAnimatorSet;
     }
-
+    // closing動畫05
     protected int getStepDelayHideDetailsAnimation() {
         return STEP_DELAY_HIDE_DETAILS_ANIMATION;
-    }
-
+    }    // closing動畫01
+    // closing動畫06
     protected int getAnimationDurationCloseProfileDetails() {
         return ANIMATION_DURATION_CLOSE_PROFILE_DETAILS;
     }
