@@ -2,6 +2,8 @@ package com.example.sam.drawerlayoutprac.Hotel;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Room.RoomFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomGetAllTask;
+import com.example.sam.drawerlayoutprac.Room.RoomGetImageTask;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.example.sam.drawerlayoutprac.Util;
 
@@ -33,16 +36,17 @@ public class HotelInfoFragment extends Fragment implements Serializable {
     private ImageView ivHotelBig;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvHotelIntro;
     private RatingBar ratingBar;
-    private String hotelId;
+    private HotelVO hotelVO;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        hotelId = getArguments().getString("hotelId");
+        hotelVO =(HotelVO) getArguments().getSerializable("hotelVO");
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
 
+        ivHotelBig = (ImageView) view.findViewById(R.id.ivHotel);
         tvHotelName = (TextView) view.findViewById(R.id.tvHotelName);
         tvHotelCity = (TextView) view.findViewById(R.id.tvHotelCity);
         tvHotelCounty = (TextView) view.findViewById(R.id.tvHotelCounty);
@@ -79,23 +83,23 @@ public class HotelInfoFragment extends Fragment implements Serializable {
     private void showHotelInfo() {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/hotel.do";
-            String id = hotelId;
-            HotelVO hotel = null;
+            String id = hotelVO.getHotelId();
+            int imageSize = 250;
             try {
-                hotel = new HotelGetOneTask().execute(url, id).get();
+                new HotelGetImageTask(ivHotelBig).execute(url, id, imageSize);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-            if (hotel == null) {
+            if (hotelVO == null) {
                 Util.showToast(getActivity(), "No hotel fonnd");
             } else {
-                tvHotelName.setText(hotel.getHotelName());
-                tvHotelCity.setText(hotel.getHotelCity());
-                tvHotelCounty.setText(hotel.getHotelCounty());
-                tvHotelPhone.setText(hotel.getHotelPhone());
-                tvHotelRoad.setText(hotel.getHotelRoad());
-                tvHotelIntro.setText(hotel.getHotelIntro());
-                ratingBar.setNumStars(hotel.getHotelRatingResult());
+                tvHotelName.setText(hotelVO.getHotelName());
+                tvHotelCity.setText(hotelVO.getHotelCity());
+                tvHotelCounty.setText(hotelVO.getHotelCounty());
+                tvHotelPhone.setText(hotelVO.getHotelPhone());
+                tvHotelRoad.setText(hotelVO.getHotelRoad());
+                tvHotelIntro.setText(hotelVO.getHotelIntro());
+                ratingBar.setNumStars(hotelVO.getHotelRatingResult());
             }
         }
 
@@ -104,7 +108,7 @@ public class HotelInfoFragment extends Fragment implements Serializable {
     private void showRoomInfo() {
         if(Common.networkConnected(getActivity())){
             String url = Common.URL + "/android/room.do";
-            String id = hotelId;
+            String id = hotelVO.getHotelId();
             List<RoomVO> room = null;
             try{
                 room = new RoomGetAllTask().execute(url, id).get();
@@ -153,9 +157,22 @@ public class HotelInfoFragment extends Fragment implements Serializable {
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
             final RoomVO myspot = list.get(position);
             final String RoomId = myspot.getRoomId();
+            String url = Common.URL + "/android/room.do";
+            int imageSize = 250;
+            Bitmap bitmap = null;
+            try{
+                bitmap = new RoomGetImageTask(null).execute(url, RoomId, imageSize).get();
+            }catch (Exception e){
+                Log.e(TAG, e.toString());
+            }
+            if(bitmap != null){
+                holder.ivImage.setImageBitmap(bitmap);
+            }else{
+                holder.ivImage.setImageResource(R.drawable.search);
+            }
 //            holder.ivImage.setImageResource(myspot.getimgId());
             holder.tvHotel.setText(myspot.getRoomName());
-//            holder.tvPrice.setText("$" + Integer.toString(myspot.getPrice()));
+            holder.tvPrice.setText("$" + Integer.toString(myspot.getRoomPrice()));
             holder.itemView.setOnClickListener(new View.OnClickListener(){
 
                 @Override

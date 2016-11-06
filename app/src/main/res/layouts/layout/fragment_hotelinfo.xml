@@ -11,9 +11,8 @@
         android:id="@+id/ivHotel"
         android:layout_width="match_parent"
         android:layout_height="190dp"
-        android:layout_margin="0px"
-        android:padding="0px"
-        android:src="@drawable/howard" />
+        android:scaleType="fitXY"
+        android:src="@drawable/default_image" />
 
     <RelativeLayout
         android:layout_width="match_parent"

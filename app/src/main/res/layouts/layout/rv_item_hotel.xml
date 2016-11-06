@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="fitXY"
-        android:src="@drawable/roombig05"
+        android:src="@drawable/default_image"
         android:layout_marginBottom="3dp"
         />
 
