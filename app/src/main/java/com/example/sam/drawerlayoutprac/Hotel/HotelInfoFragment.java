@@ -101,12 +101,6 @@ public class HotelInfoFragment extends Fragment implements Serializable {
                 tvHotelIntro.setText(hotelVO.getHotelIntro());
                 ratingBar.setNumStars(hotelVO.getHotelRatingResult());
             }
-
-//            if(bitmap == null){
-//                Util.showToast(getActivity(), "No image fonnd");
-//            }else{
-//                bitmap = BitmapFactory.decodeByteArray(pic,0,pic.length);
-//            }
         }
 
     }
