@@ -36,13 +36,13 @@ public class HotelInfoFragment extends Fragment implements Serializable {
     private ImageView ivHotelBig;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvHotelIntro;
     private RatingBar ratingBar;
-    private String hotelId;
+    private HotelVO hotelVO;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        hotelId = getArguments().getString("hotelId");
+        hotelVO =(HotelVO) getArguments().getSerializable("hotelVO");
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
 
@@ -83,28 +83,25 @@ public class HotelInfoFragment extends Fragment implements Serializable {
     private void showHotelInfo() {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/hotel.do";
-            String id = hotelId;
-            HotelVO hotel = null;
+            String id = hotelVO.getHotelId();
+            int imageSize = 250;
             try {
-                hotel = new HotelGetOneTask().execute(url, id).get();
-
-//                byte[] pic =hotel.getHotelCoverPic();
-
+                new HotelGetImageTask(ivHotelBig).execute(url, id, imageSize);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-            if (hotel == null) {
+            if (hotelVO == null) {
                 Util.showToast(getActivity(), "No hotel fonnd");
             } else {
-
-                tvHotelName.setText(hotel.getHotelName());
-                tvHotelCity.setText(hotel.getHotelCity());
-                tvHotelCounty.setText(hotel.getHotelCounty());
-                tvHotelPhone.setText(hotel.getHotelPhone());
-                tvHotelRoad.setText(hotel.getHotelRoad());
-                tvHotelIntro.setText(hotel.getHotelIntro());
-                ratingBar.setNumStars(hotel.getHotelRatingResult());
+                tvHotelName.setText(hotelVO.getHotelName());
+                tvHotelCity.setText(hotelVO.getHotelCity());
+                tvHotelCounty.setText(hotelVO.getHotelCounty());
+                tvHotelPhone.setText(hotelVO.getHotelPhone());
+                tvHotelRoad.setText(hotelVO.getHotelRoad());
+                tvHotelIntro.setText(hotelVO.getHotelIntro());
+                ratingBar.setNumStars(hotelVO.getHotelRatingResult());
             }
+
 //            if(bitmap == null){
 //                Util.showToast(getActivity(), "No image fonnd");
 //            }else{
@@ -117,7 +114,7 @@ public class HotelInfoFragment extends Fragment implements Serializable {
     private void showRoomInfo() {
         if(Common.networkConnected(getActivity())){
             String url = Common.URL + "/android/room.do";
-            String id = hotelId;
+            String id = hotelVO.getHotelId();
             List<RoomVO> room = null;
             try{
                 room = new RoomGetAllTask().execute(url, id).get();

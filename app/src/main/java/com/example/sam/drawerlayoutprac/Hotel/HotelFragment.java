@@ -97,12 +97,12 @@ public class HotelFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(SpotAdapter.MyViewHolder holder, int position) {
-            HotelVO myHotel = myListSpot.get(position);
-            final String HotelId = myHotel.getHotelId();
+            final HotelVO hotelVO = myListSpot.get(position);
+            final String HotelId = hotelVO.getHotelId();
             String url = Common.URL + "/android/hotel.do";
             int imageSize = 250;
             new HotelGetImageTask(holder.ivImage).execute(url, HotelId, imageSize);
-            holder.tvHotel.setText(myHotel.getHotelName());
+            holder.tvHotel.setText(hotelVO.getHotelName());
 //            holder.tvPrice.setText(Integer.toString(mySpot.getPrice()) + "$");
             holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -110,7 +110,7 @@ public class HotelFragment extends Fragment {
                 public void onClick(View view) {
                     Fragment fragment = new HotelInfoFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("hotelId", HotelId);
+                    bundle.putSerializable("hotelVO", hotelVO);
                     fragment.setArguments(bundle);
                     Util.switchFragment(HotelFragment.this, fragment);
                 }
