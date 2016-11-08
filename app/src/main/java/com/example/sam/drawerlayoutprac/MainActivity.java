@@ -78,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment = null;
                 switch (item.getItemId()){
                     case R.id.lookfor_hotel:
-                        showToast("hotel clicked");
+                        //showToast("hotel clicked");
                         fragment = new HotelFragment();
                         Util.switchFragment(MainActivity.this,fragment);
                         break;
                     case R.id.lookfor_partner:
-                        showToast("partner clicked");
+                        //showToast("partner clicked");
                         fragment = new PartnerFragment();
                         Util.switchFragment(MainActivity.this,fragment);
                         break;

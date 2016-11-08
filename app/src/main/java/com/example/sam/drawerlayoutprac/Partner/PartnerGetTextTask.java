@@ -107,7 +107,7 @@ public class PartnerGetTextTask extends AsyncTask<String, Void, List<MemVO>> {
         connection.setRequestProperty("charset", "UTF-8");
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
         bw.write(jsonOut); // 塞入請求參數
-        Log.d(TAG, "jsonOut: " + jsonOut);
+        //Log.d(TAG, "jsonOut: " + jsonOut);
         bw.close(); // 送出request
 
         int responseCode = connection.getResponseCode();
@@ -123,7 +123,7 @@ public class PartnerGetTextTask extends AsyncTask<String, Void, List<MemVO>> {
             Log.d(TAG, "response code: " + responseCode);
         }
         connection.disconnect();
-        Log.d(TAG, "jsonIn: " + jsonIn);
+        //(TAG, "jsonIn: " + jsonIn);
         return jsonIn.toString();
     }
 }

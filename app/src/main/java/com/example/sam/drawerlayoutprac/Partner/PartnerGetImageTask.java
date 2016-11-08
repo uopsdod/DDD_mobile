@@ -80,7 +80,7 @@ public class PartnerGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
         connection.setRequestMethod("POST");
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
         bw.write(jsonOut);
-        Log.d(TAG, "jsonOut: " + jsonOut);
+        //Log.d(TAG, "jsonOut: " + jsonOut);
         bw.close();
 
         int responseCode = connection.getResponseCode();
