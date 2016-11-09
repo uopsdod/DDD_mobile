@@ -51,11 +51,9 @@ import io.codetail.animation.ViewAnimationUtils;
  * Created by cuser on 2016/10/9.
  */
 public class PartnerFragment extends Fragment {
-
     private final static String TAG = "SearchActivity";
+    public static String URL_Partner = Common.URL + "/android/live2/partner.do";
 
-    private ProgressDialog progressDialog;
-    AsyncTask retrievePartnerTask;
     ListView listview;
 
     //進入個人詳細頁面動畫屬性
@@ -175,7 +173,7 @@ public class PartnerFragment extends Fragment {
         List<MemVO> memVOList = null;
         if (Common.networkConnected(getActivity())) {
             // send request to server and get the response - 重點在new這個動作
-            String url = Common.URL + "/live2/Partner";
+            String url = PartnerFragment.URL_Partner;
             Log.d("url", url);
             try {
                 memVOList = (List<MemVO>) new PartnerGetTextTask(getContext(), this.listview).execute(url).get();
@@ -271,7 +269,7 @@ public class PartnerFragment extends Fragment {
         ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_reveal_avatar);
         ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_avatar);
         String memId = (String) item.get(PartnerListAdapter.KEY_MEMID);
-        String url = Common.URL + "/live2/Partner";
+        String url = PartnerFragment.URL_Partner;
         int imageSize = 250;
         new PartnerGetImageTask(profileImg).execute(url, memId, imageSize);
         new PartnerGetImageTask(profileOverlay).execute(url, memId, imageSize);

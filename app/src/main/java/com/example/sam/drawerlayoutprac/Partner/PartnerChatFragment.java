@@ -1,5 +1,6 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Util;
 import com.yalantis.euclid.library.EuclidState;
 
 /**
@@ -21,6 +23,9 @@ public class PartnerChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
         View view = inflater.inflate(R.layout.chat_containers, viewGroup, false);
+        SharedPreferences preferences_r = getActivity().getSharedPreferences("preferences_yo", getContext().MODE_PRIVATE);
+        String memid_yo = preferences_r.getString("memId_yo","no memId found");
+        Util.showToast(getActivity().getApplicationContext(),"current memid_yo:  " + memid_yo);
         return view;
     }// end of onCreateView
 

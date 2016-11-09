@@ -1,7 +1,6 @@
 package com.example.sam.drawerlayoutprac;
 
-import android.*;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,15 +13,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
-import com.example.sam.drawerlayoutprac.Partner.EuclidTest;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.example.sam.drawerlayoutprac.Partner.TestFragment;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -108,8 +108,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.test_yo:
-                        Intent intent = new Intent(getApplication(),EuclidTest.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent(getApplication(),EuclidTest.class);
+//                        startActivity(intent);
+                        fragment = new TestFragment();
+                        Util.switchFragment(MainActivity.this, fragment);
                         break;
 
                 }
@@ -204,5 +206,24 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    // 以下為測試
+    public void testFragmentClicked(View view){
+        LinearLayout linearLayout = (LinearLayout)view.getParent();
+        EditText editText = (EditText)linearLayout.findViewById(R.id.memId_yo);
+//        Util.showToast(getApplicationContext(),"testFragmentClicked:  " + editText.getText().toString());
+        // 把假memId放入preferences_yo
+        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
+        preferences_w.edit()
+                   .putString("memId_yo",editText.getText().toString())
+                   .apply();
+
+        // 從preferences_yo讀取假memId
+        SharedPreferences preferences_r = getSharedPreferences("preferences_yo", MODE_PRIVATE);
+        String memid_yo = preferences_r.getString("memId_yo","no memId found");
+        Util.showToast(getApplicationContext(),"memid_yo:  " + memid_yo);
+
+
     }
 }
