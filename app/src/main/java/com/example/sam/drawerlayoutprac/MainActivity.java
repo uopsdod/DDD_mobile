@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.Partner.EuclidTest;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,12 +43,13 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         setSupportActionBar(myToolbar);
 
-
         // button-step1
         setUpActionBar();
 
         initDrawer();
         inigDrawerBody();
+
+        // fcm testing;
     }
 
     @Override
