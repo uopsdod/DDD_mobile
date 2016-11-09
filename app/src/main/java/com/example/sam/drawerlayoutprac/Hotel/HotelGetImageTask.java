@@ -21,6 +21,7 @@ public class HotelGetImageTask extends AsyncTask<Object /*傳進來的參數*/, 
     private String TAG = "HotelGetImageTask";
     private String ACTION = "getImage";
     private WeakReference<ImageView> imageViewWeakReference;
+    float aFloat;
 
     HotelGetImageTask(ImageView imageView){
         this.imageViewWeakReference = new WeakReference<>(imageView);
@@ -51,6 +52,7 @@ public class HotelGetImageTask extends AsyncTask<Object /*傳進來的參數*/, 
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
+        aFloat = (float) 0.5;
         if (isCancelled()) {
             bitmap = null;
         }
@@ -58,9 +60,11 @@ public class HotelGetImageTask extends AsyncTask<Object /*傳進來的參數*/, 
         if (imageView != null) {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
+                imageView.setAlpha(aFloat);  // 設定圖片透明度 (float)
             } else {
                 imageView.setImageResource(R.drawable.search);
             }
+
         }
         super.onPostExecute(bitmap);
     }
