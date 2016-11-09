@@ -1,8 +1,11 @@
 package com.example.sam.drawerlayoutprac;
 
+import android.*;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +21,9 @@ import android.widget.Toast;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.Partner.EuclidTest;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         // button-step3
         actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        askPermissions();
     }
 
     @Override
@@ -145,4 +157,49 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+
+
+
+    private void askPermissions() {
+        String[] permissions = {
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+
+        Set<String> permissionsRequest = new HashSet<>();
+        for (String permission : permissions) {
+            int result = ContextCompat.checkSelfPermission(this, permission);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                permissionsRequest.add(permission);
+            }
+        }
+
+        if (!permissionsRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    permissionsRequest.toArray(new String[permissionsRequest.size()]),
+                    REQ_PERMISSIONS);
+        }
+    }
+
+    private static final int REQ_PERMISSIONS = 0;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQ_PERMISSIONS:
+                String text = "";
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        text += permissions[i] + "\n";
+                    }
+                }
+                if (!text.isEmpty()) {
+                    text += "text_NotGranted";
+                    Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
 }

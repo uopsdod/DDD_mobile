@@ -1,11 +1,14 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -52,14 +55,14 @@ public class PartnerMapFragment extends Fragment {
         mMapView.onResume(); // needed to get the map to display immediately
 
         // 設定floatingBtn click lisner - 讓它返回到上一個Fragment
-        LinearLayout ll_view = (LinearLayout)container.getParent();
-        CoordinatorLayout cdl_view = (CoordinatorLayout)ll_view.getParent();
-        FloatingActionButton floatingBtn = (FloatingActionButton)cdl_view.findViewById(R.id.floatingBtn);
+        LinearLayout ll_view = (LinearLayout) container.getParent();
+        CoordinatorLayout cdl_view = (CoordinatorLayout) ll_view.getParent();
+        FloatingActionButton floatingBtn = (FloatingActionButton) cdl_view.findViewById(R.id.floatingBtn);
 
         floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.showToast(getContext(),"ftBtn clicked");
+                Util.showToast(getContext(), "ftBtn clicked");
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.popBackStack();
             }
@@ -83,6 +86,12 @@ public class PartnerMapFragment extends Fragment {
                 // set up floatingBtn click Listener
 
                 // For showing a move to my location button
+                if (ActivityCompat.checkSelfPermission(
+                        getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
                 googleMap.setMyLocationEnabled(true);
 
                 // For dropping a marker at a point on the Map
