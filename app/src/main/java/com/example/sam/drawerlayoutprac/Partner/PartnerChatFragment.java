@@ -80,7 +80,11 @@ public class PartnerChatFragment extends Fragment {
                     Util.showToast(getContext(), "message is empty.");
                     return;
                 }
+                SharedPreferences preferences_r = getActivity().getSharedPreferences("preferences_yo",getActivity().MODE_PRIVATE);
+                String memid_yo = preferences_r.getString("memId_yo", null);
                 Map<String, String> map = new HashMap<>();
+                map.put("action", "chat");
+                map.put("memId", memid_yo);
                 map.put(KEY_USER_NAME, USER_NAME);
                 map.put(KEY_MESSAGE, newMsg);
                 if (myWebSocketClient != null) {
