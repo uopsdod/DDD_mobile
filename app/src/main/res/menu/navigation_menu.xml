@@ -35,7 +35,7 @@
         <item
             android:id="@+id/test_yo"
             android:icon="@drawable/info"
-            android:title="測試業面_柚" />
+            android:title="測試頁面_柚" />
 
     </group>
 </menu>

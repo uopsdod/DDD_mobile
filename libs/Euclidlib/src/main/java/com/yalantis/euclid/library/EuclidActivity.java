@@ -65,7 +65,7 @@ public abstract class EuclidActivity extends Activity {
     private ViewAnimator mListViewAnimator;
 
     private View mOverlayListItemView;
-    private EuclidState mState = EuclidState.Closed;
+    private EuclidState mState = EuclidState.ProfilePageClosed;
 
     private float mInitialProfileButtonX;
 
@@ -117,7 +117,7 @@ public abstract class EuclidActivity extends Activity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mState = EuclidState.Opening;
+                mState = EuclidState.ProfilePageOpening;
                 showProfileDetails((Map<String, Object>) parent.getItemAtPosition(position), view);
             }
         });
@@ -347,7 +347,7 @@ public abstract class EuclidActivity extends Activity {
             public void onAnimationEnd(Animator animation) {
                 mButtonProfile.startAnimation(mProfileButtonShowAnimation);
 
-                mState = EuclidState.Opened;
+                mState = EuclidState.ProfilePageOpened;
             }
 
             @Override
@@ -380,7 +380,7 @@ public abstract class EuclidActivity extends Activity {
      * and profile details views.
      */
     private void animateCloseProfileDetails() {
-        mState = EuclidState.Closing;
+        mState = EuclidState.ProfilePageClosing;
         getCloseProfileAnimatorSet().start();
     }
 
@@ -436,7 +436,7 @@ public abstract class EuclidActivity extends Activity {
                     mListView.setEnabled(true);
                     mListViewAnimator.disableAnimations();
 
-                    mState = EuclidState.Closed;
+                    mState = EuclidState.ProfilePageClosed;
                 }
 
                 @Override
@@ -479,9 +479,9 @@ public abstract class EuclidActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (getState() == EuclidState.Opened) {
+        if (getState() == EuclidState.ProfilePageOpened) {
             animateCloseProfileDetails();
-        } else if (getState() == EuclidState.Closed) {
+        } else if (getState() == EuclidState.ProfilePageClosed) {
             super.onBackPressed();
         }
     }

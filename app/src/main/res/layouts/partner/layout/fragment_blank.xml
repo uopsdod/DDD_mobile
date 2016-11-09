@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:context="com.example.sam.drawerlayoutprac.Partner.TestFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/memId_yo"
+        android:textSize="30sp"
+        android:layout_gravity="center_vertical"
+        android:hint="輸入會員Id" />
+    <Button
+        android:id="@+id/btn_test_yo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="存入preference"
+        android:onClick="testFragmentClicked"
+        />
+
+</LinearLayout>
