@@ -16,6 +16,7 @@
 
 package com.example.sam.drawerlayoutprac.Partner;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,7 +26,6 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
-
     private static final String TAG = "MyFirebaseIIDService";
 
     /**
@@ -39,7 +39,10 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
-
+        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
+        preferences_w.edit()
+                .putString("tokenId",refreshedToken)
+                .apply();
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
@@ -58,7 +61,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
         // Get token
-        String myToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("fcm - token", myToken);
+//        String myToken = FirebaseInstanceId.getInstance().getToken();
+//        Log.d("fcm - token", myToken);
     }
 }

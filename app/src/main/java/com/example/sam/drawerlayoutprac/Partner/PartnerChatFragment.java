@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class PartnerChatFragment extends Fragment {
     public static final String TAG = "WebSocket Chat - ";
-    private static final String URL_Chatroom = "ws://10.0.2.2:8081/DDD_web/android/live2/Chatroom";
+    public static final String URL_Chatroom = "ws://10.0.2.2:8081/DDD_web/android/live2/MsgCenter";
 
     private static final String USER_NAME = "會員一號";
     private static final String KEY_USER_NAME = "userName";
@@ -113,7 +113,7 @@ public class PartnerChatFragment extends Fragment {
     }
 
 
-    class MyWebSocketClient extends WebSocketClient {
+    public class MyWebSocketClient extends WebSocketClient {
 
         public MyWebSocketClient(URI serverURI) {
             super(serverURI, new Draft_17());
