@@ -284,7 +284,7 @@ public class PartnerFragment extends Fragment {
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.topMargin = view.getTop() + mToolbar.getHeight();
-        params.bottomMargin = -(view.getBottom() - listview.getHeight());
+        params.bottomMargin = (listview.getHeight() - view.getBottom());
         mWrapper.addView(mOverlayListItemView, params);
         mToolbar.bringToFront();
     }
@@ -367,18 +367,15 @@ public class PartnerFragment extends Fragment {
                 @Override
                 public void onAnimationStart(Animation animation) {
                     mButtonProfile.setVisibility(View.VISIBLE);
-                    Log.d("mButtonProfile","mButtonProfile - onAnimationStart - set VISIBLE 01");
+                    //Log.d("mButtonProfile","mButtonProfile - onAnimationStart - set VISIBLE");
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    mButtonProfile.setVisibility(View.VISIBLE);
-                    Log.d("mButtonProfile","mButtonProfile - onAnimationEnd - set VISIBLE");
                 }
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
         }
@@ -418,20 +415,24 @@ public class PartnerFragment extends Fragment {
 
                 mButtonProfile.setX(mInitialProfileButtonX);
                 mButtonProfile.bringToFront();
-                Log.d("mButtonProfile","mButtonProfile - bringToFront");
+                //Log.d("mButtonProfile","mButtonProfile - bringToFront");
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                // 關鍵-解決點第一個人->進入聊天室窗->按下返回鍵後訊息小圓圈不見的bug
+                mButtonProfile.setX(883.0f);
+                // end of 關鍵-解決點第一個人->進入聊天室窗->按下返回鍵後訊息小圓圈不見的bug
                 mButtonProfile.startAnimation(mProfileButtonShowAnimation);
-                Log.d("mButtonProfile","mButtonProfile - startAnimation");
+//                Log.d("mButtonProfile","mButtonProfile - startAnimation");
+//                Log.d("mButtonProfile - X: ", Float.toString(mButtonProfile.getX()));
+//                Log.d("mButtonProfile - Y: ", Float.toString(mButtonProfile.getY()));
 
                 mState = EuclidState.ProfilePageOpened;
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
             }
 
             @Override
@@ -501,10 +502,6 @@ public class PartnerFragment extends Fragment {
 
                         return true;
                     }
-//                    else if (getState() == EuclidState.ProfilePageClosed) {
-//                        Util.showToast(getContext(),"ProfilePageClosed");
-//                        this.onKey(v, keyCode, event);
-//                    }
                 }
                 return false;
             }
@@ -518,7 +515,7 @@ public class PartnerFragment extends Fragment {
 
     // closing動畫03
     private void animateCloseProfileDetails() {
-        Log.d("method - ", "animateCloseProfileDetails");
+//        Log.d("method - ", "animateCloseProfileDetails");
         mState = EuclidState.ProfilePageClosing;
         getCloseProfileAnimatorSet().start();
     }
@@ -529,7 +526,7 @@ public class PartnerFragment extends Fragment {
         mCloseProfileAnimatorSet = null;
         // end of 處理聊天訊息回來畫面
         if (mCloseProfileAnimatorSet == null) {
-            Log.d("method - ", "getCloseProfileAnimatorSet");
+//            Log.d("method - ", "getCloseProfileAnimatorSet");
             Animator profileToolbarAnimator = ObjectAnimator.ofFloat(mToolbarProfile, View.X,
                     0, mToolbarProfile.getWidth());
 
@@ -539,7 +536,7 @@ public class PartnerFragment extends Fragment {
 
             Animator profileButtonAnimator = ObjectAnimator.ofFloat(mButtonProfile, View.X,
                     mInitialProfileButtonX, mOverlayListItemView.getWidth() + mInitialProfileButtonX);
-            Log.d("mButtonProfile","mButtonProfile - ObjectAnimator.ofFloat");
+//            Log.d("mButtonProfile","mButtonProfile - ObjectAnimator.ofFloat");
             profileButtonAnimator.setStartDelay(getStepDelayHideDetailsAnimation() * 2);
 
             Animator profileDetailsAnimator = ObjectAnimator.ofFloat(mProfileDetails, View.X,
