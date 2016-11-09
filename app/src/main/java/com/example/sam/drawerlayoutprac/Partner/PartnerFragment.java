@@ -264,6 +264,7 @@ public class PartnerFragment extends Fragment {
         } else {
             // 此狀況是給一般正常狀況用的(非從聊天訊息回來的): 列表與個人頁面間的切換
             mWrapper.removeView(mOverlayListItemView);
+            mOverlayListItemView = getActivity().getLayoutInflater().inflate(R.layout.overlay_list_item_partner, mWrapper, false);
         }
         mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.view_avatar_overlay).setBackground(buildAvatarCircleOverlay());
         // 建立新的Thread去DB抓圖片
