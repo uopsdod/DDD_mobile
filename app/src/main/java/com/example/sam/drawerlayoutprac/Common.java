@@ -14,7 +14,7 @@ public class Common {
     //public static String URL = "http://10.0.2.2:8081/TextToJson_Web/SearchServlet";
     //public final static String URL = "http://10.0.2.2:8081/TextToJson_Web/Partner";
     public final static String URL = "http://10.0.2.2:8081/DDD_web";
-
+    public final static String PREF_FILE = "preference";
 
     public static boolean networkConnected(Activity activity) {
         ConnectivityManager conManager =

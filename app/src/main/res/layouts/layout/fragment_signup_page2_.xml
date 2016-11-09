@@ -11,82 +11,82 @@
     android:gravity="center"
     >
 
-    <ImageView
-        android:id="@+id/ivLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="120dp"
-        android:src="@drawable/logo01" />
 
-    <ImageView
-        android:id="@+id/ivPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivLogo"
-        android:src="@drawable/member_hotel"
-        />
+
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilUserName"
+        android:id="@+id/tilName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivPhoto">
+        android:layout_below="@+id/btChangePhoto">
         <EditText
-            android:id="@+id/etUserName"
+            android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:hint="@string/UserName"
+            android:hint="Name"
             android:textAlignment="center" />
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilPassword"
+    <RadioGroup
+        android:id="@+id/rgGender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tilUserName">
+        android:orientation="horizontal"
+        android:layout_below="@id/tilName">
+
+        <RadioButton
+            android:id="@+id/rbMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:hint="M"
+            android:textSize="18sp"/>
+
+        <RadioButton
+            android:id="@+id/rbFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:hint="F"
+            android:textSize="18sp"/>
+
+
+    </RadioGroup>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/tilLiveBudget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rgGender">
         <EditText
-            android:id="@+id/etPassword"
+            android:id="@+id/etLiveBudget"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:hint="@string/Password"
+            android:hint="LiveBudget"
             android:textAlignment="center" />
     </android.support.design.widget.TextInputLayout>
+
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilChPassword"
+        android:id="@+id/tilIntro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tilPassword">
+        android:layout_below="@id/tilLiveBudget">
         <EditText
-            android:id="@+id/etChPassword"
+            android:id="@+id/etIntro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:hint="@string/ChPassword"
-            android:textAlignment="center" />
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tilChPassword">
-        <EditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:hint="@string/Email"
+            android:hint="Introduce"
             android:textAlignment="center" />
     </android.support.design.widget.TextInputLayout>
 
@@ -95,7 +95,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tilEmail"
+        android:layout_below="@id/tilIntro"
         android:layout_marginTop="10dp"
         android:gravity="center">
 
@@ -107,5 +107,19 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/ivPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/member_hotel"
+        android:layout_below="@+id/ivLogo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp" />
 
+    <Button
+        android:id="@+id/btChangePhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivPhoto"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
