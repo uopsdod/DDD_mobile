@@ -78,9 +78,11 @@ public class HotelFragment extends Fragment {
             // 把拿到的到個view的資料一個個存好成實體變數
             public MyViewHolder(View itemView) {
                 super(itemView); // 必須使用這個父建構式，因為RecyclerView.ViewHolder沒有空參數的建構式 - 用父類別的實體變數來指向這個View物件,第90行會用到
+                float f = (float) 0.6;
                 this.ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
                 this.tvHotel = (TextView) itemView.findViewById(R.id.tvHotel);
                 this.tvPrice = (TextView) itemView.findViewById(R.id.tvPrice);
+                this.ivImage.setAlpha(f); // 設定圖片透明度 (float)
             }
         }
 
