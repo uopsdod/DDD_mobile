@@ -39,7 +39,7 @@ public class PartnerChatFragment extends Fragment {
     public static final String URL_Chatroom = "ws://10.0.2.2:8081/DDD_web/android/live2/MsgCenter";
 
     private static final String USER_NAME = "會員一號";
-    private static final String KEY_USER_NAME = "userName";
+    private static final String KEY_MEMID = "memId";
     private static final String KEY_MESSAGE = "message";
     private MyWebSocketClient myWebSocketClient;
 
@@ -68,8 +68,15 @@ public class PartnerChatFragment extends Fragment {
         } catch (URISyntaxException e) {
             Log.e(TAG, e.toString());
         }
-        this.myWebSocketClient = new MyWebSocketClient(uri);
+        SharedPreferences preferences_r = getActivity().getSharedPreferences("preferences_yo",getActivity().MODE_PRIVATE);
+        String memid_yo = preferences_r.getString("memId_yo", null);
+        String action = "bindMemIdWithSession";
+        Map<String, String> map = new HashMap<>();
+        map.put("action", action);
+        map.put("memId", memid_yo);
+        this.myWebSocketClient = new MyWebSocketClient(uri, map);
         this.myWebSocketClient.connect();
+
         // end of 建立Websocket連線
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +92,7 @@ public class PartnerChatFragment extends Fragment {
                 Map<String, String> map = new HashMap<>();
                 map.put("action", "chat");
                 map.put("memId", memid_yo);
-                map.put(KEY_USER_NAME, USER_NAME);
+                map.put(KEY_MEMID, USER_NAME);
                 map.put(KEY_MESSAGE, newMsg);
                 if (myWebSocketClient != null) {
                     myWebSocketClient.send(new JSONObject(map).toString());
@@ -93,11 +100,10 @@ public class PartnerChatFragment extends Fragment {
             }
         });
 
-        SharedPreferences preferences_r = getActivity().getSharedPreferences("preferences_yo", getContext().MODE_PRIVATE);
-        String memid_yo = preferences_r.getString("memId_yo", "no memId found");
         Util.showToast(getActivity().getApplicationContext(), "current memid_yo:  " + memid_yo);
         return this.rootView;
     }// end of onCreateView
+
 
 
     private void backBtnPressed() {
@@ -110,6 +116,9 @@ public class PartnerChatFragment extends Fragment {
                     //Util.showToast(getContext(),"backBtnPressed");
                     FragmentManager fm = PartnerChatFragment.this.getFragmentManager();
                     fm.popBackStack();
+                    // close websocket
+                    PartnerChatFragment.this.myWebSocketClient.close();
+                    Log.d(PartnerChatFragment.TAG,"myWebSocketClient is closed");
                 }
                 return true;
             }
@@ -118,14 +127,19 @@ public class PartnerChatFragment extends Fragment {
 
 
     public class MyWebSocketClient extends WebSocketClient {
+        Map<String, String> dataMap;
 
-        public MyWebSocketClient(URI serverURI) {
+        public MyWebSocketClient(URI serverURI, Map<String, String> aDataMap) {
             super(serverURI, new Draft_17());
+            this.dataMap = aDataMap;
         }
 
         @Override
         public void onOpen(ServerHandshake handshakedata) {
             Log.d(TAG, "onOpen: handshakedata.toString() = " + handshakedata.toString());
+            if (myWebSocketClient != null) {
+                myWebSocketClient.send(new JSONObject(this.dataMap).toString());
+            }
         }
 
         @Override
@@ -136,12 +150,10 @@ public class PartnerChatFragment extends Fragment {
                 public void run() {
                     try {
                         JSONObject jsonObject = new JSONObject(message);
-                        String userName = jsonObject.get(KEY_USER_NAME).toString();
+                        String userName = jsonObject.get(KEY_MEMID).toString();
                         String message = jsonObject.get(KEY_MESSAGE).toString();
                         String text = userName + ": " + message + "\n";
                         Log.d(TAG, text);
-//                        tvMessage.append(text);
-//                        scrollView.fullScroll(View.FOCUS_DOWN);
                     } catch (JSONException e) {
                         Log.e(TAG, e.toString());
                     }

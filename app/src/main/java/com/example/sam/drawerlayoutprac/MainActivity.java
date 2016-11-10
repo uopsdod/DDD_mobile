@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         // toolbar   setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setBackgroundColor( ContextCompat.getColor(this, R.color.sub1_color));
+        myToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.sub1_color));
         myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         setSupportActionBar(myToolbar);
 
@@ -66,44 +66,37 @@ public class MainActivity extends AppCompatActivity {
         inigDrawerBody();
 
         // fcm testing;
-        SharedPreferences preferences_r = getSharedPreferences("preferences_yo",MODE_PRIVATE);
-        String memid_yo = null;
-        String tokenId = null;
-        if (preferences_r != null){
-            memid_yo = preferences_r.getString("memId_yo", null);
-            tokenId = preferences_r.getString("tokenId", null);
-        }
         // 狀況一(在這邊處理): 確定有登入 + 已有tokenId
         // 狀況二(在登入後處理)：尚未登入 + 已有tokenId
         // 狀況三(在FirebaseInstanceIdService::onTokenRefresed()方法中處理)：尚未登入 + tokenId還在更新中
-        if (memid_yo != null && tokenId != null){
+        SharedPreferences preferences_r = getSharedPreferences("preferences_yo", MODE_PRIVATE);
+        String memid_yo = null;
+        String tokenId = null;
+        if (preferences_r != null) {
+            memid_yo = preferences_r.getString("memId_yo", null);
+            tokenId = preferences_r.getString("tokenId", null);
+        }
+        if (memid_yo != null && tokenId != null) {
             URI uri = null;
             try {
                 uri = new URI(PartnerChatFragment.URL_Chatroom);
             } catch (URISyntaxException e) {
                 Log.e(PartnerChatFragment.TAG, e.toString());
             }
-            this.webSocketClientTmp = new TmpWebSocketClient(uri);
+            Map<String, String> dataMap = new HashMap<>();
+            dataMap.put("action", "uploadTokenId");
+            dataMap.put("tokenId", tokenId);
+            dataMap.put("memId", memid_yo);
+            this.webSocketClientTmp = new TmpWebSocketClient(uri, dataMap);
             this.webSocketClientTmp.connect();
         }
     }
 
     @Override
-    public void onPostCreate(Bundle savedInstanceState){
+    public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // button-step3
         actionBarDrawerToggle.syncState();
-        if (webSocketClientTmp != null) {
-            Map<String, String> map = new HashMap<>();
-            SharedPreferences preferences_r = getSharedPreferences("preferences_yo",MODE_PRIVATE);
-            String memid_yo = preferences_r.getString("memId_yo", null);
-            // Get token
-            String token = FirebaseInstanceId.getInstance().getToken();
-            map.put("action", "uploadTokenId");
-            map.put("tokenId", token);
-            map.put("memId", memid_yo);
-            webSocketClientTmp.send(new JSONObject(map).toString());
-        }
     }
 
     @Override
@@ -123,15 +116,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpActionBar() {
         ActionBar actionbar = getSupportActionBar();
-        if (actionbar != null){
+        if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
 
-    private void initDrawer(){
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView)drawerLayout.findViewById(R.id.navigation_view);
+    private void initDrawer() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.navigation_view);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -139,16 +132,16 @@ public class MainActivity extends AppCompatActivity {
                 item.setChecked(true);
                 drawerLayout.closeDrawers(); // important step
                 Fragment fragment = null;
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.lookfor_hotel:
                         //showToast("hotel clicked");
                         fragment = new HotelFragment();
-                        Util.switchFragment(MainActivity.this,fragment);
+                        Util.switchFragment(MainActivity.this, fragment);
                         break;
                     case R.id.lookfor_partner:
                         //showToast("partner clicked");
                         fragment = new PartnerFragment();
-                        Util.switchFragment(MainActivity.this,fragment);
+                        Util.switchFragment(MainActivity.this, fragment);
                         break;
                     case R.id.my_member:
                         fragment = new MemberFragment();
@@ -177,40 +170,38 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        NavigationView navigationView = (NavigationView)drawerLayout.findViewById(R.id.navigation_view);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.navigation_view);
 
         // button-step4
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home: // for home button at the top left corner
-            if (drawerLayout.isDrawerOpen(navigationView)){
-                drawerLayout.closeDrawer(navigationView);
-            }else {
-                drawerLayout.openDrawer(navigationView);
-            }
+                if (drawerLayout.isDrawerOpen(navigationView)) {
+                    drawerLayout.closeDrawer(navigationView);
+                } else {
+                    drawerLayout.openDrawer(navigationView);
+                }
 //            if (drawerLayout.isDrawerOpen(GravityCompat.START)){
 //                drawerLayout.closeDrawer(GravityCompat.START);
 //            }else {
 //                drawerLayout.openDrawer(GravityCompat.START);
 //            }
-            return true;
+                return true;
         }
         return onOptionsItemSelected(item);
     }
 
     private void inigDrawerBody() {
         Fragment fragment = new HotelFragment();
-        Util.switchFragment(MainActivity.this,fragment);
+        Util.switchFragment(MainActivity.this, fragment);
     }
 
-    private void showToast(String msg){
+    private void showToast(String msg) {
         Toast.makeText(getApplicationContext(),
                 msg,
                 Toast.LENGTH_SHORT)
                 .show();
     }
-
-
 
 
     private void askPermissions() {
@@ -257,32 +248,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 以下為測試
-    public void testFragmentClicked(View view){
-        LinearLayout linearLayout = (LinearLayout)view.getParent();
-        EditText editText = (EditText)linearLayout.findViewById(R.id.memId_yo);
+    public void testFragmentClicked(View view) {
+        LinearLayout linearLayout = (LinearLayout) view.getParent();
+        EditText editText = (EditText) linearLayout.findViewById(R.id.memId_yo);
 //        Util.showToast(getApplicationContext(),"testFragmentClicked:  " + editText.getText().toString());
         // 把假memId放入preferences_yo
         SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
         preferences_w.edit()
-                   .putString("memId_yo",editText.getText().toString())
-                   .apply();
+                .putString("memId_yo", editText.getText().toString())
+                .apply();
 
         // 從preferences_yo讀取假memId
         SharedPreferences preferences_r = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-        String memid_yo = preferences_r.getString("memId_yo","no memId found");
-        Util.showToast(getApplicationContext(),"memid_yo:  " + memid_yo);
+        String memid_yo = preferences_r.getString("memId_yo", "no memId found");
+        Util.showToast(getApplicationContext(), "memid_yo:  " + memid_yo);
 
 
     }
 
     public class TmpWebSocketClient extends WebSocketClient {
-        public TmpWebSocketClient(URI serverURI) {
-            super(serverURI,new Draft_17());
+        Map<String, String> dataMap;
+
+        public TmpWebSocketClient(URI serverURI, Map<String, String> aDataMap) {
+            super(serverURI, new Draft_17());
+            this.dataMap = aDataMap;
         }
 
         @Override
         public void onOpen(ServerHandshake handshakedata) {
-
+            webSocketClientTmp.send(new JSONObject(this.dataMap).toString());
         }
 
         @Override
