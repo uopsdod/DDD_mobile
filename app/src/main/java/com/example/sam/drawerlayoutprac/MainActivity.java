@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
             String memid_yo = preferences_r.getString("memId_yo", null);
             // Get token
             String token = FirebaseInstanceId.getInstance().getToken();
+            map.put("action", "uploadTokenId");
             map.put("tokenId", token);
-            map.put("action", "tokenId");
-            map.put(memid_yo, "myTokenId");
+            map.put("memId", memid_yo);
             webSocketClientTmp.send(new JSONObject(map).toString());
         }
     }
