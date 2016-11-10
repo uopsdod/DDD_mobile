@@ -60,7 +60,7 @@ public class HotelGetImageTask extends AsyncTask<Object /*傳進來的參數*/, 
         if (imageView != null) {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
-                imageView.setAlpha(aFloat);  // 設定圖片透明度 (float)
+//                imageView.setAlpha(aFloat);  // 設定圖片透明度 (float)
             } else {
                 imageView.setImageResource(R.drawable.search);
             }
