@@ -74,8 +74,9 @@ public class PartnerChatFragment extends Fragment {
 
         // 建立Websocket連線 - bindMemIdWithSession
         myWebSocketClient = new TokenIdWebSocket(getContext()).bindMemIdWithSession();
-
         // end of 建立Websocket連線
+
+        // 設定send監聽器
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,9 +90,9 @@ public class PartnerChatFragment extends Fragment {
                 String memid = preferences_r.getString("memId", null);
                 PartnerMsg partnerMsg = new PartnerMsg();
                 partnerMsg.setAction("chat");
-                partnerMsg.setFromMemId(memid);
+                partnerMsg.setMemChatMemId(memid);
                 partnerMsg.setToMemId(PartnerChatFragment.this.toMemId);
-                partnerMsg.setMessage(newMsg);
+                partnerMsg.setMemChatContent(newMsg);
 
                 if (myWebSocketClient != null) {
                     Gson gson = new Gson();
@@ -100,8 +101,6 @@ public class PartnerChatFragment extends Fragment {
                 }
             }
         });
-
-        //Util.showToast(getActivity().getApplicationContext(), "current memid:  " + memid);
         return this.rootView;
     }// end of onCreateView
 
@@ -125,56 +124,4 @@ public class PartnerChatFragment extends Fragment {
             }
         });
     }
-
-
-    public class MyWebSocketClient extends WebSocketClient {
-        Map<String, String> dataMap;
-
-        public MyWebSocketClient(URI serverURI, Map<String, String> aDataMap) {
-            super(serverURI, new Draft_17());
-            this.dataMap = aDataMap;
-        }
-
-        @Override
-        public void onOpen(ServerHandshake handshakedata) {
-            Log.d(TAG, "onOpen: handshakedata.toString() = " + handshakedata.toString());
-            if (myWebSocketClient != null) {
-                myWebSocketClient.send(new JSONObject(this.dataMap).toString());
-            }
-        }
-
-        @Override
-        public void onMessage(final String message) {
-            Log.d(TAG, "onMessage: " + message);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        JSONObject jsonObject = new JSONObject(message);
-                        String userName = jsonObject.get(KEY_MEMID).toString();
-                        String message = jsonObject.get(KEY_MESSAGE).toString();
-                        String text = userName + ": " + message + "\n";
-                        Log.d(TAG, text);
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.toString());
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onClose(int code, String reason, boolean remote) {
-            String text = String.format(Locale.getDefault(),
-                    "code = %d, reason = %s, remote = %b",
-                    code, reason, remote);
-            Log.d(TAG, "onClose: " + text);
-        }
-
-        @Override
-        public void onError(Exception ex) {
-            Log.d(TAG, "onError: exception = " + ex.toString());
-        }
-    }
-
-
 }

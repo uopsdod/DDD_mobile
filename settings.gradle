@@ -1,2 +1,2 @@
-include ':app', ':Euclidlib'
+include ':app', ':Euclidlib', ':commons-beanutils-1.9.3'
 project(':Euclidlib').projectDir = new File('libs/Euclidlib')

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //findViews
-        this.floatingBtn = (FloatingActionButton)findViewById(R.id.floatingBtn);
+        this.floatingBtn = (FloatingActionButton) findViewById(R.id.floatingBtn);
 
         // toolbar  setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -90,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString("memId", fromMemId);
                 fragment.setArguments(bundle);
                 Util.switchFragment(this, fragment);
+                return;
             }
-        }else{
-        // 使用設定預設首頁 - HotelFragment.java
-            inigDrawerBody();
         }
+        // 使用設定預設首頁 - HotelFragment.java
+        inigDrawerBody();
     }
 
     @Override

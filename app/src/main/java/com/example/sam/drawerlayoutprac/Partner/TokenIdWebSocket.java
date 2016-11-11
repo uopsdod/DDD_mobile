@@ -26,6 +26,7 @@ public class TokenIdWebSocket {
 
     Context context;
     URI uri;
+    // List<>
 
     public TokenIdWebSocket(Context aContext) {
         this.context = aContext;
@@ -51,7 +52,7 @@ public class TokenIdWebSocket {
             PartnerMsg partnerMsg = new PartnerMsg();
             partnerMsg.setAction("uploadTokenId");
             partnerMsg.setTokenId(tokenId);
-            partnerMsg.setFromMemId(memId);
+            partnerMsg.setMemChatMemId(memId);
             new MyWebSocketClient(partnerMsg).connect();
         }
     }
@@ -76,7 +77,7 @@ public class TokenIdWebSocket {
             this.uri = uri;
             PartnerMsg partnerMsg = new PartnerMsg();
             partnerMsg.setAction("bindMemIdWithSession");
-            partnerMsg.setFromMemId(memId);
+            partnerMsg.setMemChatMemId(memId);
             tmpWebSocketClient = new MyWebSocketClient(partnerMsg);
             tmpWebSocketClient.connect();
         }
