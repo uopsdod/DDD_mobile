@@ -56,16 +56,6 @@ public class PartnerChatFragment extends Fragment {
     public void onResume() {
         super.onResume();
         backBtnPressed();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
-        super.onCreateView(inflater, viewGroup, bundle);
-        this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
-        this.chatContet = (LinearLayout) this.rootView.findViewById(R.id.chat_contents);
-        this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
-        this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
-
         // 拿toMemId的會員Id
         Bundle myBundle = getArguments();
         this.toMemId = (String)myBundle.get("memId");
@@ -101,9 +91,25 @@ public class PartnerChatFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
+        super.onCreateView(inflater, viewGroup, bundle);
+        this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
+        this.chatContet = (LinearLayout) this.rootView.findViewById(R.id.chat_contents);
+        this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
+        this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
+
         return this.rootView;
     }// end of onCreateView
 
+    @Override
+    public void onPause (){
+        super.onPause();
+        PartnerChatFragment.this.myWebSocketClient.close();
+        Log.d(PartnerChatFragment.TAG," fcm - myWebSocketClient is closed via onPause()");
+    }
 
 
     private void backBtnPressed() {
@@ -113,14 +119,17 @@ public class PartnerChatFragment extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    //Util.showToast(getContext(),"backBtnPressed");
-                    FragmentManager fm = PartnerChatFragment.this.getFragmentManager();
-                    fm.popBackStack();
                     // close websocket
                     PartnerChatFragment.this.myWebSocketClient.close();
-                    Log.d(PartnerChatFragment.TAG,"myWebSocketClient is closed");
-                }
-                return true;
+                    Log.d(PartnerChatFragment.TAG,"myWebSocketClient is closed via back button");
+                    // 回到上一個Fragment或是離開app
+                    FragmentManager fm = PartnerChatFragment.this.getFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0){
+                        fm.popBackStack();
+                        return true;
+                    }
+                }// end if
+                return false;
             }
         });
     }

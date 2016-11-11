@@ -96,6 +96,10 @@ public class TokenIdWebSocket {
         @Override
         public void onOpen(ServerHandshake handshakedata) {
             Gson gson = new Gson();
+            // 再判斷看要不要用
+//            Gson gson = new GsonBuilder()
+//                    .setDateFormat("yyyy-MM-dd hh:mm:ss.S")
+//                    .create();
             String partnerMsgGson = gson.toJson(this.partnerMsg);
             this.send(partnerMsgGson);
             Log.d("TokenIdWebSocket - ", "fcm - sent to Server(" + this.partnerMsg.getAction() + "): " + partnerMsgGson);
