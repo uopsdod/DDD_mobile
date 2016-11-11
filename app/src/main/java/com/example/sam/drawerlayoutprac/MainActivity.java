@@ -2,8 +2,6 @@ package com.example.sam.drawerlayoutprac;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.icu.text.MessagePattern;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -24,16 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
-import com.example.sam.drawerlayoutprac.Partner.MyFirebaseInstanceIDService;
 import com.example.sam.drawerlayoutprac.Partner.PartnerChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_17;
-import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -69,27 +63,7 @@ public class MainActivity extends AppCompatActivity {
         // 狀況一(在這邊處理): 確定有登入 + 已有tokenId
         // 狀況二(在登入後處理)：尚未登入 + 已有tokenId
         // 狀況三(在FirebaseInstanceIdService::onTokenRefresed()方法中處理)：尚未登入 + tokenId還在更新中
-        SharedPreferences preferences_r = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-        String memid_yo = null;
-        String tokenId = null;
-        if (preferences_r != null) {
-            memid_yo = preferences_r.getString("memId_yo", null);
-            tokenId = preferences_r.getString("tokenId", null);
-        }
-        if (memid_yo != null && tokenId != null) {
-            URI uri = null;
-            try {
-                uri = new URI(PartnerChatFragment.URL_Chatroom);
-            } catch (URISyntaxException e) {
-                Log.e(PartnerChatFragment.TAG, e.toString());
-            }
-            Map<String, String> dataMap = new HashMap<>();
-            dataMap.put("action", "uploadTokenId");
-            dataMap.put("tokenId", tokenId);
-            dataMap.put("memId", memid_yo);
-            this.webSocketClientTmp = new TmpWebSocketClient(uri, dataMap);
-            this.webSocketClientTmp.connect();
-        }
+        new TokenIdWebSocket(getApplicationContext()).sendTokenIdToServer();
     }
 
     @Override
@@ -264,35 +238,5 @@ public class MainActivity extends AppCompatActivity {
         Util.showToast(getApplicationContext(), "memid_yo:  " + memid_yo);
 
 
-    }
-
-    public class TmpWebSocketClient extends WebSocketClient {
-        Map<String, String> dataMap;
-
-        public TmpWebSocketClient(URI serverURI, Map<String, String> aDataMap) {
-            super(serverURI, new Draft_17());
-            this.dataMap = aDataMap;
-        }
-
-        @Override
-        public void onOpen(ServerHandshake handshakedata) {
-            webSocketClientTmp.send(new JSONObject(this.dataMap).toString());
-        }
-
-        @Override
-        public void onMessage(String message) {
-            Log.d("fcm - ", "onMessage: " + message);
-            this.close();
-        }
-
-        @Override
-        public void onClose(int code, String reason, boolean remote) {
-
-        }
-
-        @Override
-        public void onError(Exception ex) {
-
-        }
     }
 }
