@@ -68,12 +68,12 @@ public class PartnerChatFragment extends Fragment {
         } catch (URISyntaxException e) {
             Log.e(TAG, e.toString());
         }
-        SharedPreferences preferences_r = getActivity().getSharedPreferences("preferences_yo",getActivity().MODE_PRIVATE);
-        String memid_yo = preferences_r.getString("memId_yo", null);
+        SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,getActivity().MODE_PRIVATE);
+        String memid = preferences_r.getString("memId", null);
         String action = "bindMemIdWithSession";
         Map<String, String> map = new HashMap<>();
         map.put("action", action);
-        map.put("memId", memid_yo);
+        map.put("memId", memid);
         this.myWebSocketClient = new MyWebSocketClient(uri, map);
         this.myWebSocketClient.connect();
 
@@ -87,11 +87,11 @@ public class PartnerChatFragment extends Fragment {
                     Util.showToast(getContext(), "message is empty.");
                     return;
                 }
-                SharedPreferences preferences_r = getActivity().getSharedPreferences("preferences_yo",getActivity().MODE_PRIVATE);
-                String memid_yo = preferences_r.getString("memId_yo", null);
+                SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,getActivity().MODE_PRIVATE);
+                String memid = preferences_r.getString("memId", null);
                 Map<String, String> map = new HashMap<>();
                 map.put("action", "chat");
-                map.put("memId", memid_yo);
+                map.put("memId", memid);
                 map.put(KEY_MEMID, USER_NAME);
                 map.put(KEY_MESSAGE, newMsg);
                 if (myWebSocketClient != null) {
@@ -100,7 +100,7 @@ public class PartnerChatFragment extends Fragment {
             }
         });
 
-        Util.showToast(getActivity().getApplicationContext(), "current memid_yo:  " + memid_yo);
+        Util.showToast(getActivity().getApplicationContext(), "current memid:  " + memid);
         return this.rootView;
     }// end of onCreateView
 

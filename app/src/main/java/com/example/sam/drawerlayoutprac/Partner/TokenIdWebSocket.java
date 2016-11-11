@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Util;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
@@ -28,14 +31,16 @@ public class TokenIdWebSocket {
         this.context = aContext;
     }
     public void sendTokenIdToServer(){
-        SharedPreferences preferences_r = this.context.getSharedPreferences("preferences_yo", this.context.MODE_PRIVATE);
-        String memid_yo = null;
+
+        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
+        String memId = null;
         String tokenId = null;
+
         if (preferences_r != null) {
-            memid_yo = preferences_r.getString("memId_yo", null);
+            memId = preferences_r.getString("memId", null);
             tokenId = preferences_r.getString("tokenId", null);
         }
-        if (memid_yo != null && tokenId != null) {
+        if (memId != null && tokenId != null) {
             URI uri = null;
             try {
                 uri = new URI(PartnerChatFragment.URL_Chatroom);
@@ -46,7 +51,7 @@ public class TokenIdWebSocket {
             Map<String, String> dataMap = new HashMap<>();
             dataMap.put("action", "uploadTokenId");
             dataMap.put("tokenId", tokenId);
-            dataMap.put("memId", memid_yo);
+            dataMap.put("memId", memId);
             this.dataMap = dataMap; // 重點
             new TokenIdWebSocketClient().connect();
         }
@@ -62,7 +67,9 @@ public class TokenIdWebSocket {
         @Override
         public void onOpen(ServerHandshake handshakedata) {
             this.send(new JSONObject(TokenIdWebSocket.this.dataMap).toString());
-            Log.d("TokenIdWebSocket","token Sent to the server");
+            Log.d("TokenIdWebSocket","tokenId and memid sent to Server: "
+                  + TokenIdWebSocket.this.dataMap.get("memId") + " - "
+                  + TokenIdWebSocket.this.dataMap.get("tokenId") );
         }
 
         @Override
