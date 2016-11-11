@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -84,6 +85,8 @@ public class MemberFragment extends Fragment {
                                .putString("memId", memId)
                                .putBoolean("login" , true)
                                .apply();
+                    // 將會員Id與tokenId送到server
+                    new TokenIdWebSocket(getContext()).sendTokenIdToServer();
                 }
 
                 fragment = new HotelFragment();

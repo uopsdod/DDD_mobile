@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -38,11 +39,14 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
-        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-        preferences_w.edit()
-                .putString("tokenId",refreshedToken)
-                .apply();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
+        pref.edit().putString("tokenId", refreshedToken)
+                   .apply();
+//        Log.d(TAG, "Refreshed token: " + refreshedToken);
+//        SharedPreferences preferences_w = getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
+//        preferences_w.edit()
+//                .putString("tokenId",refreshedToken)
+//                .apply();
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
@@ -60,8 +64,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
-        // Get token
-//        String myToken = FirebaseInstanceId.getInstance().getToken();
-//        Log.d("fcm - token", myToken);
+        new TokenIdWebSocket(getApplicationContext()).sendTokenIdToServer();
     }
 }
