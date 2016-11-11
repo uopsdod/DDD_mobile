@@ -3,6 +3,7 @@ package com.example.sam.drawerlayoutprac.Partner;
 import android.content.SharedPreferences;
 import android.icu.text.MessagePattern;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;

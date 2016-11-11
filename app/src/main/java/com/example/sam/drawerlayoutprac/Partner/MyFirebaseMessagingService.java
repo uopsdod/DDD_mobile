@@ -27,6 +27,7 @@ import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Util;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -35,7 +36,7 @@ import java.util.Set;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "MyFirebaseMsgService";
+    public static final String TAG = "MyFirebaseMsgService";
 
     /**
      * Called when message is received.
@@ -57,25 +58,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "fcm - From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Map<String, String> myMap = remoteMessage.getData();
-            Log.d(TAG, "Message data payload: " + myMap);
+            Log.d(TAG, "fcm - Message data payload: " + myMap);
             Set<String> myKeys = myMap.keySet();
             for (String myKey: myKeys){
-                Log.d("Keys: ", myKey);
-                if (myKey.equals("talk")) {
-                    Log.d("talk: ", "Someone wants to talk to you");
-                    //Toast.makeText(getApplicationContext(),"Someone wants to talk to you", Toast.LENGTH_SHORT);
-                }
+                Log.d(TAG, "fcm - "+myKey);
+//                if (myKey.equals("talk")) {
+//                    Log.d(TAG, "Someone wants to talk to you");
+//                    //Toast.makeText(getApplicationContext(),"Someone wants to talk to you", Toast.LENGTH_SHORT);
+//                }
             }
         }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Log.d(TAG, "fcm - Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

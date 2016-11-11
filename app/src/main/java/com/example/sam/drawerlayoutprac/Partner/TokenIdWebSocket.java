@@ -97,7 +97,7 @@ public class TokenIdWebSocket {
             Gson gson = new Gson();
             String partnerMsgGson = gson.toJson(this.partnerMsg);
             this.send(partnerMsgGson);
-            Log.d("TokenIdWebSocket - ", "sent to Server(" + this.partnerMsg.getAction() + "): " + partnerMsgGson);
+            Log.d("TokenIdWebSocket - ", "fcm - sent to Server(" + this.partnerMsg.getAction() + "): " + partnerMsgGson);
         }
 
         @Override
@@ -106,7 +106,7 @@ public class TokenIdWebSocket {
                 this.close();
             }
 
-            Log.d("TokenIdWebSocket - ", "receive from server: " + message);
+            Log.d("TokenIdWebSocket - ", "fcm - receive from server: " + message);
 
         }
 

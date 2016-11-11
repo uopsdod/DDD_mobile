@@ -3,6 +3,7 @@ package com.example.sam.drawerlayoutprac;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.Partner.MyFirebaseMessagingService;
 import com.example.sam.drawerlayoutprac.Partner.PartnerChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
@@ -37,33 +39,62 @@ import java.util.Map;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     WebSocketClient webSocketClientTmp;
+    FloatingActionButton floatingBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // toolbar   setup
+        //findViews
+        this.floatingBtn = (FloatingActionButton)findViewById(R.id.floatingBtn);
+
+        // toolbar  setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.sub1_color));
         myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         setSupportActionBar(myToolbar);
 
-        // button-step1
+        // 左上角button-step1
         setUpActionBar();
-
+        // 左邊拉出視窗顯現
         initDrawer();
-        inigDrawerBody();
 
         // fcm testing;
         // 狀況一(在這邊處理): 確定有登入 + 已有tokenId
         // 狀況二(在登入後處理)：尚未登入 + 已有tokenId
         // 狀況三(在FirebaseInstanceIdService::onTokenRefresed()方法中處理)：尚未登入 + tokenId還在更新中
+
+
+        //this.floatingBtn.setVisibility(View.VISIBLE);
+        // 印出所有key-value pairs
+//            for (String key : fcmBundle.keySet()) {
+//                String value = fcmBundle.get(key).toString();
+//                Log.d(TAG, "fcm - Key: " + key + " Value: " + value);
+//            }
         new TokenIdWebSocket(getApplicationContext()).sendTokenIdToServer();
+        // fcm - 當使用者點擊notification
+        Bundle fcmBundle = getIntent().getExtras();
+        if (fcmBundle != null) {
+            String fromMemId = (String) fcmBundle.get("fromMemId");
+            if (fromMemId != null) {
+                this.floatingBtn.setVisibility(View.INVISIBLE);
+                fromMemId = fromMemId.trim();
+                Fragment fragment = new PartnerChatFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("memId", fromMemId);
+                fragment.setArguments(bundle);
+                Util.switchFragment(this, fragment);
+            }
+        }else{
+        // 使用設定預設首頁 - HotelFragment.java
+            inigDrawerBody();
+        }
     }
 
     @Override
@@ -169,14 +200,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = new HotelFragment();
         Util.switchFragment(MainActivity.this, fragment);
     }
-
-    private void showToast(String msg) {
-        Toast.makeText(getApplicationContext(),
-                msg,
-                Toast.LENGTH_SHORT)
-                .show();
-    }
-
 
     private void askPermissions() {
         String[] permissions = {
