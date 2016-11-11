@@ -37,6 +37,7 @@ public class HotelInfoFragment extends Fragment implements Serializable {
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvHotelIntro;
     private RatingBar ratingBar;
     private HotelVO hotelVO;
+    private float aFloat = (float) 0.6;
 
     @Nullable
     @Override
@@ -144,6 +145,7 @@ public class HotelInfoFragment extends Fragment implements Serializable {
                 ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
                 tvHotel = (TextView) itemView.findViewById(R.id.tvHotel);
                 tvPrice = (TextView) itemView.findViewById(R.id.tvPrice);
+                ivImage.setAlpha(aFloat);
             }
         }
 

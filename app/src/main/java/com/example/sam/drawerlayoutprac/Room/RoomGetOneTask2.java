@@ -6,21 +6,24 @@ import android.util.Log;
 import com.example.sam.drawerlayoutprac.Hotel.HotelVO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 
-public class RoomGetOneTask extends AsyncTask<Object, String, RoomVO> {
+public class RoomGetOneTask2 extends AsyncTask<Object, String, List<String>> {
     private String TAG = "RoomGetOne";
-    private String ACTION = "getOne";
+    private String ACTION = "getOneAllPhotoId";
     @Override
-    protected RoomVO doInBackground(Object... params) {
+    protected List<String> doInBackground(Object... params) {
         String url = params[0].toString();
         String id = params[1].toString();
         String jsonIn;
@@ -34,7 +37,8 @@ public class RoomGetOneTask extends AsyncTask<Object, String, RoomVO> {
             return null;
         }
         Gson gson = new Gson();
-        return gson.fromJson(jsonIn, RoomVO.class);
+        Type listType = new TypeToken<List<String>>(){} .getType();
+        return gson.fromJson(jsonIn, listType);
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {
