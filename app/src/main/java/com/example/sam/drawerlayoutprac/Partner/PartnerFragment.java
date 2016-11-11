@@ -87,6 +87,9 @@ public class PartnerFragment extends Fragment {
     private SwingLeftInAnimationAdapter mListViewAnimationAdapter;
     private ViewAnimator mListViewAnimator;
 
+    // now memId
+    private String memId;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -123,6 +126,9 @@ public class PartnerFragment extends Fragment {
                 //Util.showToast(getContext(), "進入聊天視窗");
                 mMapFloatingBtn.setVisibility(View.INVISIBLE);
                 Fragment fragment = new PartnerChatFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("memId", PartnerFragment.this.memId);
+                fragment.setArguments(bundle);
                 Util.switchFragment(PartnerFragment.this, fragment);
             }
         });
@@ -268,7 +274,8 @@ public class PartnerFragment extends Fragment {
         // 建立新的Thread去DB抓圖片
         ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_reveal_avatar);
         ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_avatar);
-        String memId = (String) item.get(PartnerListAdapter.KEY_MEMID);
+            // 將現在頁面的memId放入實體變數，若使用者進入訊息視窗，則將memId也帶過去
+        PartnerFragment.this.memId = (String) item.get(PartnerListAdapter.KEY_MEMID);
         String url = PartnerFragment.URL_Partner;
         int imageSize = 250;
         new PartnerGetImageTask(profileImg).execute(url, memId, imageSize);

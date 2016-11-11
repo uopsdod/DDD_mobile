@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Util;
+import com.google.gson.Gson;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
@@ -23,7 +24,6 @@ import java.util.Map;
 
 public class TokenIdWebSocket {
 
-    Map<String, String> dataMap;
     Context context;
     URI uri;
 
@@ -48,33 +48,66 @@ public class TokenIdWebSocket {
                 Log.e(PartnerChatFragment.TAG, e.toString());
             }
             this.uri = uri;
-            Map<String, String> dataMap = new HashMap<>();
-            dataMap.put("action", "uploadTokenId");
-            dataMap.put("tokenId", tokenId);
-            dataMap.put("memId", memId);
-            this.dataMap = dataMap; // 重點
-            new TokenIdWebSocketClient().connect();
+            PartnerMsg partnerMsg = new PartnerMsg();
+            partnerMsg.setAction("uploadTokenId");
+            partnerMsg.setTokenId(tokenId);
+            partnerMsg.setFromMemId(memId);
+            new MyWebSocketClient(partnerMsg).connect();
         }
     }
 
+    public WebSocketClient bindMemIdWithSession(){
+        WebSocketClient tmpWebSocketClient = null;
+        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
+        String memId = null;
+        String tokenId = null;
 
-    private class TokenIdWebSocketClient extends WebSocketClient{
-        
-        public TokenIdWebSocketClient(){
+        if (preferences_r != null) {
+            memId = preferences_r.getString("memId", null);
+            tokenId = preferences_r.getString("tokenId", null);
+        }
+        if (memId != null) {
+            URI uri = null;
+            try {
+                uri = new URI(PartnerChatFragment.URL_Chatroom);
+            } catch (URISyntaxException e) {
+                Log.e(PartnerChatFragment.TAG, e.toString());
+            }
+            this.uri = uri;
+            PartnerMsg partnerMsg = new PartnerMsg();
+            partnerMsg.setAction("bindMemIdWithSession");
+            partnerMsg.setFromMemId(memId);
+            tmpWebSocketClient = new MyWebSocketClient(partnerMsg);
+            tmpWebSocketClient.connect();
+        }
+        return tmpWebSocketClient;
+    }
+
+
+    private class MyWebSocketClient extends WebSocketClient{
+        PartnerMsg partnerMsg;
+
+        public MyWebSocketClient(PartnerMsg aPartnerMsg){
             super(TokenIdWebSocket.this.uri,new Draft_17());
+            this.partnerMsg = aPartnerMsg;
         }
 
         @Override
         public void onOpen(ServerHandshake handshakedata) {
-            this.send(new JSONObject(TokenIdWebSocket.this.dataMap).toString());
-            Log.d("TokenIdWebSocket","tokenId and memid sent to Server: "
-                  + TokenIdWebSocket.this.dataMap.get("memId") + " - "
-                  + TokenIdWebSocket.this.dataMap.get("tokenId") );
+            Gson gson = new Gson();
+            String partnerMsgGson = gson.toJson(this.partnerMsg);
+            this.send(partnerMsgGson);
+            Log.d("TokenIdWebSocket - ", "sent to Server(" + this.partnerMsg.getAction() + "): " + partnerMsgGson);
         }
 
         @Override
         public void onMessage(String message) {
-            this.close();
+            if ("uploadTokenId".equals(this.partnerMsg.getAction())){
+                this.close();
+            }
+
+            Log.d("TokenIdWebSocket - ", "receive from server: " + message);
+
         }
 
         @Override
@@ -85,6 +118,8 @@ public class TokenIdWebSocket {
         @Override
         public void onError(Exception ex) {
 
-        }   
+        }
     }
+
+
 }

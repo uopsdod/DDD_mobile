@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
 import android.content.SharedPreferences;
+import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
+import com.google.gson.Gson;
 import com.yalantis.euclid.library.EuclidState;
 
 import org.java_websocket.client.WebSocketClient;
@@ -41,7 +43,8 @@ public class PartnerChatFragment extends Fragment {
     private static final String USER_NAME = "會員一號";
     private static final String KEY_MEMID = "memId";
     private static final String KEY_MESSAGE = "message";
-    private MyWebSocketClient myWebSocketClient;
+    private static String toMemId;
+    private WebSocketClient myWebSocketClient;
 
     private View rootView;
     private LinearLayout chatContet;
@@ -61,21 +64,15 @@ public class PartnerChatFragment extends Fragment {
         this.chatContet = (LinearLayout) this.rootView.findViewById(R.id.chat_contents);
         this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
         this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
-        // 建立Websocket連線
-        URI uri = null;
-        try {
-            uri = new URI(URL_Chatroom);
-        } catch (URISyntaxException e) {
-            Log.e(TAG, e.toString());
-        }
-        SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,getActivity().MODE_PRIVATE);
-        String memid = preferences_r.getString("memId", null);
-        String action = "bindMemIdWithSession";
-        Map<String, String> map = new HashMap<>();
-        map.put("action", action);
-        map.put("memId", memid);
-        this.myWebSocketClient = new MyWebSocketClient(uri, map);
-        this.myWebSocketClient.connect();
+
+        // 拿toMemId的會員Id
+        Bundle myBundle = getArguments();
+        this.toMemId = (String)myBundle.get("memId");
+        Util.showToast(getContext(),"toMemId: " + this.toMemId);
+
+
+        // 建立Websocket連線 - bindMemIdWithSession
+        myWebSocketClient = new TokenIdWebSocket(getContext()).bindMemIdWithSession();
 
         // end of 建立Websocket連線
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -89,18 +86,21 @@ public class PartnerChatFragment extends Fragment {
                 }
                 SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,getActivity().MODE_PRIVATE);
                 String memid = preferences_r.getString("memId", null);
-                Map<String, String> map = new HashMap<>();
-                map.put("action", "chat");
-                map.put("memId", memid);
-                map.put(KEY_MEMID, USER_NAME);
-                map.put(KEY_MESSAGE, newMsg);
+                PartnerMsg partnerMsg = new PartnerMsg();
+                partnerMsg.setAction("chat");
+                partnerMsg.setFromMemId(memid);
+                partnerMsg.setToMemId(PartnerChatFragment.this.toMemId);
+                partnerMsg.setMessage(newMsg);
+
                 if (myWebSocketClient != null) {
-                    myWebSocketClient.send(new JSONObject(map).toString());
+                    Gson gson = new Gson();
+                    String partnerMsgGson = gson.toJson(partnerMsg);
+                    myWebSocketClient.send(partnerMsgGson);
                 }
             }
         });
 
-        Util.showToast(getActivity().getApplicationContext(), "current memid:  " + memid);
+        //Util.showToast(getActivity().getApplicationContext(), "current memid:  " + memid);
         return this.rootView;
     }// end of onCreateView
 
