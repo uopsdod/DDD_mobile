@@ -166,6 +166,8 @@ public class SignUp_Page2_Fragment extends Fragment {
             String Intro = etIntro.getText().toString().trim();
             if(image == null){
                 memVO.setMemProfile(null);
+            }else{
+                memVO.setMemProfile(image);
             }
 
             if(Common.networkConnected(getActivity())){
@@ -173,7 +175,7 @@ public class SignUp_Page2_Fragment extends Fragment {
                 memVO.setMemName(name);
                 memVO.setMemLiveBudget(LiveBudget);
                 memVO.setMemIntro(Intro);
-                memVO.setMemProfile(image);
+//                memVO.setMemProfile(image);
 //                String imageBase64 = Base64.encodeToString(image, Base64.DEFAULT);
                 String action = "Insert";
 //                new MemUpdateTask().execute(url, action, memVO, imageBase64);
