@@ -1,26 +1,40 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
+
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.security.Timestamp;
+
 /**
  * Created by cuser on 2016/11/11.
  */
-
-public class PartnerMsg {
+// 這個類別現在被兩個.java使用:
+// 1. TokenIdWebSocket.java
+// 2. PartnerChatFragment.java
+public class PartnerMsg extends MemChatVO{
     String action;
     String tokenId;
-    String fromMemId;
     String toMemId;
-    String message;
+    // MemChatVO
+//    private String memChatChatId; // NOT NULL
+//    private String memChatMemId; // NOT NULL
+//    private java.sql.Timestamp memChatDate;
+//    private String memChatContent;
+//    private byte[] memChatPic;
+    // End of MemChatVO
 
     public PartnerMsg(){
-
     }
+//    // 測試:看能不能這樣直接copy
+//    public PartnerMsg(MemChatVO aMemChatVO) throws InvocationTargetException, IllegalAccessException {
+//        BeanUtils.copyProperties(this,aMemChatVO);
+//    }
 
-    public PartnerMsg(String action, String tokenId, String fromMemId, String toMemId, String message) {
+    public PartnerMsg(String action, String tokenId, String toMemId) {
         this.action = action;
         this.tokenId = tokenId;
-        this.fromMemId = fromMemId;
         this.toMemId = toMemId;
-        this.message = message;
     }
 
     public String getAction() {
@@ -39,27 +53,11 @@ public class PartnerMsg {
         this.tokenId = tokenId;
     }
 
-    public String getFromMemId() {
-        return fromMemId;
-    }
-
-    public void setFromMemId(String fromMemId) {
-        this.fromMemId = fromMemId;
-    }
-
     public String getToMemId() {
         return toMemId;
     }
 
     public void setToMemId(String toMemId) {
         this.toMemId = toMemId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

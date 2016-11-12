@@ -56,16 +56,6 @@ public class PartnerChatFragment extends Fragment {
     public void onResume() {
         super.onResume();
         backBtnPressed();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
-        super.onCreateView(inflater, viewGroup, bundle);
-        this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
-        this.chatContet = (LinearLayout) this.rootView.findViewById(R.id.chat_contents);
-        this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
-        this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
-
         // 拿toMemId的會員Id
         Bundle myBundle = getArguments();
         this.toMemId = (String)myBundle.get("memId");
@@ -74,8 +64,9 @@ public class PartnerChatFragment extends Fragment {
 
         // 建立Websocket連線 - bindMemIdWithSession
         myWebSocketClient = new TokenIdWebSocket(getContext()).bindMemIdWithSession();
-
         // end of 建立Websocket連線
+
+        // 設定send監聽器
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,9 +80,9 @@ public class PartnerChatFragment extends Fragment {
                 String memid = preferences_r.getString("memId", null);
                 PartnerMsg partnerMsg = new PartnerMsg();
                 partnerMsg.setAction("chat");
-                partnerMsg.setFromMemId(memid);
+                partnerMsg.setMemChatMemId(memid);
                 partnerMsg.setToMemId(PartnerChatFragment.this.toMemId);
-                partnerMsg.setMessage(newMsg);
+                partnerMsg.setMemChatContent(newMsg);
 
                 if (myWebSocketClient != null) {
                     Gson gson = new Gson();
@@ -100,11 +91,25 @@ public class PartnerChatFragment extends Fragment {
                 }
             }
         });
+    }
 
-        //Util.showToast(getActivity().getApplicationContext(), "current memid:  " + memid);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
+        super.onCreateView(inflater, viewGroup, bundle);
+        this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
+        this.chatContet = (LinearLayout) this.rootView.findViewById(R.id.chat_contents);
+        this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
+        this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
+
         return this.rootView;
     }// end of onCreateView
 
+    @Override
+    public void onPause (){
+        super.onPause();
+        PartnerChatFragment.this.myWebSocketClient.close();
+        Log.d(PartnerChatFragment.TAG," fcm - myWebSocketClient is closed via onPause()");
+    }
 
 
     private void backBtnPressed() {
@@ -114,67 +119,18 @@ public class PartnerChatFragment extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    //Util.showToast(getContext(),"backBtnPressed");
-                    FragmentManager fm = PartnerChatFragment.this.getFragmentManager();
-                    fm.popBackStack();
                     // close websocket
                     PartnerChatFragment.this.myWebSocketClient.close();
-                    Log.d(PartnerChatFragment.TAG,"myWebSocketClient is closed");
-                }
-                return true;
+                    Log.d(PartnerChatFragment.TAG,"myWebSocketClient is closed via back button");
+                    // 回到上一個Fragment或是離開app
+                    FragmentManager fm = PartnerChatFragment.this.getFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0){
+                        fm.popBackStack();
+                        return true;
+                    }
+                }// end if
+                return false;
             }
         });
     }
-
-
-    public class MyWebSocketClient extends WebSocketClient {
-        Map<String, String> dataMap;
-
-        public MyWebSocketClient(URI serverURI, Map<String, String> aDataMap) {
-            super(serverURI, new Draft_17());
-            this.dataMap = aDataMap;
-        }
-
-        @Override
-        public void onOpen(ServerHandshake handshakedata) {
-            Log.d(TAG, "onOpen: handshakedata.toString() = " + handshakedata.toString());
-            if (myWebSocketClient != null) {
-                myWebSocketClient.send(new JSONObject(this.dataMap).toString());
-            }
-        }
-
-        @Override
-        public void onMessage(final String message) {
-            Log.d(TAG, "onMessage: " + message);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        JSONObject jsonObject = new JSONObject(message);
-                        String userName = jsonObject.get(KEY_MEMID).toString();
-                        String message = jsonObject.get(KEY_MESSAGE).toString();
-                        String text = userName + ": " + message + "\n";
-                        Log.d(TAG, text);
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.toString());
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onClose(int code, String reason, boolean remote) {
-            String text = String.format(Locale.getDefault(),
-                    "code = %d, reason = %s, remote = %b",
-                    code, reason, remote);
-            Log.d(TAG, "onClose: " + text);
-        }
-
-        @Override
-        public void onError(Exception ex) {
-            Log.d(TAG, "onError: exception = " + ex.toString());
-        }
-    }
-
-
 }
