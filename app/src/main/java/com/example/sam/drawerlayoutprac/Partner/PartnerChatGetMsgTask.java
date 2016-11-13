@@ -34,9 +34,11 @@ public class PartnerChatGetMsgTask extends AsyncTask<String, Void, List<PartnerM
     private final static String TAG = "PartnerChatGetMsgTask";
     private Context context;
     private ProgressDialog progressDialog;
+    private String toMemId;
 
-    public PartnerChatGetMsgTask(Context aContext){
+    public PartnerChatGetMsgTask(Context aContext, String aToMemId){
         this.context = aContext;
+        this.toMemId = aToMemId;
     }
 
 
@@ -57,7 +59,7 @@ public class PartnerChatGetMsgTask extends AsyncTask<String, Void, List<PartnerM
         try {
             jsonIn = getRemoteData(url, jsonObject.toString());
         } catch (IOException e) {
-            Log.e(TAG, e.toString());
+            Log.e(TAG, "fcm - " + e.toString());
             return null;
         }
 

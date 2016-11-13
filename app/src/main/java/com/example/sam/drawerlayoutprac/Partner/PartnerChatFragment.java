@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
@@ -52,7 +52,7 @@ public class PartnerChatFragment extends Fragment {
     private WebSocketClient myWebSocketClient;
 
     private View rootView;
-    private RecyclerView chatContet;
+    private ListView chatContet;
     private Button btnSend;
     private EditText msg;
 
@@ -63,11 +63,6 @@ public class PartnerChatFragment extends Fragment {
     public void onResume() {
         super.onResume();
         backBtnPressed();
-        // 拿toMemId的會員Id
-        Bundle myBundle = getArguments();
-        this.toMemId = (String)myBundle.get("memId");
-        Util.showToast(getContext(),"toMemId: " + this.toMemId);
-
 
         // 建立Websocket連線 - bindMemIdWithSession
         myWebSocketClient = new TokenIdWebSocket(getContext()).bindMemIdWithSession();
@@ -104,9 +99,15 @@ public class PartnerChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
         this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
-        this.chatContet = (RecyclerView) this.rootView.findViewById(R.id.chat_contents);
+        this.chatContet = (ListView) this.rootView.findViewById(R.id.chat_contents);
         this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
         this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
+        // 拿toMemId的會員Id
+        Bundle myBundle = getArguments();
+        this.toMemId = (String)myBundle.get("memId");
+        Util.showToast(getContext(),"toMemId: " + this.toMemId);
+
+
         initMsgHistoryList();
 
         return this.rootView;
@@ -114,15 +115,17 @@ public class PartnerChatFragment extends Fragment {
 
     private void initMsgHistoryList() {
 
-//        String uri = Common.URL + "/android/live2/PartnerMsgController";
-//        try {
-//            this.partnerMsgList = new PartnerChatGetMsgTask(getContext()).execute(uri).get();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//        this.chatContet.setAdapter( new XXXXAdapter);
+        String uri = Common.URL + "/android/live2/PartnerMsgController";
+        try {
+            this.partnerMsgList = new PartnerChatGetMsgTask(getContext(),PartnerChatFragment.this.toMemId).execute(uri).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d("PartnerChatFragment", "fcm - " +this.partnerMsgList.get(0).getMemChatContent());
+
+        this.chatContet.setAdapter( new PartnerChatAdapter(getContext(), this.partnerMsgList));
     }
 
     @Override
