@@ -39,7 +39,7 @@
             android:textSize="10sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/text_container"
         android:layout_width="226dp"
         android:layout_height="wrap_content"
@@ -47,10 +47,11 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/bubble_block"
+            android:layout_width="226dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/img_thumbnail">
 
             <TextView
                 android:id="@+id/txt_name"
@@ -83,7 +84,7 @@
                     android:layout_marginRight="45dp"
                     android:autoLink="web"
                     android:gravity="right"
-                    android:text="testttttttttttttttttttttttttttttt"
+                    android:text="tesssssssszzzsst"
                     android:textColor="#3d3d3d"
                     android:textSize="22sp" />
             </RelativeLayout>
@@ -98,6 +99,8 @@
             android:layout_marginTop="23dp"
             android:scaleType="centerCrop"
             android:src="@drawable/sendbird_ic_launcher"
-            android:visibility="visible" />
-    </LinearLayout>
+            android:visibility="visible"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/bubble_block"/>
+    </RelativeLayout>
 </LinearLayout>

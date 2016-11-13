@@ -10,7 +10,7 @@
     android:orientation="horizontal"
     android:visibility="visible">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/text_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,19 +24,21 @@
             android:layout_marginTop="23dp"
             android:scaleType="centerCrop"
             android:src="@drawable/sendbird_ic_launcher"
+            android:layout_alignBottom="@+id/bubble_block"
             android:visibility="visible" />
 
         <LinearLayout
-            android:layout_width="226dp"
+            android:id="@+id/bubble_block"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/img_thumbnail">
 
             <TextView
                 android:id="@+id/txt_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SenderName"
-                android:layout_marginLeft="34dp"
                 android:textSize="18sp"
                 android:visibility="visible" />
 
@@ -64,36 +66,34 @@
                     android:textSize="22sp" />
             </RelativeLayout>
         </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/txt_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:orientation="vertical"
-            android:layout_marginLeft="5dp">
+            android:text="Unread"
+            android:textColor="#ac90ff"
+            android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/txt_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:text="Unread"
-                android:textColor="#ac90ff"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/txt_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_weight="1"
-                android:paddingBottom="2dp"
-                android:paddingLeft="4dp"
-                android:text="10:24PM"
-                android:textColor="#acaab2"
-                android:textSize="10sp" />
-        </LinearLayout>
-
+        <TextView
+            android:id="@+id/txt_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:text="10:24PM"
+            android:textColor="#acaab2"
+            android:textSize="10sp" />
     </LinearLayout>
 
 
