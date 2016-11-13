@@ -152,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new MemberFragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
+                    case R.id.my_member_hotel:
+                        fragment = new HotelMemberFragment();
+                        Util.switchFragment(MainActivity.this, fragment);
+                        break;
 
                     case R.id.test_yo:
 //                        Intent intent = new Intent(getApplication(),EuclidTest.class);

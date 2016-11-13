@@ -60,7 +60,7 @@ public class SignUp_Page1_Fragment extends Fragment {
         btDueDatePicker = (Button) view.findViewById(R.id.btDueDatePicker);
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
         btBirthDatePicker = (Button) view.findViewById(R.id.btBirthDatePicker);
-
+        getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
         editText.setOnKeyListener(new edFocus());
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

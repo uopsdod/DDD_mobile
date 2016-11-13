@@ -26,8 +26,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:hint="Name"
-            android:textAlignment="center" />
+            android:hint="Name" />
     </android.support.design.widget.TextInputLayout>
 
     <RadioGroup
@@ -69,8 +68,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:hint="LiveBudget"
-            android:textAlignment="center" />
+            android:hint="LiveBudget" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -86,8 +84,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:hint="Introduce"
-            android:textAlignment="center" />
+            android:hint="Introduce" />
     </android.support.design.widget.TextInputLayout>
 
 
