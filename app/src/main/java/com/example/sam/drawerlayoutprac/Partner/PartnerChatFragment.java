@@ -83,7 +83,7 @@ public class PartnerChatFragment extends Fragment {
                 PartnerMsg partnerMsg = new PartnerMsg();
                 partnerMsg.setAction("chat");
                 partnerMsg.setMemChatMemId(memid);
-                partnerMsg.setToMemId(PartnerChatFragment.this.toMemId);
+                partnerMsg.setMemChatToMemId(PartnerChatFragment.this.toMemId);
                 partnerMsg.setMemChatContent(newMsg);
 
                 if (myWebSocketClient != null) {

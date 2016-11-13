@@ -13,7 +13,7 @@ public class MemChatVO implements Serializable {
 	private String memChatContent;
 	private byte[] memChatPic;
 	private String memChatStatus;
-	private String toMemId;
+	private String memChatToMemId;
 	public String getMemChatMemId() {
 		return memChatMemId;
 	}
@@ -50,13 +50,12 @@ public class MemChatVO implements Serializable {
 	public void setMemChatStatus(String memChatStatus) {
 		this.memChatStatus = memChatStatus;
 	}
-	public String getToMemId() {
-		return toMemId;
+	public String getMemChatToMemId() {
+		return memChatToMemId;
 	}
-	public void setToMemId(String toMemId) {
-		this.toMemId = toMemId;
+	public void setMemChatToMemId(String memChatToMemId) {
+		this.memChatToMemId = memChatToMemId;
 	}
-	
 	
 	
 }
