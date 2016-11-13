@@ -58,7 +58,7 @@ public class PartnerChatAdapter extends BaseAdapter {
 
         final ViewHolder holder;
         final PartnerMsg data = this.partnerMsgList.get(aPosition);
-        if (aConvertView == null) {
+//        if (aConvertView == null) {
             holder = new ViewHolder();
             if (data.getMemChatMemId().equals(memId)) { // 是自己的訊息
                 aConvertView = View.inflate(this.context, R.layout.chat_right_container, null);
@@ -74,9 +74,10 @@ public class PartnerChatAdapter extends BaseAdapter {
             holder.txt_status = (TextView)aConvertView.findViewById(R.id.txt_status);
             holder.txt_time = (TextView)aConvertView.findViewById(R.id.txt_time);
             aConvertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) aConvertView.getTag();
-        }
+//        }
+//        else {
+//            holder = (ViewHolder) aConvertView.getTag();
+//        }
 
         // 開始binding data to viewholder:
         holder.txt.setText(data.getMemChatContent().toString());
