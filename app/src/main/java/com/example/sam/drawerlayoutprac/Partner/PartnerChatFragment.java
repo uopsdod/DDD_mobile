@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,9 +30,12 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by cuser on 2016/11/8.
@@ -48,9 +52,12 @@ public class PartnerChatFragment extends Fragment {
     private WebSocketClient myWebSocketClient;
 
     private View rootView;
-    private LinearLayout chatContet;
+    private RecyclerView chatContet;
     private Button btnSend;
     private EditText msg;
+
+    // history message
+    private List<PartnerMsg> partnerMsgList;
 
     @Override
     public void onResume() {
@@ -97,12 +104,26 @@ public class PartnerChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
         this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
-        this.chatContet = (LinearLayout) this.rootView.findViewById(R.id.chat_contents);
+        this.chatContet = (RecyclerView) this.rootView.findViewById(R.id.chat_contents);
         this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
         this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
+        initMsgHistoryList();
 
         return this.rootView;
     }// end of onCreateView
+
+    private void initMsgHistoryList() {
+
+//        String uri = Common.URL + "/android/live2/PartnerMsgController";
+//        try {
+//            this.partnerMsgList = new PartnerChatGetMsgTask(getContext()).execute(uri).get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        this.chatContet.setAdapter( new XXXXAdapter);
+    }
 
     @Override
     public void onPause (){

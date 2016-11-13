@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,7 +27,7 @@ public class TokenIdWebSocket {
 
     Context context;
     URI uri;
-    // List<>
+    List<PartnerMsg> partnerMsgList;
 
     public TokenIdWebSocket(Context aContext) {
         this.context = aContext;
