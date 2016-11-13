@@ -87,7 +87,7 @@ public class MemberFragment extends Fragment {
                                .putBoolean("login" , true)
                                .apply();
                     // 將會員Id與tokenId送到server
-                    new TokenIdWebSocket(getContext()).sendTokenIdToServer();
+                    new TokenIdWebSocket(getActivity()).sendTokenIdToServer();
                 }
 
                 fragment = new HotelFragment();
