@@ -59,6 +59,7 @@ public class SignUp_Page2_Fragment extends Fragment {
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
         btChangePhoto = (Button) view.findViewById(R.id.btChangePhoto);
+        getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
 
         rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
