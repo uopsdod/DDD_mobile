@@ -123,7 +123,9 @@ public class PartnerChatFragment extends Fragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        Log.d("PartnerChatFragment", "fcm - " +this.partnerMsgList.get(0).getMemChatContent());
+        if (this.partnerMsgList != null && this.partnerMsgList.size() > 0){
+            Log.d("PartnerChatFragment", "fcm - " +this.partnerMsgList.get(0).getMemChatContent());
+        }
 
         this.chatContet.setAdapter( new PartnerChatAdapter(getContext(), this.partnerMsgList));
     }

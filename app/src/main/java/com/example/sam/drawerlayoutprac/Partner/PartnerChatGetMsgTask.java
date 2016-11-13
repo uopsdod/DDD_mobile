@@ -2,11 +2,13 @@ package com.example.sam.drawerlayoutprac.Partner;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,9 +55,13 @@ public class PartnerChatGetMsgTask extends AsyncTask<String, Void, List<PartnerM
     @Override
     protected List<PartnerMsg> doInBackground(String... params) {
         String url = params[0]; // 傳入的Common.URL字串
+        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE,this.context.MODE_PRIVATE);
+        String memid = preferences_r.getString("memId", null);
         String jsonIn;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", "getAll"); // 在這邊控制請求參數
+        jsonObject.addProperty("memId", memid); // 在這邊控制請求參數
+        jsonObject.addProperty("toMemId", this.toMemId); // 在這邊控制請求參數
         try {
             jsonIn = getRemoteData(url, jsonObject.toString());
         } catch (IOException e) {
