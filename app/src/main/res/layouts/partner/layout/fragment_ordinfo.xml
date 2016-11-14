@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="訂房須知"
+        android:textColor="#709acf"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tvInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="房價包括什麼?"
+                android:textColor="#243757"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="房價包含各房型下所列設施，點選客房名稱即可查看。將游標移動至「相關條款」，將會顯示房價是否包含早餐或稅費等其他費用。您也查看住宿確認函，或登入帳戶瞭解詳情。若您尚未建立帳戶，可以點此註冊。" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我可以不使用信用卡預訂客房嗎？"
+                android:textColor="#243757"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="大部分的飯店需要有效的信用卡作為您的預訂擔保。我們也提供一小部分無需信用卡即可擔保預訂的飯店，這類飯店的數量還在增加中。您也可以用他人的信用卡進行預訂，但必須獲得持卡人的同意。在此情況下，請在預訂時於“特別要求”一欄中確認持卡人的姓名並說明他們同意您使用其信用卡。"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我如何能知道我的預訂已經確定了？"
+                android:textColor="#243757"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="完成預訂後您會看到確認頁面，我們也將發送預訂確認函給您。住宿確認函包含所有訂單資訊、訂單編號及 PIN 碼。如果您需要與客服團隊聯繫，請提供訂單編號及 PIN 碼。您也可於線上查看確認函，登入帳號查看訂單詳情或修改預訂。若您尚未建立帳戶，可以點此註冊。"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="哪裡可以找到住宿的聯絡資訊？"
+                android:textColor="#243757"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="預訂前，如果您對住宿方有疑問，請參見該住宿頁面的“政策”和“設施”欄目。如果這些信息還不能解答您的疑問，請通過電話或電子郵件聯系我們的客戶服務團隊，我們會向住宿方轉達您的問題。 預訂完成後，住宿方的聯系方式會列在您的預訂確認頁面和預訂確認郵件中，您也可以在管理預訂欄目中查看。Booking.com移動app中也會列出這些信息。"
+                 />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="如何查詢住宿費用？"
+                android:textColor="#243757"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="填妥欲入住日期後，網站將列出可預訂的住宿，每筆搜尋結果旁均會標明住宿費用。依照入住人數、包含早餐及可否取消訂單等不同訂房規範，同一間住宿的費用亦將有所差異。\n"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

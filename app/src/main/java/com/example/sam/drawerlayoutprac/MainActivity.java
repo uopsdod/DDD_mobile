@@ -129,9 +129,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void initDrawer() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.navigation_view);
+        final NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.navigation_view);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            Menu menu = navigationView.getMenu();
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setChecked(true);
@@ -154,6 +155,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.my_member_hotel:
                         fragment = new HotelMemberFragment();
+                        Util.switchFragment(MainActivity.this, fragment);
+                        break;
+                    case R.id.info:
+                        fragment = new OrdInfoFragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
 
