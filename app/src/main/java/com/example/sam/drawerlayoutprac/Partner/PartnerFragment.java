@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -40,6 +41,7 @@ import com.yalantis.euclid.library.EuclidState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -183,6 +185,16 @@ public class PartnerFragment extends Fragment {
             Log.d("url", url);
             try {
                 memVOList = (List<MemVO>) new PartnerGetTextTask(getContext(), this.listview).execute(url).get();
+                // 去掉自己
+                SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,getActivity().MODE_PRIVATE);
+                String memid = preferences_r.getString("memId", null);
+                Iterator<MemVO> itr = memVOList.iterator();
+                while(itr.hasNext()){
+                    if (itr.next().getMemId().equals(memid)){
+                        itr.remove();
+                        break;
+                    }
+                }// end while
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {

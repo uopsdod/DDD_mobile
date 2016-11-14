@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 //                String value = fcmBundle.get(key).toString();
 //                Log.d(TAG, "fcm - Key: " + key + " Value: " + value);
 //            }
-        new TokenIdWebSocket(getApplicationContext()).sendTokenIdToServer();
+        new TokenIdWebSocket(this).sendTokenIdToServer();
         // fcm - 當使用者點擊notification
         Bundle fcmBundle = getIntent().getExtras();
         if (fcmBundle != null) {

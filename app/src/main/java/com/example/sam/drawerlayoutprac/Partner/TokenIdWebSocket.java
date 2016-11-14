@@ -1,7 +1,9 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
@@ -16,6 +18,7 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,16 +27,24 @@ import java.util.Map;
 
 public class TokenIdWebSocket {
 
-    Context context;
+    Activity activity; //
+    Context context; // 給MyFirebaseInstanceIDService用
     URI uri;
-    // List<>
-
+    PartnerChatFragment partnerChatFragment;
+    List<PartnerMsg> partnerMsgList;
     public TokenIdWebSocket(Context aContext) {
         this.context = aContext;
     }
+    public TokenIdWebSocket(Activity aActivity) {
+        this.activity = aActivity;
+    }
+    public TokenIdWebSocket(Activity aActivity, PartnerChatFragment aPartnerChatFragment) {
+        this.activity = aActivity;
+        this.partnerChatFragment = aPartnerChatFragment;
+    }
     public void sendTokenIdToServer(){
 
-        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
+        SharedPreferences preferences_r = this.activity.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
         String memId = null;
         String tokenId = null;
 
@@ -59,7 +70,7 @@ public class TokenIdWebSocket {
 
     public WebSocketClient bindMemIdWithSession(){
         WebSocketClient tmpWebSocketClient = null;
-        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
+        SharedPreferences preferences_r = this.activity.getSharedPreferences(Common.PREF_FILE, this.activity.MODE_PRIVATE);
         String memId = null;
         String tokenId = null;
 
@@ -108,11 +119,22 @@ public class TokenIdWebSocket {
         @Override
         public void onMessage(String message) {
             if ("uploadTokenId".equals(this.partnerMsg.getAction())){
+                Log.d("TokenIdWebSocket - ", "fcm - receive from server: " + message);
                 this.close();
+                return;
             }
-
-            Log.d("TokenIdWebSocket - ", "fcm - receive from server: " + message);
-
+            // 即時通訊時使用
+            if (partnerChatFragment != null){
+                final PartnerMsg partnerMsg = new PartnerMsg();
+                partnerMsg.setMemChatContent(message);
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        partnerChatFragment.partnerMsgList.add(partnerMsg);
+                        partnerChatFragment.partnerChatAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
         }
 
         @Override
