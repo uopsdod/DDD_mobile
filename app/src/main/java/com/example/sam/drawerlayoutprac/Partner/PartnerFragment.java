@@ -89,7 +89,7 @@ public class PartnerFragment extends Fragment {
     private SwingLeftInAnimationAdapter mListViewAnimationAdapter;
     private ViewAnimator mListViewAnimator;
 
-    // now memId
+    // 紀錄要將訊息傳給誰的toMemId
     private String toMemId;
 
     @Override
