@@ -95,6 +95,9 @@ public class PartnerChatFragment extends Fragment {
                 partnerMsg.setMemChatMemId(memid);
                 partnerMsg.setMemChatToMemId(PartnerChatFragment.this.toMemId);
                 partnerMsg.setMemChatContent(newMsg);
+                // 在自己頁面顯示聊天視窗:
+                addMsgScrollDown(partnerMsg);
+                // end of 在自己頁面顯示聊天視窗
 
                 if (myWebSocketClient != null) {
                     Gson gson = new Gson();
@@ -114,7 +117,7 @@ public class PartnerChatFragment extends Fragment {
         this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
         // 拿toMemId的會員Id
         Bundle myBundle = getArguments();
-        this.toMemId = (String) myBundle.get("memId");
+        this.toMemId = (String) myBundle.get("ToMemId");
         Util.showToast(getContext(), "toMemId: " + this.toMemId);
 
         // this.chatContent(ListView) - setAdapter here
@@ -249,16 +252,7 @@ public class PartnerChatFragment extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    PartnerChatFragment.this.partnerMsgList.add(partnerMsg);
-                                    PartnerChatFragment.this.partnerChatAdapter.notifyDataSetChanged();
-                                    // scroll down to the bottom:
-                                    PartnerChatFragment.this.chatContent.post(new Runnable(){
-                                        @Override
-                                        public void run(){
-                                            PartnerChatFragment.this.chatContent.setSelection(PartnerChatFragment.this.partnerChatAdapter.getCount() - 1);
-                                        }
-                                    });
-                                    
+                                    addMsgScrollDown(partnerMsg);
                                 }
                             });
                         } catch (Exception e) {
@@ -287,5 +281,17 @@ public class PartnerChatFragment extends Fragment {
 
 
     }// end of PartnerChatWebSocket
+
+    private void addMsgScrollDown(PartnerMsg partnerMsg){
+        PartnerChatFragment.this.partnerMsgList.add(partnerMsg);
+        PartnerChatFragment.this.partnerChatAdapter.notifyDataSetChanged();
+        // scroll down to the bottom:
+        PartnerChatFragment.this.chatContent.post(new Runnable(){
+            @Override
+            public void run(){
+                PartnerChatFragment.this.chatContent.setSelection(PartnerChatFragment.this.partnerChatAdapter.getCount() - 1);
+            }
+        });
+    }
 
 }

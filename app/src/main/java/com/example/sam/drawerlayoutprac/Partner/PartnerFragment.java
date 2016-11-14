@@ -90,7 +90,7 @@ public class PartnerFragment extends Fragment {
     private ViewAnimator mListViewAnimator;
 
     // now memId
-    private String memId;
+    private String toMemId;
 
     @Override
     public void onResume() {
@@ -129,7 +129,7 @@ public class PartnerFragment extends Fragment {
                 mMapFloatingBtn.setVisibility(View.INVISIBLE);
                 Fragment fragment = new PartnerChatFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("memId", PartnerFragment.this.memId);
+                bundle.putString("ToMemId", PartnerFragment.this.toMemId);
                 fragment.setArguments(bundle);
                 Util.switchFragment(PartnerFragment.this, fragment);
             }
@@ -287,11 +287,11 @@ public class PartnerFragment extends Fragment {
         ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_reveal_avatar);
         ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_avatar);
             // 將現在頁面的memId放入實體變數，若使用者進入訊息視窗，則將memId也帶過去
-        PartnerFragment.this.memId = (String) item.get(PartnerListAdapter.KEY_MEMID);
+        PartnerFragment.this.toMemId = (String) item.get(PartnerListAdapter.KEY_MEMID);
         String url = PartnerFragment.URL_Partner;
         int imageSize = 250;
-        new PartnerGetImageTask(profileImg).execute(url, memId, imageSize);
-        new PartnerGetImageTask(profileOverlay).execute(url, memId, imageSize);
+        new PartnerGetImageTask(profileImg).execute(url, toMemId, imageSize);
+        new PartnerGetImageTask(profileOverlay).execute(url, toMemId, imageSize);
         // end of 建立新的Thread去DB抓圖片
 
         // 將文字data放上view

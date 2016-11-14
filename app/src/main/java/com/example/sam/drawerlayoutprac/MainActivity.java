@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 fromMemId = fromMemId.trim();
                 Fragment fragment = new PartnerChatFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("memId", fromMemId);
+                bundle.putString("ToMemId", fromMemId);
                 fragment.setArguments(bundle);
                 Util.switchFragment(this, fragment);
                 return;
