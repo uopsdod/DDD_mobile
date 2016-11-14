@@ -97,7 +97,7 @@ public class PartnerFragment extends Fragment {
         super.onResume();
         backBtnPressed();
         // 處理聊天訊息回來畫面
-        if (getState() == EuclidState.ProfilePageOpened) {
+        if (getState() == EuclidState.ProfilePageOpened) { // 改
             Util.showToast(getContext(), "Current State: " + EuclidState.ProfilePageOpened);
             try {
                 showProfileDetails(mItemSelected, mViewSelected);

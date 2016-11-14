@@ -26,6 +26,7 @@ import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.Partner.MyFirebaseMessagingService;
 import com.example.sam.drawerlayoutprac.Partner.PartnerChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerHistoryMsgFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle actionBarDrawerToggle;
     WebSocketClient webSocketClientTmp;
     FloatingActionButton floatingBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // 使用設定預設首頁 - HotelFragment.java
         inigDrawerBody();
+
     }
 
     @Override
@@ -270,5 +273,12 @@ public class MainActivity extends AppCompatActivity {
         Util.showToast(getApplicationContext(), "memid_yo:  " + memid_yo);
 
 
+    }
+
+    public boolean getHistoryMsgList(MenuItem item){
+//        Util.showToast(this,"getHistoryMsgList clicked");
+        Fragment fragment = new PartnerHistoryMsgFragment();
+        Util.switchFragment(this, fragment);
+        return true;
     }
 }
