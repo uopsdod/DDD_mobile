@@ -58,7 +58,7 @@ public class PartnerChatFragment extends Fragment {
     private WebSocketClient myWebSocketClient;
 
     private View rootView;
-    private ListView chatContet;
+    private ListView chatContent;
     private Button btnSend;
     private EditText msg;
 
@@ -109,7 +109,7 @@ public class PartnerChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
         this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
-        this.chatContet = (ListView) this.rootView.findViewById(R.id.chat_contents);
+        this.chatContent = (ListView) this.rootView.findViewById(R.id.chat_contents);
         this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
         this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
         // 拿toMemId的會員Id
@@ -117,7 +117,7 @@ public class PartnerChatFragment extends Fragment {
         this.toMemId = (String) myBundle.get("memId");
         Util.showToast(getContext(), "toMemId: " + this.toMemId);
 
-
+        // this.chatContent(ListView) - setAdapter here
         initMsgHistoryList();
 
         return this.rootView;
@@ -137,7 +137,14 @@ public class PartnerChatFragment extends Fragment {
             Log.d("PartnerChatFragment", "fcm - " + this.partnerMsgList.get(0).getMemChatContent());
         }
         this.partnerChatAdapter = new PartnerChatAdapter(getContext(), this.partnerMsgList);
-        this.chatContet.setAdapter(partnerChatAdapter);
+        this.chatContent.setAdapter(partnerChatAdapter);
+        // scroll to the bottom:
+        this.chatContent.post(new Runnable(){
+            @Override
+            public void run(){
+                PartnerChatFragment.this.chatContent.setSelection(PartnerChatFragment.this.partnerChatAdapter.getCount() - 1);
+            }
+        });
     }
 
     @Override
@@ -234,23 +241,37 @@ public class PartnerChatFragment extends Fragment {
                 final PartnerMsg partnerMsg = gson.fromJson(message, PartnerMsg.class);
                 // 將data放入partnerMsgList,並更新UI畫面
                 // Try - 使用AsynTask加快訊息的接收
-                new Thread(new Runnable() {
+                Thread myThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            Thread.sleep(1000 * (new Random().nextInt(3) + 1));
+//                            Thread.sleep(1000 * (new Random().nextInt(3) + 1));
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     PartnerChatFragment.this.partnerMsgList.add(partnerMsg);
                                     PartnerChatFragment.this.partnerChatAdapter.notifyDataSetChanged();
+                                    // scroll down to the bottom:
+                                    PartnerChatFragment.this.chatContent.post(new Runnable(){
+                                        @Override
+                                        public void run(){
+                                            PartnerChatFragment.this.chatContent.setSelection(PartnerChatFragment.this.partnerChatAdapter.getCount() - 1);
+                                        }
+                                    });
+                                    
                                 }
                             });
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                }).start();
+                });
+                myThread.start();
+                try {
+                    myThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
