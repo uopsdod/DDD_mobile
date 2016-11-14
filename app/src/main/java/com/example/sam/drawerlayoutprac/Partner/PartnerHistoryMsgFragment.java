@@ -70,7 +70,6 @@ public class PartnerHistoryMsgFragment extends Fragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        //Log.d("WebSocket - ", "" + partnerHistoryMsgsList.size());
         this.listView.setAdapter(new PartnerHistoryMsgAdapter(getContext(),this.partnerHistoryMsgsList));
     }
 

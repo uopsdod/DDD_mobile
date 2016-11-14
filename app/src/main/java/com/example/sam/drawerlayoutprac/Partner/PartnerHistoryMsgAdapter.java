@@ -2,6 +2,9 @@ package com.example.sam.drawerlayoutprac.Partner;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,6 +18,7 @@ import com.example.sam.drawerlayoutprac.R;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by cuser on 2016/11/13.
@@ -64,11 +68,22 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
 
 
         // 開始binding data to viewholder:
-        holder.txt_topic.setText(data.getMemChatToMemId().toString());
+        String url = Common.URL + "/android/live2/partner.do";
+        MemVO memVO = null;
+        try {
+            memVO = new PartnerGetOneTask().execute(url,data.getMemChatToMemId().toString()).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        holder.txt_topic.setText(memVO.getMemName());
         holder.txt_lastmsg.setText(data.getMemChatContent().toString());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(data.getMemChatDate());
         holder.txt_date.setText(date);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(memVO.getMemProfile(),0,memVO.getMemProfile().length);
+        holder.img_profile.setImageBitmap(bitmap);
         return aConvertView;
     }// end
 
