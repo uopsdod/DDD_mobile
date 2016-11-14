@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +43,7 @@ public class SignUp_Page2_Fragment extends Fragment {
     Button btSubmit, btChangePhoto;
     ImageView ivPhoto;
     RadioGroup rgGender;
+    TextInputLayout tilName, tilLiveBudget, tilIntro;
     byte[] image;
     private static final int REQUEST_PICK_PICTURE = 2;
     private final static int REQ_PERMISSIONS = 0;
@@ -58,9 +60,51 @@ public class SignUp_Page2_Fragment extends Fragment {
         etLiveBudget = (EditText) view.findViewById(R.id.etLiveBudget);
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
+        tilName = (TextInputLayout) view.findViewById(R.id.tilName);
+        tilLiveBudget = (TextInputLayout) view.findViewById(R.id.tilLiveBudget);
+        tilIntro = (TextInputLayout) view.findViewById(R.id.tilIntro);
         btChangePhoto = (Button) view.findViewById(R.id.btChangePhoto);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
 
+        //Name 檢查
+        etName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String name = etName.getText().toString().trim();
+                if(name.length()<=0){
+                    tilName.setError("TwId can not be empty");
+                    return;
+                }else{
+                    tilName.setError(null);
+                }
+            }
+        });
+        //LiveBudget 檢查
+        etLiveBudget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Integer liveBudget = parseInt(String.valueOf(etLiveBudget.getText()));
+                if(liveBudget == null){
+                    tilLiveBudget.setError("TwId can not be empty");
+                    return;
+                }else{
+                    tilLiveBudget.setError(null);
+                }
+            }
+        });
+        //Intro 檢查
+        etIntro.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String intro = etIntro.getText().toString().trim();
+                if(intro.length()<=0){
+                    tilIntro.setError("TwId can not be empty");
+                    return;
+                }else{
+                    tilIntro.setError(null);
+                }
+            }
+        });
         rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
             @Override
@@ -159,10 +203,6 @@ public class SignUp_Page2_Fragment extends Fragment {
         @Override
         public void onClick(View view) {
             String name = etName.getText().toString().trim();
-            if(name.length() <= 0){
-                etName.setError("Must insert words");
-                return;
-            }
             Integer LiveBudget = parseInt(String.valueOf(etLiveBudget.getText()));
             String Intro = etIntro.getText().toString().trim();
             if(image == null){

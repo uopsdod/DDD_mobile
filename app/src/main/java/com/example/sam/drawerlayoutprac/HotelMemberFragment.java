@@ -3,6 +3,7 @@ package com.example.sam.drawerlayoutprac;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -24,8 +25,9 @@ import static android.content.Context.MODE_PRIVATE;
 public class HotelMemberFragment extends Fragment {
     private String TAG = "HotelMemberFragment";
     TextView tvTroLogin;
+    TextInputLayout tilUserName, tilPassword;
     EditText etUserName, etPassword;
-    Button btLogin, btSignUp;
+    Button btLogin;
     Fragment fragment;
     HotelVO hotelVO = new HotelVO();
 
@@ -35,13 +37,42 @@ public class HotelMemberFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_hotel_member, container, false);
 
+        tilUserName = (TextInputLayout) view.findViewById(R.id.tilUserName);
+        tilPassword = (TextInputLayout) view.findViewById(R.id.tilPassword);
         etUserName = (EditText) view.findViewById(R.id.etUserName);
         etPassword = (EditText) view.findViewById(R.id.etPassword);
         btLogin = (Button) view.findViewById(R.id.btLogin);
         btLogin.setOnClickListener(new btClick());
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
-        return view;
+        etUserName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String userName = etUserName.getText().toString().trim();
+                if(userName.length() <= 0){
+                    tilUserName.setError("User name is invalid");
+                    return;
+                }else{
+                    tilUserName.setError(null);
+                    return;
+                }
+            }
+        });
 
+        etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String password = etPassword.getText().toString().trim();
+                if(password.length() <= 0){
+                    tilPassword.setError("Password is invalid");
+                    return;
+                }else{
+                    tilPassword.setError(null);
+                    return;
+                }
+            }
+        });
+
+        return view;
     }
 
     private boolean isUserValid(String userName, String password){
@@ -68,12 +99,10 @@ public class HotelMemberFragment extends Fragment {
             if (view.equals(btLogin)) {
                 String userName = etUserName.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
-                if(userName.length() <= 0 || password.length() <= 0){
-                    etUserName.setError("User name or password invalid");
-                    return;
-                }
                 if(!isUserValid(userName,password)){
                     etUserName.setError("Account or Password is not valid");
+                    etPassword.setError(null);
+                    Util.showToast(getActivity(), "Login fail");
                     return;
                 }else{
 //                    String memId = memVO.getMemId().trim();
@@ -85,6 +114,7 @@ public class HotelMemberFragment extends Fragment {
                                .apply();
                     // 將會員Id與tokenId送到server
                     new TokenIdWebSocket(getActivity()).sendTokenIdToServer();
+                    Util.showToast(getActivity(), "Login success");
                 }
 
                 fragment = new HotelFragment();

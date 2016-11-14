@@ -32,7 +32,7 @@
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/tilUserName1"
+                android:id="@+id/tilUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linLayout">
@@ -51,10 +51,10 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/tilPassword1"
+                android:id="@+id/tilPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tilUserName1">
+                android:layout_below="@id/tilUserName">
 
                 <EditText
                     android:id="@+id/etPassword"
@@ -73,7 +73,7 @@
                 android:id="@+id/tilChPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tilPassword1">
+                android:layout_below="@id/tilPassword">
 
                 <EditText
                     android:id="@+id/etChPassword"
