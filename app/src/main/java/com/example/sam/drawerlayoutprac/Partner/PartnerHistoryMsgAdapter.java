@@ -70,8 +70,19 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         // 開始binding data to viewholder:
         String url = Common.URL + "/android/live2/partner.do";
         MemVO memVO = null;
+        // 判斷對方會員的memId - 由於資料庫sql指令的關係，此list資料是依據發訊息者或是接收訊息者其中一方是自己本身的話就放入list，
+        // 因此我們在這裡得做額外判斷
+        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE,this.context.MODE_PRIVATE);
+        String memId =preferences_r.getString("memId",null);
+        String toMemId = null;
+        if (!data.getMemChatToMemId().toString().equals(memId)){
+            toMemId = data.getMemChatToMemId().toString();
+        }else{
+            toMemId = data.getMemChatMemId().toString();
+        }
+        // end of 判斷對方會員的memId
         try {
-            memVO = new PartnerGetOneTask().execute(url,data.getMemChatToMemId().toString()).get();
+            memVO = new PartnerGetOneTask().execute(url,toMemId).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
