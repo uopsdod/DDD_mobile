@@ -92,13 +92,16 @@ public class PartnerFragment extends Fragment {
     // 紀錄要將訊息傳給誰的toMemId
     private String toMemId;
 
+    // 處理從訊息視窗切到navigation後，切換到其他頁面時當掉的bug
+    public static boolean backBtnPressed = false;
+
     @Override
     public void onResume() {
         super.onResume();
         backBtnPressed();
         // 處理聊天訊息回來畫面
-        if (getState() == EuclidState.ProfilePageOpened) { // 改
-            Util.showToast(getContext(), "Current State: " + EuclidState.ProfilePageOpened);
+        if (getState() == EuclidState.ProfilePageOpened && backBtnPressed == true) { // 改
+            PartnerFragment.this.backBtnPressed = false;
             try {
                 showProfileDetails(mItemSelected, mViewSelected);
             } catch (ExecutionException e) {
@@ -512,6 +515,7 @@ public class PartnerFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     //Util.showToast(getContext(),"backBtnPressed");
+                    PartnerFragment.this.backBtnPressed = true;
 
                     if (getState() == EuclidState.ProfilePageOpened) {
                         mProfileButtonShowAnimation = null;
