@@ -33,9 +33,9 @@ public class HotelInfoFragment extends Fragment implements Serializable {
     private static final String TAG = "HotelInfoFragment";
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rv_hotelInfo;
+    private TextView tvStatus;
     private ImageView ivHotelBig;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvHotelIntro;
-    private RatingBar ratingBar;
     private HotelVO hotelVO;
     private float aFloat = (float) 0.6;
 
@@ -54,7 +54,7 @@ public class HotelInfoFragment extends Fragment implements Serializable {
         tvHotelRoad = (TextView) view.findViewById(R.id.tvHotelRoad);
         tvHotelPhone = (TextView) view.findViewById(R.id.tvHotelPhone);
         tvHotelIntro = (TextView) view.findViewById(R.id.tvHotelIntro);
-        ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+        tvStatus = (TextView) view.findViewById(R.id.tvStatus);
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -100,7 +100,6 @@ public class HotelInfoFragment extends Fragment implements Serializable {
                 tvHotelPhone.setText(hotelVO.getHotelPhone());
                 tvHotelRoad.setText(hotelVO.getHotelRoad());
                 tvHotelIntro.setText(hotelVO.getHotelIntro());
-                ratingBar.setNumStars(hotelVO.getHotelRatingResult());
             }
         }
 
@@ -117,7 +116,8 @@ public class HotelInfoFragment extends Fragment implements Serializable {
                 Log.e(TAG, e.toString());
             }
             if(room == null || room.isEmpty()){
-                Util.showToast(getActivity(), "No hotel fonnd");
+                tvStatus.setVisibility(View.VISIBLE);
+                Util.showToast(getActivity(), "No Room fonnd");
             }else{
                 rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), room));
             }

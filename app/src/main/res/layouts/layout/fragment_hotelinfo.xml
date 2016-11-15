@@ -83,6 +83,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="15dp"
             android:maxHeight="12dp"
+            android:stepSize="0.5"
             android:numStars="5"
             android:progressTint="#709ACF"
             android:rating="2" />
@@ -109,6 +110,16 @@
         </ScrollView>
     </LinearLayout>
 
+    <TextView
+        android:gravity="center"
+        android:id="@+id/tvStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="今日無上架任何房間!"
+        android:visibility="gone"
+        android:textSize="25sp"
+        android:textColor="#ff0000"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="wrap_content"
@@ -120,6 +131,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+
 
 
 </LinearLayout>
