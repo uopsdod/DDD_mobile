@@ -94,7 +94,7 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         if (lastMsg.length() > 13){
             lastMsg = lastMsg.substring(0,10);
         }
-        Log.d("lastMsg - ", ""+lastMsg.length());
+//        Log.d("lastMsg - ", ""+lastMsg.length());
         holder.txt_lastmsg.setText(lastMsg);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(data.getMemChatDate());
