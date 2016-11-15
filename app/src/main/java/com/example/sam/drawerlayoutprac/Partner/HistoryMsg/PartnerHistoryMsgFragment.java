@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -26,7 +27,7 @@ import java.util.concurrent.ExecutionException;
  * Created by cuser on 2016/11/14.
  */
 
-public class PartnerHistoryMsgFragment extends Fragment {
+public class PartnerHistoryMsgFragment extends PartnerCommonFragment {
     public static final String TAG = "WebSocket Chat - ";
 
     private LinearLayout rootView;

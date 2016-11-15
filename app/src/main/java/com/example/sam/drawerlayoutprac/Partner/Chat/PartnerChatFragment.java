@@ -211,6 +211,7 @@ public class PartnerChatFragment extends PartnerCommonFragment {
                 PartnerMsg partnerMsg = new PartnerMsg();
                 partnerMsg.setAction("bindMemIdWithSession");
                 partnerMsg.setMemChatMemId(memId);
+                partnerMsg.setMemChatToMemId(PartnerChatFragment.this.toMemId);
                 tmpWebSocketClient = new PartnerChatWebSocket.MyWebSocketClient(partnerMsg);
                 tmpWebSocketClient.connect();
             }

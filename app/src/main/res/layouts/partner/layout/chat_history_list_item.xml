@@ -37,7 +37,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="17dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/sendbird_ic_launcher" />
+                android:src="@drawable/profile_default" />
         </android.support.v7.widget.CardView>
         </LinearLayout>
 

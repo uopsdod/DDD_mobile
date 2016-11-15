@@ -263,44 +263,31 @@ public class MainActivity extends AppCompatActivity {
 
     // 以下為測試
     public void testFragmentClicked(View view) {
-        LinearLayout linearLayout = (LinearLayout) view.getParent();
-        EditText editText = (EditText) linearLayout.findViewById(R.id.memId_yo);
-//        Util.showToast(getApplicationContext(),"testFragmentClicked:  " + editText.getText().toString());
-        // 把假memId放入preferences_yo
-        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-        preferences_w.edit()
-                .putString("memId_yo", editText.getText().toString())
-                .apply();
+//        LinearLayout linearLayout = (LinearLayout) view.getParent();
+//        EditText editText = (EditText) linearLayout.findViewById(R.id.memId_yo);
+////        Util.showToast(getApplicationContext(),"testFragmentClicked:  " + editText.getText().toString());
+//        // 把假memId放入preferences_yo
+//        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
+//        preferences_w.edit()
+//                .putString("memId_yo", editText.getText().toString())
+//                .apply();
 
         // 從preferences_yo讀取假memId
-        SharedPreferences preferences_r = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-        String memid_yo = preferences_r.getString("memId_yo", "no memId found");
-        Util.showToast(getApplicationContext(), "memid_yo:  " + memid_yo);
-
-
-    }
-
-    public boolean getHistoryMsgList(MenuItem item) {
-//        Util.showToast(this,"getHistoryMsgList clicked");
-        // 大問題-如何讓他回到上一個Fragment?但又不需要在每個Fragment中加上這段code?
-        // 開啟歷史訊息列表:
-        if (!floatingBtnPressed) {
-            MainActivity.floatingBtnPressed = true;
-            Fragment fragment = new PartnerHistoryMsgFragment();
-            Util.switchFragment(this, fragment);
-            // 關閉歷史訊息列表:
-        } else {
-            MainActivity.floatingBtnPressed = false;
-            FragmentManager fm = this.getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-            } else {
-                /*
-                 * KeyEvent kdown = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK);
-                    Activity.dispatchKeyEvent(kdown);
-                */
-            }
+        SharedPreferences preferences_r = getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
+        String memid_test = null;
+        if (preferences_r != null){
+            memid_test = preferences_r.getString("memId", null);
         }
-        return true;
+        if (memid_test != null){
+            Util.showToast(getApplicationContext(), "Who is logged:  " + memid_test);
+            preferences_r.edit().remove("memId").apply();
+        }
+        if (preferences_r.getString("memId", null) == null){
+            Util.showToast(getApplicationContext(), "log out:  " + memid_test);
+        }
+        // 之後繼續-如果登出，就要去跟MsgCenter講，把我的tokenId資訊拿掉
+
+
     }
+
 }
