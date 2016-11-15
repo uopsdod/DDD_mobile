@@ -31,6 +31,7 @@ import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
+import com.example.sam.drawerlayoutprac.PartnerGoBackState;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.nhaarman.listviewanimations.appearance.ViewAnimator;
@@ -92,15 +93,17 @@ public class PartnerFragment extends PartnerCommonFragment {
     private String toMemId;
 
     // 處理從訊息視窗切到navigation後，切換到其他頁面時當掉的bug
-    public static boolean backBtnPressed = false;
+    public static PartnerGoBackState backBtnPressed_fromChat = PartnerGoBackState.NOTHING; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
+
 
     @Override
     public void onResume() {
         super.onResume();
         backBtnPressed();
         // 處理聊天訊息回來畫面
-        if (getState() == EuclidState.ProfilePageOpened && backBtnPressed == true) { // 改
-            PartnerFragment.this.backBtnPressed = false;
+        // 排除掉-曾經進入個人詳細頁面，又同時沒有在聊天訊息視窗透過backbutton正常回來的情況
+        if (getState() == EuclidState.ProfilePageOpened && !(backBtnPressed_fromChat == PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR)) { // 改
+            PartnerFragment.this.backBtnPressed_fromChat = PartnerGoBackState.NOTHING;
             try {
                 showProfileDetails(mItemSelected, mViewSelected);
             } catch (ExecutionException e) {
@@ -524,7 +527,6 @@ public class PartnerFragment extends PartnerCommonFragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     //Util.showToast(getContext(),"backBtnPressed");
-                    PartnerFragment.this.backBtnPressed = true;
 
                     if (getState() == EuclidState.ProfilePageOpened) {
                         mProfileButtonShowAnimation = null;

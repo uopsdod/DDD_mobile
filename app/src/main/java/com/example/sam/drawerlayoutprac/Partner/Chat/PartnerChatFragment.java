@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +17,12 @@ import android.widget.ListView;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneImageTask;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneTextTask;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
+import com.example.sam.drawerlayoutprac.PartnerGoBackState;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.gson.Gson;
@@ -66,7 +70,9 @@ public class PartnerChatFragment extends PartnerCommonFragment {
     @Override
     public void onResume() {
         super.onResume();
+        PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
         MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
+        backBtnPressed();
 
         // 建立Websocket連線 - bindMemIdWithSession
         // myWebSocketClient = new TokenIdWebSocket(getActivity(), PartnerChatFragment.this).bindMemIdWithSession();
@@ -318,5 +324,25 @@ public class PartnerChatFragment extends PartnerCommonFragment {
         }
         return memVO_memId;
     }
+
+    private void backBtnPressed() {
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.BACKBTN_PRESSED; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
+                    // 回到上一個Fragment或是離開app
+                    FragmentManager fm = PartnerChatFragment.this.getFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        fm.popBackStack();
+                        return true;
+                    }
+                }// end if
+                return false;
+            }
+        });
+    }// end of backBtnPressed
 
 }
