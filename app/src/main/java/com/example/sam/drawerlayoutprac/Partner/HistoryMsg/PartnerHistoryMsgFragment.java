@@ -1,32 +1,22 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.HistoryMsg;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_17;
-import org.java_websocket.handshake.ServerHandshake;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -65,7 +55,7 @@ public class PartnerHistoryMsgFragment extends Fragment {
     private void initListView() {
         String uri = Common.URL + "/android/live2/PartnerMsgController";
         try {
-            this.partnerHistoryMsgsList = new PartnerHistoryGetMsgTask(getContext()).execute(uri).get();
+            this.partnerHistoryMsgsList = new PartnerHistoryMsgGetMsgTask(getContext()).execute(uri).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.VO;
 
 import java.io.Serializable;
 import java.sql.Clob;

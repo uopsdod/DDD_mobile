@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.HistoryMsg;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -26,12 +27,12 @@ import java.util.List;
  * Created by cuser on 2016/11/4.
  */
 // BaseAdapter - notifyDataSetChanged();
-public class PartnerHistoryGetMsgTask extends AsyncTask<String, Void, List<PartnerMsg>> {
+public class PartnerHistoryMsgGetMsgTask extends AsyncTask<String, Void, List<PartnerMsg>> {
     private final static String TAG = "PartnerChatGetMsgTask";
     private Context context;
     private ProgressDialog progressDialog;
 
-    public PartnerHistoryGetMsgTask(Context aContext){
+    public PartnerHistoryMsgGetMsgTask(Context aContext){
         this.context = aContext;
     }
 

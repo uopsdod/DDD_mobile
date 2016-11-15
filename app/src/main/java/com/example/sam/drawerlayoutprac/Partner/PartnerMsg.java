@@ -1,8 +1,6 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
-import org.apache.commons.beanutils.BeanUtils;
-import java.lang.reflect.InvocationTargetException;
-import java.security.Timestamp;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemChatVO;
 
 /**
  * Created by cuser on 2016/11/11.
@@ -10,7 +8,7 @@ import java.security.Timestamp;
 // 這個類別現在被兩個.java使用:
 // 1. TokenIdWebSocket.java
 // 2. PartnerChatFragment.java
-public class PartnerMsg extends MemChatVO{
+public class PartnerMsg extends MemChatVO {
     String action;
     String tokenId;
     // MemChatVO

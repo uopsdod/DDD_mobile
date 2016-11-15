@@ -1,28 +1,22 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.Chat;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by cuser on 2016/11/13.

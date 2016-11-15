@@ -3,6 +3,7 @@ package com.example.sam.drawerlayoutprac.Partner;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;

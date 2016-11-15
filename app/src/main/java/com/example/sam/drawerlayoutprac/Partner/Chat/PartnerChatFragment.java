@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.Chat;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,6 +16,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
+import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneImageTask;
+import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneTextTask;
+import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.gson.Gson;
@@ -53,9 +57,9 @@ public class PartnerChatFragment extends Fragment {
     private EditText msg;
 
     // history message
-    List<PartnerMsg> partnerMsgList;
+    public List<PartnerMsg> partnerMsgList;
     // 用於有新訊息時，告訴adapter要更新資料到view上面了
-    PartnerChatListAdapter partnerChatAdapter;
+    public PartnerChatListAdapter partnerChatAdapter;
     // 優化訊息視窗讀取順暢度
     static public Map<String, Bitmap> profileMap = new HashMap<>();
     static public Map<String, String> nameMap = new HashMap<>();

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

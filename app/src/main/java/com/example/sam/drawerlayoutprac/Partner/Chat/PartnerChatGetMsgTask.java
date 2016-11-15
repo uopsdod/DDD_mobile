@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.Chat;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
