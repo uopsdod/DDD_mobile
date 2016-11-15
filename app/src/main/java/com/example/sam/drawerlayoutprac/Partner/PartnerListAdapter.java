@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
 
 import java.util.List;
@@ -72,7 +71,7 @@ public class PartnerListAdapter extends ArrayAdapter<Map<String, Object>> {
         Integer memId = Integer.parseInt(mData.get(position).get(KEY_MEMID).toString().toUpperCase());
         Integer imageSize = 300;
             // 每次都開另一個thread去抓圖片
-        new PartnerGetImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);
+        new PartnerGetOneImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);
         viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
         viewHolder.mListItemDescription.setText((String) mData.get(position).get(KEY_DESCRIPTION_SHORT));
             // 將大頭貼設成圓的

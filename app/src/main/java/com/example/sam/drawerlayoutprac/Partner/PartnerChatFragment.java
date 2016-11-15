@@ -1,12 +1,9 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.icu.text.MessagePattern;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
@@ -24,25 +20,17 @@ import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.yalantis.euclid.library.EuclidState;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -67,7 +55,7 @@ public class PartnerChatFragment extends Fragment {
     // history message
     List<PartnerMsg> partnerMsgList;
     // 用於有新訊息時，告訴adapter要更新資料到view上面了
-    PartnerChatAdapter partnerChatAdapter;
+    PartnerChatListAdapter partnerChatAdapter;
     // 優化訊息視窗讀取順暢度
     static public Map<String, Bitmap> profileMap = new HashMap<>();
     static public Map<String, String> nameMap = new HashMap<>();
@@ -172,7 +160,7 @@ public class PartnerChatFragment extends Fragment {
         if (this.partnerMsgList != null && this.partnerMsgList.size() > 0) {
             Log.d("PartnerChatFragment", "fcm - " + this.partnerMsgList.get(0).getMemChatContent());
         }
-        this.partnerChatAdapter = new PartnerChatAdapter(getContext(), this.partnerMsgList);
+        this.partnerChatAdapter = new PartnerChatListAdapter(getContext(), this.partnerMsgList);
         this.chatContent.setAdapter(partnerChatAdapter);
         // scroll to the bottom:
         this.chatContent.post(new Runnable(){
@@ -331,7 +319,7 @@ public class PartnerChatFragment extends Fragment {
     private Bitmap getProfileBigmap(String aUrl, String aMemId, Integer aImageSize){
         Bitmap bitmap_memId = null;
         try {
-            bitmap_memId = new PartnerGetImageTask(null).execute(aUrl, aMemId, aImageSize).get();
+            bitmap_memId = new PartnerGetOneImageTask(null).execute(aUrl, aMemId, aImageSize).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

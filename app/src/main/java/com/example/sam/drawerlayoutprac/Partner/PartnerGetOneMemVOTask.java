@@ -29,10 +29,10 @@ import java.util.Map;
  * Created by cuser on 2016/11/4.
  */
 
-public class PartnerGetOneTask extends AsyncTask<String, Void, MemVO> {
+public class PartnerGetOneMemVOTask extends AsyncTask<String, Void, MemVO> {
     private final static String TAG = "SearchActivity";
 
-    public PartnerGetOneTask(){
+    public PartnerGetOneMemVOTask(){
     }
 
 
@@ -55,7 +55,7 @@ public class PartnerGetOneTask extends AsyncTask<String, Void, MemVO> {
             Log.e(TAG, e.toString());
             return null;
         }
-        Log.d("PartnerGetOneTask","Websocket" + jsonIn);
+        Log.d("PartnerGetOneMemVOTask","Websocket" + jsonIn);
         // 處理Oracle Date型態與gson之間的格式問題
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")

@@ -290,8 +290,8 @@ public class PartnerFragment extends Fragment {
         PartnerFragment.this.toMemId = (String) item.get(PartnerListAdapter.KEY_MEMID);
         String url = PartnerFragment.URL_Partner;
         int imageSize = 250;
-        new PartnerGetImageTask(profileImg).execute(url, toMemId, imageSize);
-        new PartnerGetImageTask(profileOverlay).execute(url, toMemId, imageSize);
+        new PartnerGetOneImageTask(profileImg).execute(url, toMemId, imageSize);
+        new PartnerGetOneImageTask(profileOverlay).execute(url, toMemId, imageSize);
         // end of 建立新的Thread去DB抓圖片
 
         // 將文字data放上view

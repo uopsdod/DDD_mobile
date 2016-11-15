@@ -83,7 +83,7 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         }
         // end of 判斷對方會員的memId
         try {
-            memVO = new PartnerGetOneTask().execute(url,toMemId).get();
+            memVO = new PartnerGetOneMemVOTask().execute(url,toMemId).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
