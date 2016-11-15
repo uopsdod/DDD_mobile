@@ -2,6 +2,8 @@ package com.example.sam.drawerlayoutprac.Partner;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +19,10 @@ import android.widget.TextView;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by cuser on 2016/11/13.
@@ -80,7 +84,22 @@ public class PartnerChatAdapter extends BaseAdapter {
 //        }
 
         // 開始binding data to viewholder:
+        String url = Common.URL + "/android/live2/partner.do";
+//        MemVO memVO = null;
+//        try {
+//            memVO = new PartnerGetOneTask().execute(url,data.getMemChatMemId()).get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+        holder.txt_name.setText(PartnerChatFragment.nameMap.get(data.getMemChatMemId()));
         holder.txt.setText(data.getMemChatContent().toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(data.getMemChatDate());
+        holder.txt_time.setText(date);
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(memVO.getMemProfile(),0,memVO.getMemProfile().length);
+        holder.img_thumbnail.setImageBitmap(PartnerChatFragment.profileMap.get(data.getMemChatMemId()));
         return aConvertView;
     }// end
 

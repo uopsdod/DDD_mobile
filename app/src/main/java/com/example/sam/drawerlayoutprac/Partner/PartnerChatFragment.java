@@ -3,6 +3,7 @@ package com.example.sam.drawerlayoutprac.Partner;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -67,6 +68,9 @@ public class PartnerChatFragment extends Fragment {
 
     PartnerChatAdapter partnerChatAdapter;
 
+    static public Map<String, Bitmap> profileMap = new HashMap<>();
+    static public Map<String, String> nameMap = new HashMap<>();
+
     @Override
     public void onResume() {
         super.onResume();
@@ -119,6 +123,51 @@ public class PartnerChatFragment extends Fragment {
         Bundle myBundle = getArguments();
         this.toMemId = (String) myBundle.get("ToMemId");
         Util.showToast(getContext(), "toMemId: " + this.toMemId);
+        // 拿memId自己的大頭照
+        SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
+        String memId = preferences_r.getString("memId",null);
+        String url = Common.URL + "/android/live2/partner.do";
+        int imageSize = 100;
+        Bitmap bitmap_memId = null;
+        try {
+            bitmap_memId = new PartnerGetImageTask(null).execute(url, memId, imageSize).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        profileMap.put(memId,bitmap_memId);
+        // 拿memId自己的姓名:
+        MemVO memVO_memId = null;
+        try {
+            memVO_memId = new PartnerGetOneTextTask().execute(url, memId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        this.nameMap.put(memId,memVO_memId.getMemName());
+
+        // 拿toMemId的會員大頭照
+        Bitmap bitmap_toMemId = null;
+        try {
+            bitmap_toMemId = new PartnerGetImageTask(null).execute(url, this.toMemId, imageSize).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        profileMap.put(this.toMemId,bitmap_toMemId);
+        // 拿toMemId的會員的姓名:
+        MemVO memVO_toMemId = null;
+        try {
+            memVO_toMemId = new PartnerGetOneTextTask().execute(url, this.toMemId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        this.nameMap.put(this.toMemId,memVO_toMemId.getMemName());
 
         // this.chatContent(ListView) - setAdapter here
         initMsgHistoryList();
