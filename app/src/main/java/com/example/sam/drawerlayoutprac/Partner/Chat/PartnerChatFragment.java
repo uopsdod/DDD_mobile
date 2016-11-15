@@ -72,13 +72,27 @@ public class PartnerChatFragment extends PartnerCommonFragment {
         super.onResume();
         PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
         MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
-        backBtnPressed();
 
         // 建立Websocket連線 - bindMemIdWithSession
         // myWebSocketClient = new TokenIdWebSocket(getActivity(), PartnerChatFragment.this).bindMemIdWithSession();
         myWebSocketClient = new PartnerChatWebSocket().bindMemIdWithSession();
 
         // end of 建立Websocket連線
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
+        super.onCreateView(inflater, viewGroup, bundle);
+        this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
+        this.chatContent = (ListView) this.rootView.findViewById(R.id.chat_contents);
+        this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
+        this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
+
+        // 拿兩會員的memId以及大頭照 - 加快訊息視窗讀取順暢度
+        initTwoMemData();
+        // this.chatContent(ListView) - setAdapter here
+        initMsgHistoryList();
 
         // 設定send監聽器
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -112,20 +126,6 @@ public class PartnerChatFragment extends PartnerCommonFragment {
                 }
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
-        super.onCreateView(inflater, viewGroup, bundle);
-        this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
-        this.chatContent = (ListView) this.rootView.findViewById(R.id.chat_contents);
-        this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
-        this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
-
-        // 拿兩會員的memId以及大頭照 - 加快訊息視窗讀取順暢度
-        initTwoMemData();
-        // this.chatContent(ListView) - setAdapter here
-        initMsgHistoryList();
 
         return this.rootView;
     }// end of onCreateView
@@ -300,8 +300,7 @@ public class PartnerChatFragment extends PartnerCommonFragment {
             }
         });
     }
-    
-    
+
     private Bitmap getProfileBigmap(String aUrl, String aMemId, Integer aImageSize){
         Bitmap bitmap_memId = null;
         try {
@@ -326,24 +325,5 @@ public class PartnerChatFragment extends PartnerCommonFragment {
         return memVO_memId;
     }
 
-    private void backBtnPressed() {
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.BACKBTN_PRESSED; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
-                    // 回到上一個Fragment或是離開app
-                    FragmentManager fm = PartnerChatFragment.this.getFragmentManager();
-                    if (fm.getBackStackEntryCount() > 0) {
-                        fm.popBackStack();
-                        return true;
-                    }
-                }// end if
-                return false;
-            }
-        });
-    }// end of backBtnPressed
 
 }
