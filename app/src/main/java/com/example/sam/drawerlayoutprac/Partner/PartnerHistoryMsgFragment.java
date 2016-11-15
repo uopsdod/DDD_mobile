@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -71,6 +72,24 @@ public class PartnerHistoryMsgFragment extends Fragment {
             e.printStackTrace();
         }
         this.listView.setAdapter(new PartnerHistoryMsgAdapter(getContext(),this.partnerHistoryMsgsList));
+
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PartnerMsg partnerMsg = (PartnerMsg)parent.getItemAtPosition(position);
+                String toMemId = null; // partnerMsg.getMemChatToMemId();
+                if (!partnerMsg.getMemChatToMemId().equals(memId)){
+                    toMemId = partnerMsg.getMemChatToMemId().toString();
+                }else{
+                    toMemId = partnerMsg.getMemChatMemId().toString();
+                }
+                Fragment fragment = new PartnerChatFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("ToMemId", toMemId);
+                fragment.setArguments(bundle);
+                Util.switchFragment(PartnerHistoryMsgFragment.this, fragment);
+            }
+        });
     }
 
 
