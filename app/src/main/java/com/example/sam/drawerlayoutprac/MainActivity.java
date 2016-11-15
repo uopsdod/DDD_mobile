@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,19 +22,15 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
-import com.example.sam.drawerlayoutprac.Partner.MyFirebaseMessagingService;
-import com.example.sam.drawerlayoutprac.Partner.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
+import com.example.sam.drawerlayoutprac.Partner.HistoryMsg.PartnerHistoryMsgFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
 import org.java_websocket.client.WebSocketClient;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle actionBarDrawerToggle;
     WebSocketClient webSocketClientTmp;
     FloatingActionButton floatingBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // 使用設定預設首頁 - HotelFragment.java
         inigDrawerBody();
+
     }
 
     @Override
@@ -270,5 +267,12 @@ public class MainActivity extends AppCompatActivity {
         Util.showToast(getApplicationContext(), "memid_yo:  " + memid_yo);
 
 
+    }
+
+    public boolean getHistoryMsgList(MenuItem item){
+//        Util.showToast(this,"getHistoryMsgList clicked");
+        Fragment fragment = new PartnerHistoryMsgFragment();
+        Util.switchFragment(this, fragment);
+        return true;
     }
 }

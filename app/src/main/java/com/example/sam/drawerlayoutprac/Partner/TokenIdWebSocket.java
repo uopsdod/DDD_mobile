@@ -3,23 +3,19 @@ package com.example.sam.drawerlayoutprac.Partner;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
-import com.example.sam.drawerlayoutprac.Util;
+import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
 import com.google.gson.Gson;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by cuser on 2016/11/11.

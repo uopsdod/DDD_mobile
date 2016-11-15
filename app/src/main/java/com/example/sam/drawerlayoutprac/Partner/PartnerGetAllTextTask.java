@@ -2,13 +2,11 @@ package com.example.sam.drawerlayoutprac.Partner;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ListView;
 
-import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,16 +29,16 @@ import java.util.Map;
 /**
  * Created by cuser on 2016/11/4.
  */
-// BaseAdapter - notifyDataSetChanged();
-public class PartnerChatGetMsgTask extends AsyncTask<String, Void, List<PartnerMsg>> {
-    private final static String TAG = "PartnerChatGetMsgTask";
-    private Context context;
-    private ProgressDialog progressDialog;
-    private String toMemId;
 
-    public PartnerChatGetMsgTask(Context aContext, String aToMemId){
-        this.context = aContext;
-        this.toMemId = aToMemId;
+public class PartnerGetAllTextTask extends AsyncTask<String, Void, List<MemVO>> {
+    private final static String TAG = "SearchActivity";
+    private Context context;
+    private ListView listView;
+    private ProgressDialog progressDialog;
+
+    public PartnerGetAllTextTask(Context context, ListView listView){
+        this.context = context;
+        this.listView = listView;
     }
 
 
@@ -53,37 +51,50 @@ public class PartnerChatGetMsgTask extends AsyncTask<String, Void, List<PartnerM
     }
 
     @Override
-    protected List<PartnerMsg> doInBackground(String... params) {
+    protected List<MemVO> doInBackground(String... params) {
         String url = params[0]; // 傳入的Common.URL字串
-        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE,this.context.MODE_PRIVATE);
-        String memid = preferences_r.getString("memId", null);
         String jsonIn;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", "getAll"); // 在這邊控制請求參數
-        jsonObject.addProperty("memId", memid); // 在這邊控制請求參數
-        jsonObject.addProperty("toMemId", this.toMemId); // 在這邊控制請求參數
         try {
             jsonIn = getRemoteData(url, jsonObject.toString());
         } catch (IOException e) {
-            Log.e(TAG, "fcm - " + e.toString());
+            Log.e(TAG, e.toString());
             return null;
         }
 
-        // 處理Oracle Timestamp型態與gson之間的格式問題
+        // 處理Oracle Date型態與gson之間的格式問題
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd hh:mm:ss.S")
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .create();
-        // end of // 處理Oracle Timestamp型態與gson之間的格式問題
-        // 請server那邊把MemCharVO都處理好成PartnerMsg之後，再傳過來
-        Type listType = new TypeToken<List<PartnerMsg>>() { }.getType();
-
+        Type listType = new TypeToken<List<MemVO>>() {
+        }.getType();
+        // end of // 處理Oracle Date型態與gson之間的格式問題
 
         // 回傳至onPostExecute(List<MemVO> items) - 備註:此為 UI main thread在呼叫的
         return gson.fromJson(jsonIn, listType);
     }
 
     @Override
-    protected void onPostExecute(List<PartnerMsg> items) {
+    protected void onPostExecute(List<MemVO> items) {
+        Map<String, Object> profileMap;
+        List<Map<String, Object>> profilesList = new ArrayList<>();
+
+        for (int i = 0; i < items.size(); i++) {
+            MemVO myVO = items.get(i);
+
+            profileMap = new HashMap<>();
+
+            //放入文字資料
+            profileMap.put(PartnerListAdapter.KEY_MEMID, myVO.getMemId());
+            profileMap.put(PartnerListAdapter.KEY_NAME, myVO.getMemName());
+            profileMap.put(PartnerListAdapter.KEY_DESCRIPTION_SHORT, myVO.getMemIntro());
+            profileMap.put(PartnerListAdapter.KEY_DESCRIPTION_FULL, myVO.getMemIntro());
+            profilesList.add(profileMap);
+        }
+        // 放入ListView的Adapter
+        listView.setAdapter(new PartnerListAdapter(this.context, R.layout.list_item, profilesList));
+
         progressDialog.cancel();
     }
 

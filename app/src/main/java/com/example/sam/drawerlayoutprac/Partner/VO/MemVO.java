@@ -1,8 +1,20 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.VO;
 
 import java.sql.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
  
 public class MemVO implements java.io.Serializable{
+	private static final long serialVersionUID = 1L;
+	private String bs64;
+	public String getBs64() {
+		return this.bs64;
+	}
+	public void setBs64(String aBs64) {
+		this.bs64 = aBs64;
+	}
+	//----------------------------上面貴新增
 	private String memId;
 	private String memAccount;
 	private String memPsw;
@@ -18,6 +30,8 @@ public class MemVO implements java.io.Serializable{
 	private String memCreditCardNo;
 	private String memCreditCheckNo;
 	private String memCreditDueDate;
+	
+	private Set<OrdVO> memOrds = new LinkedHashSet<OrdVO>();
 	
 	public String getMemId() {
 		return this.memId;
@@ -109,4 +123,12 @@ public class MemVO implements java.io.Serializable{
 	public void setMemCreditDueDate(String aMemCreditDueDate) {
 		this.memCreditDueDate = aMemCreditDueDate;
 	}
+	public Set<OrdVO> getMemOrds(){
+		return this.memOrds;
+	}
+	
+	public void setMemOrds(Set<OrdVO> aMemOrds){
+		this.memOrds = aMemOrds;
+	}
+	
 }

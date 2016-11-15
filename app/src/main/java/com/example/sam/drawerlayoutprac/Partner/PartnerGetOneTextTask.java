@@ -1,100 +1,64 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ListView;
 
-import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by cuser on 2016/11/4.
  */
 
-public class PartnerGetTextTask extends AsyncTask<String, Void, List<MemVO>> {
+public class PartnerGetOneTextTask extends AsyncTask<String, Void, MemVO> {
     private final static String TAG = "SearchActivity";
-    private Context context;
-    private ListView listView;
-    private ProgressDialog progressDialog;
 
-    public PartnerGetTextTask(Context context, ListView listView){
-        this.context = context;
-        this.listView = listView;
+    public PartnerGetOneTextTask(){
     }
 
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog = new ProgressDialog(this.context);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
     }
 
     @Override
-    protected List<MemVO> doInBackground(String... params) {
+    protected MemVO doInBackground(String... params) {
         String url = params[0]; // 傳入的Common.URL字串
+        String toMemID = params[1];
         String jsonIn;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("action", "getAll"); // 在這邊控制請求參數
+        jsonObject.addProperty("action", "getOneText"); // 在這邊控制請求參數
+        jsonObject.addProperty("toMemId", toMemID);
         try {
             jsonIn = getRemoteData(url, jsonObject.toString());
         } catch (IOException e) {
             Log.e(TAG, e.toString());
             return null;
         }
-
+        Log.d("PartnerGetOneMemVOTask","Websocket" + jsonIn);
         // 處理Oracle Date型態與gson之間的格式問題
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .create();
-        Type listType = new TypeToken<List<MemVO>>() {
-        }.getType();
         // end of // 處理Oracle Date型態與gson之間的格式問題
 
         // 回傳至onPostExecute(List<MemVO> items) - 備註:此為 UI main thread在呼叫的
-        return gson.fromJson(jsonIn, listType);
+        return gson.fromJson(jsonIn, MemVO.class);
     }
 
     @Override
-    protected void onPostExecute(List<MemVO> items) {
-        Map<String, Object> profileMap;
-        List<Map<String, Object>> profilesList = new ArrayList<>();
-
-        for (int i = 0; i < items.size(); i++) {
-            MemVO myVO = items.get(i);
-
-            profileMap = new HashMap<>();
-
-            //放入文字資料
-            profileMap.put(PartnerListAdapter.KEY_MEMID, myVO.getMemId());
-            profileMap.put(PartnerListAdapter.KEY_NAME, myVO.getMemName());
-            profileMap.put(PartnerListAdapter.KEY_DESCRIPTION_SHORT, myVO.getMemIntro());
-            profileMap.put(PartnerListAdapter.KEY_DESCRIPTION_FULL, myVO.getMemIntro());
-            profilesList.add(profileMap);
-        }
-        // 放入ListView的Adapter
-        listView.setAdapter(new PartnerListAdapter(this.context, R.layout.list_item, profilesList));
-
-        progressDialog.cancel();
+    protected void onPostExecute(MemVO items) {
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {

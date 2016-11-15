@@ -1,11 +1,9 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.Chat;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.icu.text.MessagePattern;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -15,32 +13,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
+import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneImageTask;
+import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneTextTask;
+import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.yalantis.euclid.library.EuclidState;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -63,9 +57,12 @@ public class PartnerChatFragment extends Fragment {
     private EditText msg;
 
     // history message
-    List<PartnerMsg> partnerMsgList;
-
-    PartnerChatAdapter partnerChatAdapter;
+    public List<PartnerMsg> partnerMsgList;
+    // 用於有新訊息時，告訴adapter要更新資料到view上面了
+    public PartnerChatListAdapter partnerChatAdapter;
+    // 優化訊息視窗讀取順暢度
+    static public Map<String, Bitmap> profileMap = new HashMap<>();
+    static public Map<String, String> nameMap = new HashMap<>();
 
     @Override
     public void onResume() {
@@ -95,12 +92,16 @@ public class PartnerChatFragment extends Fragment {
                 partnerMsg.setMemChatMemId(memid);
                 partnerMsg.setMemChatToMemId(PartnerChatFragment.this.toMemId);
                 partnerMsg.setMemChatContent(newMsg);
+                partnerMsg.setMemChatDate(new Timestamp(new java.util.Date().getTime()));
                 // 在自己頁面顯示聊天視窗:
                 addMsgScrollDown(partnerMsg);
                 // end of 在自己頁面顯示聊天視窗
 
                 if (myWebSocketClient != null) {
-                    Gson gson = new Gson();
+//                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder()
+                            .setDateFormat("yyyy-MM-dd hh:mm:ss.S")
+                            .create(); // 注意:如果VO中有Date,Timestamp，就要Server,Client端規格一致
                     String partnerMsgGson = gson.toJson(partnerMsg);
                     myWebSocketClient.send(partnerMsgGson);
                 }
@@ -115,16 +116,40 @@ public class PartnerChatFragment extends Fragment {
         this.chatContent = (ListView) this.rootView.findViewById(R.id.chat_contents);
         this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
         this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
-        // 拿toMemId的會員Id
-        Bundle myBundle = getArguments();
-        this.toMemId = (String) myBundle.get("ToMemId");
-        Util.showToast(getContext(), "toMemId: " + this.toMemId);
 
+        // 拿兩會員的memId以及大頭照 - 加快訊息視窗讀取順暢度
+        initTwoMemData();
         // this.chatContent(ListView) - setAdapter here
         initMsgHistoryList();
 
         return this.rootView;
     }// end of onCreateView
+
+    private void initTwoMemData() {
+        // 拿toMemId的會員Id
+        Bundle myBundle = getArguments();
+        this.toMemId = (String) myBundle.get("ToMemId");
+        Util.showToast(getContext(), "toMemId: " + this.toMemId);
+        // 拿memId自己的會員Id
+        SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
+        String memId = preferences_r.getString("memId",null);
+        // 拿memId自己的大頭照
+        String url = Common.URL + "/android/live2/partner.do";
+        int imageSize = 150;
+        Bitmap bitmap_memId = getProfileBigmap(url, memId, imageSize);
+
+        profileMap.put(memId,bitmap_memId);
+        // 拿memId自己的姓名:
+        MemVO memVO_memId = getMemVO(url, memId);
+        this.nameMap.put(memId,memVO_memId.getMemName());
+
+        // 拿toMemId的會員大頭照
+        Bitmap bitmap_toMemId = getProfileBigmap(url, this.toMemId, imageSize);
+        profileMap.put(this.toMemId,bitmap_toMemId);
+        // 拿toMemId的會員的姓名:
+        MemVO memVO_toMemId = getMemVO(url,this.toMemId);
+        this.nameMap.put(this.toMemId,memVO_toMemId.getMemName());
+    }
 
     private void initMsgHistoryList() {
 
@@ -139,7 +164,7 @@ public class PartnerChatFragment extends Fragment {
         if (this.partnerMsgList != null && this.partnerMsgList.size() > 0) {
             Log.d("PartnerChatFragment", "fcm - " + this.partnerMsgList.get(0).getMemChatContent());
         }
-        this.partnerChatAdapter = new PartnerChatAdapter(getContext(), this.partnerMsgList);
+        this.partnerChatAdapter = new PartnerChatListAdapter(getContext(), this.partnerMsgList);
         this.chatContent.setAdapter(partnerChatAdapter);
         // scroll to the bottom:
         this.chatContent.post(new Runnable(){
@@ -292,6 +317,31 @@ public class PartnerChatFragment extends Fragment {
                 PartnerChatFragment.this.chatContent.setSelection(PartnerChatFragment.this.partnerChatAdapter.getCount() - 1);
             }
         });
+    }
+    
+    
+    private Bitmap getProfileBigmap(String aUrl, String aMemId, Integer aImageSize){
+        Bitmap bitmap_memId = null;
+        try {
+            bitmap_memId = new PartnerGetOneImageTask(null).execute(aUrl, aMemId, aImageSize).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return bitmap_memId;
+    }
+
+    private MemVO getMemVO(String aUrl, String aMemId){
+        MemVO memVO_memId = null;
+        try {
+            memVO_memId = new PartnerGetOneTextTask().execute(aUrl, aMemId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return memVO_memId;
     }
 
 }

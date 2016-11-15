@@ -39,6 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SenderName"
+                android:layout_marginLeft="20dp"
                 android:textSize="18sp"
                 android:visibility="visible" />
 
@@ -81,11 +82,11 @@
             android:layout_gravity="bottom"
             android:text="Unread"
             android:textColor="#ac90ff"
-            android:textSize="10sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/txt_time"
-            android:layout_width="wrap_content"
+            android:layout_width="95dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
@@ -93,7 +94,7 @@
             android:paddingLeft="4dp"
             android:text="10:24PM"
             android:textColor="#acaab2"
-            android:textSize="10sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 

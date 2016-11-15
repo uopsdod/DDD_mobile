@@ -20,16 +20,16 @@ import java.net.URL;
 /**
  * Created by cuser on 2016/11/3.
  */
-public class PartnerGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
-    private final static String TAG = "PartnerGetImageTask";
+public class PartnerGetOneImageTask extends AsyncTask<Object, Integer, Bitmap> {
+    private final static String TAG = "PartnerGetOneImageTask";
     private final static String ACTION = "getImage";
     // 使用WeakReference，讓圖片只要滿足一項條件，就釋放記憶體。ex. 參考=null
     private final WeakReference<ImageView> imageViewWeakReference;
 
-    public PartnerGetImageTask(ImageView imageView) {
+    public PartnerGetOneImageTask(ImageView imageView) {
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
-    public PartnerGetImageTask() {
+    public PartnerGetOneImageTask() {
         this.imageViewWeakReference = null;
     }
 

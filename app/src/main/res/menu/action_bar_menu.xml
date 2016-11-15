@@ -6,7 +6,8 @@
         android:id="@+id/message"
         android:icon="@drawable/message"
         android:title="favorite"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:onClick="getHistoryMsgList"/>
 
     <item
         android:id="@+id/liveTogether"

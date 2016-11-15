@@ -3,13 +3,10 @@ package com.example.sam.drawerlayoutprac.Partner;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.icu.text.MessagePattern;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -32,6 +29,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.nhaarman.listviewanimations.appearance.ViewAnimator;
@@ -92,13 +91,16 @@ public class PartnerFragment extends Fragment {
     // 紀錄要將訊息傳給誰的toMemId
     private String toMemId;
 
+    // 處理從訊息視窗切到navigation後，切換到其他頁面時當掉的bug
+    public static boolean backBtnPressed = false;
+
     @Override
     public void onResume() {
         super.onResume();
         backBtnPressed();
         // 處理聊天訊息回來畫面
-        if (getState() == EuclidState.ProfilePageOpened) {
-            Util.showToast(getContext(), "Current State: " + EuclidState.ProfilePageOpened);
+        if (getState() == EuclidState.ProfilePageOpened && backBtnPressed == true) { // 改
+            PartnerFragment.this.backBtnPressed = false;
             try {
                 showProfileDetails(mItemSelected, mViewSelected);
             } catch (ExecutionException e) {
@@ -184,7 +186,7 @@ public class PartnerFragment extends Fragment {
             String url = PartnerFragment.URL_Partner;
             Log.d("url", url);
             try {
-                memVOList = (List<MemVO>) new PartnerGetTextTask(getContext(), this.listview).execute(url).get();
+                memVOList = (List<MemVO>) new PartnerGetAllTextTask(getContext(), this.listview).execute(url).get();
                 // 去掉自己
                 SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,getActivity().MODE_PRIVATE);
                 String memid = preferences_r.getString("memId", null);
@@ -290,8 +292,8 @@ public class PartnerFragment extends Fragment {
         PartnerFragment.this.toMemId = (String) item.get(PartnerListAdapter.KEY_MEMID);
         String url = PartnerFragment.URL_Partner;
         int imageSize = 250;
-        new PartnerGetImageTask(profileImg).execute(url, toMemId, imageSize);
-        new PartnerGetImageTask(profileOverlay).execute(url, toMemId, imageSize);
+        new PartnerGetOneImageTask(profileImg).execute(url, toMemId, imageSize);
+        new PartnerGetOneImageTask(profileOverlay).execute(url, toMemId, imageSize);
         // end of 建立新的Thread去DB抓圖片
 
         // 將文字data放上view
@@ -512,6 +514,7 @@ public class PartnerFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     //Util.showToast(getContext(),"backBtnPressed");
+                    PartnerFragment.this.backBtnPressed = true;
 
                     if (getState() == EuclidState.ProfilePageOpened) {
                         mProfileButtonShowAnimation = null;
