@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.android.gms.maps.CameraUpdate;
@@ -55,11 +56,7 @@ public class PartnerMapFragment extends Fragment {
         mMapView.onResume(); // needed to get the map to display immediately
 
         // 設定floatingBtn click lisner - 讓它返回到上一個Fragment
-        LinearLayout ll_view = (LinearLayout) container.getParent();
-        CoordinatorLayout cdl_view = (CoordinatorLayout) ll_view.getParent();
-        FloatingActionButton floatingBtn = (FloatingActionButton) cdl_view.findViewById(R.id.floatingBtn);
-
-        floatingBtn.setOnClickListener(new View.OnClickListener() {
+        MainActivity.floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Util.showToast(getContext(), "ftBtn clicked");

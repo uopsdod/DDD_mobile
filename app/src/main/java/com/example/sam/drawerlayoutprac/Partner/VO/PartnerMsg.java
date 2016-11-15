@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Partner.VO;
 
 import com.example.sam.drawerlayoutprac.Partner.VO.MemChatVO;
 

@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.R;
@@ -109,6 +110,7 @@ public class PartnerFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+        setFloatingBtnClickListener();
         // end of // 處理聊天訊息回來畫面
     }
 
@@ -117,7 +119,6 @@ public class PartnerFragment extends Fragment {
         super.onCreateView(inflater, viewGroup, bundle);
         View view = inflater.inflate(R.layout.fragment_partner, viewGroup, false);
         findViews(view);
-        setFloatingBtnClickListener(viewGroup);
         setButtonProfileClickListener();
         initList();
         return view;
@@ -128,7 +129,6 @@ public class PartnerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Util.showToast(getContext(), "進入聊天視窗");
-                mMapFloatingBtn.setVisibility(View.INVISIBLE);
                 Fragment fragment = new PartnerChatFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("ToMemId", PartnerFragment.this.toMemId);
@@ -159,13 +159,10 @@ public class PartnerFragment extends Fragment {
     }
 
     // onCreateView方法02
-    private void setFloatingBtnClickListener(ViewGroup viewGroup) {
+    private void setFloatingBtnClickListener() {
         // set up floatingBtn click Listener
-        LinearLayout ll_view = (LinearLayout) viewGroup.getParent();
-        CoordinatorLayout cdl_view = (CoordinatorLayout) ll_view.getParent();
-        this.mMapFloatingBtn = (FloatingActionButton) cdl_view.findViewById(R.id.floatingBtn);
-
-        mMapFloatingBtn.setOnClickListener(new View.OnClickListener() {
+        MainActivity.floatingBtn.setVisibility(View.VISIBLE);
+        MainActivity.floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Util.showToast(getContext(), "ftBtn clicked");

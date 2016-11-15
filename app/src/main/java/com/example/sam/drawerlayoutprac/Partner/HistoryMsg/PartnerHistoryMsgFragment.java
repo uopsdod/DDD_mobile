@@ -12,8 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
-import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
+import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
@@ -36,6 +37,7 @@ public class PartnerHistoryMsgFragment extends Fragment {
     public void onResume() {
         super.onResume();
         backBtnPressed();
+        MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -67,6 +69,7 @@ public class PartnerHistoryMsgFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PartnerMsg partnerMsg = (PartnerMsg)parent.getItemAtPosition(position);
+                //MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
                 String toMemId = null; // partnerMsg.getMemChatToMemId();
                 if (!partnerMsg.getMemChatToMemId().equals(memId)){
                     toMemId = partnerMsg.getMemChatToMemId().toString();

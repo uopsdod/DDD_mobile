@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     WebSocketClient webSocketClientTmp;
-    FloatingActionButton floatingBtn;
+    public static FloatingActionButton floatingBtn;
 
 
     @Override
