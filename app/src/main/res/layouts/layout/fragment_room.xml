@@ -44,17 +44,7 @@
             android:textColor="#DD71B4"
             android:textSize="24dp" />
 
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="15dp"
-            android:maxHeight="12dp"
-            android:numStars="5"
-            android:progressTint="#709ACF"
-            android:rating="2" />
+
     </RelativeLayout>
 
     <RelativeLayout

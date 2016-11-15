@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
@@ -28,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 public class RoomFragment extends Fragment {
     private String TAG = "RoomFragment";
     private TextView tvRoomName,tvFacilitiesDetail, tvPrice;
-    private String RoomId ;
+    private String RoomId;
     private ImageView imageView;
     private RecyclerView rv_RoomImage;
     @Nullable
