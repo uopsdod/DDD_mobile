@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -89,7 +90,12 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         holder.txt_topic.setText(memVO.getMemName());
-        holder.txt_lastmsg.setText(data.getMemChatContent().toString());
+        String lastMsg = data.getMemChatContent().toString();
+        if (lastMsg.length() > 13){
+            lastMsg = lastMsg.substring(0,10);
+        }
+        Log.d("lastMsg - ", ""+lastMsg.length());
+        holder.txt_lastmsg.setText(lastMsg);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(data.getMemChatDate());
         holder.txt_date.setText(date);
