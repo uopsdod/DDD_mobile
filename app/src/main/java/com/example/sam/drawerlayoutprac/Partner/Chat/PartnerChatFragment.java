@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneImageTask;
@@ -65,6 +66,7 @@ public class PartnerChatFragment extends PartnerCommonFragment {
     @Override
     public void onResume() {
         super.onResume();
+        MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
 
         // 建立Websocket連線 - bindMemIdWithSession
         // myWebSocketClient = new TokenIdWebSocket(getActivity(), PartnerChatFragment.this).bindMemIdWithSession();
