@@ -65,9 +65,9 @@ public class PartnerChatFragment extends Fragment {
 
     // history message
     List<PartnerMsg> partnerMsgList;
-
+    // 用於有新訊息時，告訴adapter要更新資料到view上面了
     PartnerChatAdapter partnerChatAdapter;
-
+    // 優化訊息視窗讀取順暢度
     static public Map<String, Bitmap> profileMap = new HashMap<>();
     static public Map<String, String> nameMap = new HashMap<>();
 
@@ -119,61 +119,40 @@ public class PartnerChatFragment extends Fragment {
         this.chatContent = (ListView) this.rootView.findViewById(R.id.chat_contents);
         this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
         this.btnSend = (Button) this.rootView.findViewById(R.id.btn_send);
-        // 拿toMemId的會員Id
-        Bundle myBundle = getArguments();
-        this.toMemId = (String) myBundle.get("ToMemId");
-        Util.showToast(getContext(), "toMemId: " + this.toMemId);
-        // 拿memId自己的大頭照
-        SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
-        String memId = preferences_r.getString("memId",null);
-        String url = Common.URL + "/android/live2/partner.do";
-        int imageSize = 100;
-        Bitmap bitmap_memId = null;
-        try {
-            bitmap_memId = new PartnerGetImageTask(null).execute(url, memId, imageSize).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        profileMap.put(memId,bitmap_memId);
-        // 拿memId自己的姓名:
-        MemVO memVO_memId = null;
-        try {
-            memVO_memId = new PartnerGetOneTextTask().execute(url, memId).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        this.nameMap.put(memId,memVO_memId.getMemName());
 
-        // 拿toMemId的會員大頭照
-        Bitmap bitmap_toMemId = null;
-        try {
-            bitmap_toMemId = new PartnerGetImageTask(null).execute(url, this.toMemId, imageSize).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        profileMap.put(this.toMemId,bitmap_toMemId);
-        // 拿toMemId的會員的姓名:
-        MemVO memVO_toMemId = null;
-        try {
-            memVO_toMemId = new PartnerGetOneTextTask().execute(url, this.toMemId).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        this.nameMap.put(this.toMemId,memVO_toMemId.getMemName());
-
+        // 拿兩會員的memId以及大頭照 - 加快訊息視窗讀取順暢度
+        initTwoMemData();
         // this.chatContent(ListView) - setAdapter here
         initMsgHistoryList();
 
         return this.rootView;
     }// end of onCreateView
+
+    private void initTwoMemData() {
+        // 拿toMemId的會員Id
+        Bundle myBundle = getArguments();
+        this.toMemId = (String) myBundle.get("ToMemId");
+        Util.showToast(getContext(), "toMemId: " + this.toMemId);
+        // 拿memId自己的會員Id
+        SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
+        String memId = preferences_r.getString("memId",null);
+        // 拿memId自己的大頭照
+        String url = Common.URL + "/android/live2/partner.do";
+        int imageSize = 150;
+        Bitmap bitmap_memId = getProfileBigmap(url, memId, imageSize);
+
+        profileMap.put(memId,bitmap_memId);
+        // 拿memId自己的姓名:
+        MemVO memVO_memId = getMemVO(url, memId);
+        this.nameMap.put(memId,memVO_memId.getMemName());
+
+        // 拿toMemId的會員大頭照
+        Bitmap bitmap_toMemId = getProfileBigmap(url, this.toMemId, imageSize);
+        profileMap.put(this.toMemId,bitmap_toMemId);
+        // 拿toMemId的會員的姓名:
+        MemVO memVO_toMemId = getMemVO(url,this.toMemId);
+        this.nameMap.put(this.toMemId,memVO_toMemId.getMemName());
+    }
 
     private void initMsgHistoryList() {
 
@@ -341,6 +320,31 @@ public class PartnerChatFragment extends Fragment {
                 PartnerChatFragment.this.chatContent.setSelection(PartnerChatFragment.this.partnerChatAdapter.getCount() - 1);
             }
         });
+    }
+    
+    
+    private Bitmap getProfileBigmap(String aUrl, String aMemId, Integer aImageSize){
+        Bitmap bitmap_memId = null;
+        try {
+            bitmap_memId = new PartnerGetImageTask(null).execute(aUrl, aMemId, aImageSize).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return bitmap_memId;
+    }
+
+    private MemVO getMemVO(String aUrl, String aMemId){
+        MemVO memVO_memId = null;
+        try {
+            memVO_memId = new PartnerGetOneTextTask().execute(aUrl, aMemId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return memVO_memId;
     }
 
 }
