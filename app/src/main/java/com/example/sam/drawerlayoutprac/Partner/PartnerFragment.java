@@ -8,7 +8,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -52,7 +51,7 @@ import io.codetail.animation.ViewAnimationUtils;
 /**
  * Created by cuser on 2016/10/9.
  */
-public class PartnerFragment extends Fragment {
+public class PartnerFragment extends PartnerCommonFragment {
     private final static String TAG = "SearchActivity";
     public static String URL_Partner = Common.URL + "/android/live2/partner.do";
 
@@ -112,6 +111,20 @@ public class PartnerFragment extends Fragment {
         }
         setFloatingBtnClickListener();
         // end of // 處理聊天訊息回來畫面
+    }
+
+    @Override
+    public void onCreate (Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        // testing
+//        setHasOptionsMenu(true);
+//        MainActivity.actionBarMenu.findItem(R.id.action_bar_message).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Util.showToast(getContext(),"action_bar_message clicked Fragment");
+//                return false;
+//            }
+//        });
     }
 
     @Override
@@ -617,6 +630,19 @@ public class PartnerFragment extends Fragment {
     protected int getAnimationDurationCloseProfileDetails() {
         return ANIMATION_DURATION_CLOSE_PROFILE_DETAILS;
     }
+
+//    @Override
+//    public boolean onOptionsItemSelected (MenuItem item){
+//        switch (item.getItemId()) {
+//            case R.id.action_bar_message : {
+//                Util.showToast(getContext(),"R.id.message");
+////                Log.i(TAG, "menu - Save from fragment");
+//
+//                return true;
+//            }
+//        }
+//        return true;
+//    }
 
 
 }// end

@@ -4,10 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
-import com.example.sam.drawerlayoutprac.MainActivity;
+import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneImageTask;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneTextTask;
@@ -42,7 +39,7 @@ import java.util.concurrent.ExecutionException;
  * Created by cuser on 2016/11/8.
  */
 
-public class PartnerChatFragment extends Fragment {
+public class PartnerChatFragment extends PartnerCommonFragment {
     public static final String TAG = "WebSocket Chat - ";
     public static final String URL_Chatroom = "ws://10.0.2.2:8081/DDD_web/android/live2/MsgCenter";
 
@@ -68,7 +65,6 @@ public class PartnerChatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        backBtnPressed();
 
         // 建立Websocket連線 - bindMemIdWithSession
         // myWebSocketClient = new TokenIdWebSocket(getActivity(), PartnerChatFragment.this).bindMemIdWithSession();
@@ -113,7 +109,6 @@ public class PartnerChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         super.onCreateView(inflater, viewGroup, bundle);
-        MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
         this.rootView = inflater.inflate(R.layout.chat_containers, viewGroup, false);
         this.chatContent = (ListView) this.rootView.findViewById(R.id.chat_contents);
         this.msg = (EditText) this.rootView.findViewById(R.id.et_message);
@@ -183,30 +178,6 @@ public class PartnerChatFragment extends Fragment {
         PartnerChatFragment.this.myWebSocketClient.close();
         Log.d(PartnerChatFragment.TAG, " fcm - myWebSocketClient is closed via onPause()");
     }
-
-
-    private void backBtnPressed() {
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    // close websocket
-                    PartnerChatFragment.this.myWebSocketClient.close();
-                    Log.d(PartnerChatFragment.TAG, "myWebSocketClient is closed via back button");
-                    // 回到上一個Fragment或是離開app
-                    FragmentManager fm = PartnerChatFragment.this.getFragmentManager();
-                    if (fm.getBackStackEntryCount() > 0) {
-                        fm.popBackStack();
-                        return true;
-                    }
-                }// end if
-                return false;
-            }
-        });
-    }// end of backBtnPressed
-
 
     private class PartnerChatWebSocket {
         URI uri;

@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle actionBarDrawerToggle;
     WebSocketClient webSocketClientTmp;
     public static FloatingActionButton floatingBtn;
+    public static boolean floatingBtnPressed = false;
+    public static Menu actionBarMenu;
 
 
     @Override
@@ -109,9 +112,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu aMenu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.action_bar_menu, menu);
+        this.actionBarMenu = aMenu;
+        getMenuInflater().inflate(R.menu.action_bar_menu, this.actionBarMenu);
+//        this.actionBarMenu.findItem(R.id.action_bar_message).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Util.showToast(MainActivity.this,"action_bar_message clicked");
+//                return false;
+//            }
+//        });
         return true;
     }
 
@@ -130,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             Menu menu = navigationView.getMenu();
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setChecked(true);
@@ -192,14 +204,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     drawerLayout.openDrawer(navigationView);
                 }
-//            if (drawerLayout.isDrawerOpen(GravityCompat.START)){
-//                drawerLayout.closeDrawer(GravityCompat.START);
-//            }else {
-//                drawerLayout.openDrawer(GravityCompat.START);
-//            }
                 return true;
+//            case R.id.action_bar_message:
+//                Util.showToast(this,"hey menu item clicked");
+//                return true;
         }
-        return onOptionsItemSelected(item);
+//        return onOptionsItemSelected(item);
+        return false;
     }
 
     private void inigDrawerBody() {
@@ -269,10 +280,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public boolean getHistoryMsgList(MenuItem item){
+    public boolean getHistoryMsgList(MenuItem item) {
 //        Util.showToast(this,"getHistoryMsgList clicked");
-        Fragment fragment = new PartnerHistoryMsgFragment();
-        Util.switchFragment(this, fragment);
+        // 大問題-如何讓他回到上一個Fragment?但又不需要在每個Fragment中加上這段code?
+        // 開啟歷史訊息列表:
+        if (!floatingBtnPressed) {
+            MainActivity.floatingBtnPressed = true;
+            Fragment fragment = new PartnerHistoryMsgFragment();
+            Util.switchFragment(this, fragment);
+            // 關閉歷史訊息列表:
+        } else {
+            MainActivity.floatingBtnPressed = false;
+            FragmentManager fm = this.getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStack();
+            } else {
+                /*
+                 * KeyEvent kdown = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK);
+                    Activity.dispatchKeyEvent(kdown);
+                */
+            }
+        }
         return true;
     }
 }

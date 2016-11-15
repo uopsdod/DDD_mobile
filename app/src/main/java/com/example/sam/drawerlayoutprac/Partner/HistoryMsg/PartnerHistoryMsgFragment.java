@@ -3,6 +3,7 @@ package com.example.sam.drawerlayoutprac.Partner.HistoryMsg;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,11 +101,11 @@ public class PartnerHistoryMsgFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     // 回到上一個Fragment或是離開app
-//                    FragmentManager fm = PartnerHistoryMsgFragment.this.getFragmentManager();
-//                    if (fm.getBackStackEntryCount() > 0) {
-//                        fm.popBackStack();
-//                        return true;
-//                    }
+                    FragmentManager fm = PartnerHistoryMsgFragment.this.getFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        fm.popBackStack();
+                        return true;
+                    }
                 }// end if
                 return false;
             }

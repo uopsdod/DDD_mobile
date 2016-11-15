@@ -16,12 +16,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class MemberFragment extends Fragment {
+public class MemberFragment extends PartnerCommonFragment {
     private String TAG = "MemberFragment";
     TextView tvTroLogin;
     TextInputLayout tilUserName, tilPassword;
