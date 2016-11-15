@@ -29,13 +29,13 @@ import java.util.Map;
  * Created by cuser on 2016/11/4.
  */
 
-public class PartnerGetTextTask extends AsyncTask<String, Void, List<MemVO>> {
+public class PartnerGetAllTextTask extends AsyncTask<String, Void, List<MemVO>> {
     private final static String TAG = "SearchActivity";
     private Context context;
     private ListView listView;
     private ProgressDialog progressDialog;
 
-    public PartnerGetTextTask(Context context, ListView listView){
+    public PartnerGetAllTextTask(Context context, ListView listView){
         this.context = context;
         this.listView = listView;
     }

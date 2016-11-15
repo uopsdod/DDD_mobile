@@ -3,13 +3,10 @@ package com.example.sam.drawerlayoutprac.Partner;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.icu.text.MessagePattern;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -187,7 +184,7 @@ public class PartnerFragment extends Fragment {
             String url = PartnerFragment.URL_Partner;
             Log.d("url", url);
             try {
-                memVOList = (List<MemVO>) new PartnerGetTextTask(getContext(), this.listview).execute(url).get();
+                memVOList = (List<MemVO>) new PartnerGetAllTextTask(getContext(), this.listview).execute(url).get();
                 // 去掉自己
                 SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,getActivity().MODE_PRIVATE);
                 String memid = preferences_r.getString("memId", null);

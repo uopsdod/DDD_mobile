@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,12 +100,16 @@ public class PartnerChatFragment extends Fragment {
                 partnerMsg.setMemChatMemId(memid);
                 partnerMsg.setMemChatToMemId(PartnerChatFragment.this.toMemId);
                 partnerMsg.setMemChatContent(newMsg);
+                partnerMsg.setMemChatDate(new Timestamp(new java.util.Date().getTime()));
                 // 在自己頁面顯示聊天視窗:
                 addMsgScrollDown(partnerMsg);
                 // end of 在自己頁面顯示聊天視窗
 
                 if (myWebSocketClient != null) {
-                    Gson gson = new Gson();
+//                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder()
+                            .setDateFormat("yyyy-MM-dd hh:mm:ss.S")
+                            .create(); // 注意:如果VO中有Date,Timestamp，就要Server,Client端規格一致
                     String partnerMsgGson = gson.toJson(partnerMsg);
                     myWebSocketClient.send(partnerMsgGson);
                 }
