@@ -15,7 +15,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,7 @@ import static android.app.Activity.RESULT_OK;
 import static java.lang.Integer.parseInt;
 
 
-public class SignUp_Page2_Fragment extends Fragment {
+public class MemberUpdateFragment extends Fragment {
     private MemVO memVO;
     EditText etIntro, etLiveBudget, etName;
     Button btSubmit, btChangePhoto;
@@ -52,7 +51,6 @@ public class SignUp_Page2_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        memVO = (MemVO) getArguments().getSerializable("memVO");
         View view = inflater.inflate(R.layout.fragment_signup_page2_, container, false);
         ivPhoto = (ImageView) view.findViewById(R.id.ivPhoto);
         etName = (EditText) view.findViewById(R.id.etName);
@@ -89,7 +87,7 @@ public class SignUp_Page2_Fragment extends Fragment {
                     return;
                 }else {
                     // 有打字之後，再把它轉型成數字 (不能打文字或沒打字，會造成轉型失敗)
-//                    Integer.parseInt(String.valueOf(etLiveBudget.getText()));
+//                    liveBudget = Integer.parseInt(String.valueOf(etLiveBudget.getText()));
                     tilLiveBudget.setError(null);
                 }
             }
@@ -222,7 +220,7 @@ public class SignUp_Page2_Fragment extends Fragment {
 //                String imageBase64 = Base64.encodeToString(image, Base64.DEFAULT);
                 String action = "Insert";
 //                new MemUpdateTask().execute(url, action, memVO, imageBase64);
-                new MemUpdateTask().execute(url, action, memVO);
+//                new MemUpdateTask().execute(url, action, memVO);
             }else{
                 Util.showToast(getActivity(), "No network connection available");
             }

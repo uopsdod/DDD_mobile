@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/lookfor_hotel"
@@ -13,6 +14,7 @@
             android:id="@+id/my_order"
             android:icon="@drawable/order"
             android:title="我的訂單" />
+
         <item
         android:id="@+id/my_wishlist"
         android:icon="@drawable/wish_list"
@@ -21,7 +23,13 @@
         <item
             android:id="@+id/my_member"
             android:icon="@drawable/member"
-            android:title="一般會員" />
+            android:title="一般會員"/>
+
+        <item
+            android:id="@+id/my_member_update"
+            android:icon="@drawable/member"
+            android:title="會員修改資料"/>
+
 
         <item
             android:id="@+id/my_member_hotel"
@@ -32,6 +40,13 @@
             android:id="@+id/info"
             android:icon="@drawable/info"
             android:title="訂房須知" />
+
+        <item
+            android:id="@+id/logOut"
+            android:icon="@drawable/info"
+            android:title="登 出"
+            />
+
         <item
             android:id="@+id/test_yo"
             android:icon="@drawable/info"
