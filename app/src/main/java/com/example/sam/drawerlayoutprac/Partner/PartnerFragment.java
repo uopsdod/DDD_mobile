@@ -31,7 +31,6 @@ import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
-import com.example.sam.drawerlayoutprac.PartnerGoBackState;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.nhaarman.listviewanimations.appearance.ViewAnimator;
@@ -52,7 +51,7 @@ import io.codetail.animation.ViewAnimationUtils;
 /**
  * Created by cuser on 2016/10/9.
  */
-public class PartnerFragment extends PartnerCommonFragment {
+public class PartnerFragment extends PartnerMustLoginFragment {
     private final static String TAG = "SearchActivity";
     public static String URL_Partner = Common.URL + "/android/live2/partner.do";
 

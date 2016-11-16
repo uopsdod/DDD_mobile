@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
             memid_test = preferences_r.getString("memId", null);
         }
         if (memid_test != null){
-            Util.showToast(getApplicationContext(), "Who is logged:  " + memid_test);
+//            Util.showToast(getApplicationContext(), "Who is logged:  " + memid_test);
             preferences_r.edit().remove("memId").apply();
         }
         if (preferences_r.getString("memId", null) == null){
