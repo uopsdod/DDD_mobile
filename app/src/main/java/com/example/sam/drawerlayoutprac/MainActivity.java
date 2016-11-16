@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -132,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             Menu menu = navigationView.getMenu();
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                View popMenu = findViewById(R.id.my_member);
                 item.setChecked(true);
                 drawerLayout.closeDrawers(); // important step
                 Fragment fragment = null;
@@ -147,16 +149,50 @@ public class MainActivity extends AppCompatActivity {
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
                     case R.id.my_member:
-                        fragment = new MemberFragment();
-                        Util.switchFragment(MainActivity.this, fragment);
+                        SharedPreferences pref = getSharedPreferences(Common.PREF_FILE,
+                                MODE_PRIVATE);
+                        boolean login = pref.getBoolean("login",false);
+                        if(login){
+                            fragment = new MemberUpdateFragment();
+                            Util.switchFragment(MainActivity.this, fragment);
+                            Util.showToast(getApplicationContext(),"要修改資料喔! 屁孩");
+                        }else{
+                            fragment = new MemberFragment();
+                            Util.switchFragment(MainActivity.this, fragment);
+                            Util.showToast(getApplicationContext(),"還沒登入喔! 屁孩");
+                        }
+//                        PopupMenu popupMenu = new PopupMenu(navigationView.getContext(), popMenu);
+//                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                            @Override
+//                            public boolean onMenuItemClick(MenuItem item) {
+//                                return true;
+//                            }
+//                        });
+//                        popupMenu.show();
                         break;
+                    case R.id.my_member_update:
+                        break;
+
                     case R.id.my_member_hotel:
                         fragment = new HotelMemberFragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
+
                     case R.id.info:
                         fragment = new OrdInfoFragment();
                         Util.switchFragment(MainActivity.this, fragment);
+                        break;
+
+                    case R.id.logOut:
+                        SharedPreferences pref2 = getSharedPreferences(Common.PREF_FILE,
+                                MODE_PRIVATE);
+                        boolean login2 = pref2.getBoolean("login",false);
+                        if(login2){
+                            pref2.edit().clear().apply();
+                            Util.showToast(getApplicationContext(),"登出了喔! 屁孩");
+                        }else{
+                            Util.showToast(getApplicationContext(),"還沒登入喔! 屁孩");
+                        }
                         break;
 
                     case R.id.test_yo:
