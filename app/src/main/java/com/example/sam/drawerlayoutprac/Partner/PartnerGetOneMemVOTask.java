@@ -46,7 +46,7 @@ public class PartnerGetOneMemVOTask extends AsyncTask<String, Void, MemVO> {
             Log.e(TAG, e.toString());
             return null;
         }
-        Log.d("PartnerGetOneMemVOTask","Websocket" + jsonIn);
+        //Log.d("PartnerGetOneMemVOTask","Websocket" + jsonIn);
         // 處理Oracle Date型態與gson之間的格式問題
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")

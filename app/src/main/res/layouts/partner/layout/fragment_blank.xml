@@ -2,10 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context="com.example.sam.drawerlayoutprac.Partner.TestFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <EditText
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -19,6 +23,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="存入preference"
+        />
+        </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="登出"
         android:onClick="testFragmentClicked"
         />
 

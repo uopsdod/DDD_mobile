@@ -11,8 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
-import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
-import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
+import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 
 import java.text.SimpleDateFormat;

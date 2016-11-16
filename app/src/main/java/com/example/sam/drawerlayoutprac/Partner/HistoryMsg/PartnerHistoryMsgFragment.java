@@ -3,6 +3,7 @@ package com.example.sam.drawerlayoutprac.Partner.HistoryMsg;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
-import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
+import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
+import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
@@ -24,7 +27,7 @@ import java.util.concurrent.ExecutionException;
  * Created by cuser on 2016/11/14.
  */
 
-public class PartnerHistoryMsgFragment extends Fragment {
+public class PartnerHistoryMsgFragment extends PartnerCommonFragment {
     public static final String TAG = "WebSocket Chat - ";
 
     private LinearLayout rootView;
@@ -36,6 +39,7 @@ public class PartnerHistoryMsgFragment extends Fragment {
     public void onResume() {
         super.onResume();
         backBtnPressed();
+        MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -67,6 +71,7 @@ public class PartnerHistoryMsgFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PartnerMsg partnerMsg = (PartnerMsg)parent.getItemAtPosition(position);
+                //MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
                 String toMemId = null; // partnerMsg.getMemChatToMemId();
                 if (!partnerMsg.getMemChatToMemId().equals(memId)){
                     toMemId = partnerMsg.getMemChatToMemId().toString();
@@ -97,11 +102,11 @@ public class PartnerHistoryMsgFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     // 回到上一個Fragment或是離開app
-//                    FragmentManager fm = PartnerHistoryMsgFragment.this.getFragmentManager();
-//                    if (fm.getBackStackEntryCount() > 0) {
-//                        fm.popBackStack();
-//                        return true;
-//                    }
+                    FragmentManager fm = PartnerHistoryMsgFragment.this.getFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        fm.popBackStack();
+                        return true;
+                    }
                 }// end if
                 return false;
             }

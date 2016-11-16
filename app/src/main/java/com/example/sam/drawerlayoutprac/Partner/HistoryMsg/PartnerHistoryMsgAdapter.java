@@ -12,9 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneImageTask;
+import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneTextTask;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneMemVOTask;
-import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
+import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 
 import java.text.SimpleDateFormat;
@@ -83,7 +85,10 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         }
         // end of 判斷對方會員的memId
         try {
-            memVO = new PartnerGetOneMemVOTask().execute(url,toMemId).get();
+            //memVO = new PartnerGetOneMemVOTask().execute(url,toMemId).get();
+            memVO = new PartnerGetOneTextTask().execute(url,toMemId).get();
+            int imageSize = 100;
+            new PartnerGetOneImageTask(holder.img_profile).execute(url, toMemId, imageSize);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -94,13 +99,13 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         if (lastMsg.length() > 13){
             lastMsg = lastMsg.substring(0,10);
         }
-        Log.d("lastMsg - ", ""+lastMsg.length());
+//        Log.d("lastMsg - ", ""+lastMsg.length());
         holder.txt_lastmsg.setText(lastMsg);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(data.getMemChatDate());
         holder.txt_date.setText(date);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(memVO.getMemProfile(),0,memVO.getMemProfile().length);
-        holder.img_profile.setImageBitmap(bitmap);
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(memVO.getMemProfile(),0,memVO.getMemProfile().length);
+//        holder.img_profile.setImageBitmap(bitmap);
         return aConvertView;
     }// end
 

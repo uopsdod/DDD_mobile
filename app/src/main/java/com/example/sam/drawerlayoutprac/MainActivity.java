@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -40,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     WebSocketClient webSocketClientTmp;
-    FloatingActionButton floatingBtn;
+    public static FloatingActionButton floatingBtn;
+    public static boolean floatingBtnPressed = false;
+    public static Menu actionBarMenu;
 
 
     @Override
@@ -110,9 +113,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu aMenu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.action_bar_menu, menu);
+        this.actionBarMenu = aMenu;
+        getMenuInflater().inflate(R.menu.action_bar_menu, this.actionBarMenu);
+//        this.actionBarMenu.findItem(R.id.action_bar_message).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Util.showToast(MainActivity.this,"action_bar_message clicked");
+//                return false;
+//            }
+//        });
         return true;
     }
 
@@ -131,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             Menu menu = navigationView.getMenu();
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 View popMenu = findViewById(R.id.my_member);
@@ -228,14 +240,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     drawerLayout.openDrawer(navigationView);
                 }
-//            if (drawerLayout.isDrawerOpen(GravityCompat.START)){
-//                drawerLayout.closeDrawer(GravityCompat.START);
-//            }else {
-//                drawerLayout.openDrawer(GravityCompat.START);
-//            }
                 return true;
+//            case R.id.action_bar_message:
+//                Util.showToast(this,"hey menu item clicked");
+//                return true;
         }
-        return onOptionsItemSelected(item);
+//        return onOptionsItemSelected(item);
+        return false;
     }
 
     private void inigDrawerBody() {
@@ -288,27 +299,31 @@ public class MainActivity extends AppCompatActivity {
 
     // 以下為測試
     public void testFragmentClicked(View view) {
-        LinearLayout linearLayout = (LinearLayout) view.getParent();
-        EditText editText = (EditText) linearLayout.findViewById(R.id.memId_yo);
-//        Util.showToast(getApplicationContext(),"testFragmentClicked:  " + editText.getText().toString());
-        // 把假memId放入preferences_yo
-        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-        preferences_w.edit()
-                .putString("memId_yo", editText.getText().toString())
-                .apply();
+//        LinearLayout linearLayout = (LinearLayout) view.getParent();
+//        EditText editText = (EditText) linearLayout.findViewById(R.id.memId_yo);
+////        Util.showToast(getApplicationContext(),"testFragmentClicked:  " + editText.getText().toString());
+//        // 把假memId放入preferences_yo
+//        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
+//        preferences_w.edit()
+//                .putString("memId_yo", editText.getText().toString())
+//                .apply();
 
         // 從preferences_yo讀取假memId
-        SharedPreferences preferences_r = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-        String memid_yo = preferences_r.getString("memId_yo", "no memId found");
-        Util.showToast(getApplicationContext(), "memid_yo:  " + memid_yo);
+        SharedPreferences preferences_r = getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
+        String memid_test = null;
+        if (preferences_r != null){
+            memid_test = preferences_r.getString("memId", null);
+        }
+        if (memid_test != null){
+            Util.showToast(getApplicationContext(), "Who is logged:  " + memid_test);
+            preferences_r.edit().remove("memId").apply();
+        }
+        if (preferences_r.getString("memId", null) == null){
+            Util.showToast(getApplicationContext(), "log out:  " + memid_test);
+        }
+        // 之後繼續-如果登出，就要去跟MsgCenter講，把我的tokenId資訊拿掉
 
 
     }
 
-    public boolean getHistoryMsgList(MenuItem item){
-//        Util.showToast(this,"getHistoryMsgList clicked");
-        Fragment fragment = new PartnerHistoryMsgFragment();
-        Util.switchFragment(this, fragment);
-        return true;
-    }
 }

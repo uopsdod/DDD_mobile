@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.google.gson.Gson;
 
 import org.java_websocket.client.WebSocketClient;

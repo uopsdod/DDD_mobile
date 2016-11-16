@@ -8,7 +8,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -29,8 +28,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
+import com.example.sam.drawerlayoutprac.PartnerGoBackState;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.nhaarman.listviewanimations.appearance.ViewAnimator;
@@ -51,7 +52,7 @@ import io.codetail.animation.ViewAnimationUtils;
 /**
  * Created by cuser on 2016/10/9.
  */
-public class PartnerFragment extends Fragment {
+public class PartnerFragment extends PartnerCommonFragment {
     private final static String TAG = "SearchActivity";
     public static String URL_Partner = Common.URL + "/android/live2/partner.do";
 
@@ -92,15 +93,17 @@ public class PartnerFragment extends Fragment {
     private String toMemId;
 
     // 處理從訊息視窗切到navigation後，切換到其他頁面時當掉的bug
-    public static boolean backBtnPressed = false;
+    public static PartnerGoBackState backBtnPressed_fromChat = PartnerGoBackState.NOTHING; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
+
 
     @Override
     public void onResume() {
         super.onResume();
         backBtnPressed();
         // 處理聊天訊息回來畫面
-        if (getState() == EuclidState.ProfilePageOpened && backBtnPressed == true) { // 改
-            PartnerFragment.this.backBtnPressed = false;
+        // 排除掉-曾經進入個人詳細頁面，又同時沒有在聊天訊息視窗透過backbutton正常回來的情況
+        if (getState() == EuclidState.ProfilePageOpened && !(backBtnPressed_fromChat == PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR)) { // 改
+            PartnerFragment.this.backBtnPressed_fromChat = PartnerGoBackState.NOTHING;
             try {
                 showProfileDetails(mItemSelected, mViewSelected);
             } catch (ExecutionException e) {
@@ -109,7 +112,22 @@ public class PartnerFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+        setFloatingBtnClickListener();
         // end of // 處理聊天訊息回來畫面
+    }
+
+    @Override
+    public void onCreate (Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        // testing
+//        setHasOptionsMenu(true);
+//        MainActivity.actionBarMenu.findItem(R.id.action_bar_message).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Util.showToast(getContext(),"action_bar_message clicked Fragment");
+//                return false;
+//            }
+//        });
     }
 
     @Override
@@ -117,7 +135,6 @@ public class PartnerFragment extends Fragment {
         super.onCreateView(inflater, viewGroup, bundle);
         View view = inflater.inflate(R.layout.fragment_partner, viewGroup, false);
         findViews(view);
-        setFloatingBtnClickListener(viewGroup);
         setButtonProfileClickListener();
         initList();
         return view;
@@ -128,7 +145,6 @@ public class PartnerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Util.showToast(getContext(), "進入聊天視窗");
-                mMapFloatingBtn.setVisibility(View.INVISIBLE);
                 Fragment fragment = new PartnerChatFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("ToMemId", PartnerFragment.this.toMemId);
@@ -159,13 +175,10 @@ public class PartnerFragment extends Fragment {
     }
 
     // onCreateView方法02
-    private void setFloatingBtnClickListener(ViewGroup viewGroup) {
+    private void setFloatingBtnClickListener() {
         // set up floatingBtn click Listener
-        LinearLayout ll_view = (LinearLayout) viewGroup.getParent();
-        CoordinatorLayout cdl_view = (CoordinatorLayout) ll_view.getParent();
-        this.mMapFloatingBtn = (FloatingActionButton) cdl_view.findViewById(R.id.floatingBtn);
-
-        mMapFloatingBtn.setOnClickListener(new View.OnClickListener() {
+        MainActivity.floatingBtn.setVisibility(View.VISIBLE);
+        MainActivity.floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Util.showToast(getContext(), "ftBtn clicked");
@@ -514,7 +527,6 @@ public class PartnerFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     //Util.showToast(getContext(),"backBtnPressed");
-                    PartnerFragment.this.backBtnPressed = true;
 
                     if (getState() == EuclidState.ProfilePageOpened) {
                         mProfileButtonShowAnimation = null;
@@ -620,6 +632,19 @@ public class PartnerFragment extends Fragment {
     protected int getAnimationDurationCloseProfileDetails() {
         return ANIMATION_DURATION_CLOSE_PROFILE_DETAILS;
     }
+
+//    @Override
+//    public boolean onOptionsItemSelected (MenuItem item){
+//        switch (item.getItemId()) {
+//            case R.id.action_bar_message : {
+//                Util.showToast(getContext(),"R.id.message");
+////                Log.i(TAG, "menu - Save from fragment");
+//
+//                return true;
+//            }
+//        }
+//        return true;
+//    }
 
 
 }// end

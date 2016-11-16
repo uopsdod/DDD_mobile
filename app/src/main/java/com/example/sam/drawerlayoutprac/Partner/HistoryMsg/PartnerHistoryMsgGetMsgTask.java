@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
-import com.example.sam.drawerlayoutprac.Partner.PartnerMsg;
+import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -60,7 +60,7 @@ public class PartnerHistoryMsgGetMsgTask extends AsyncTask<String, Void, List<Pa
             Log.e(TAG, "fcm - " + e.toString());
             return null;
         }
-        Log.e(TAG, "fcm - " + jsonIn);
+        Log.d(TAG, "fcm - " + jsonIn);
         // 處理Oracle Timestamp型態與gson之間的格式問題
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd hh:mm:ss.S")
