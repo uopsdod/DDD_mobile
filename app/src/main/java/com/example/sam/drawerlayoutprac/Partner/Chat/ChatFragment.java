@@ -14,8 +14,8 @@ import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
-import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
-import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
+import com.example.sam.drawerlayoutprac.CommonFragment;
+import com.example.sam.drawerlayoutprac.Partner.Fragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneImageTask;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneTextTask;
@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutionException;
  * Created by cuser on 2016/11/8.
  */
 
-public class PartnerChatFragment extends PartnerCommonFragment {
+public class ChatFragment extends CommonFragment {
     public static final String TAG = "WebSocket Chat - ";
     public static final String URL_Chatroom = "ws://10.0.2.2:8081/DDD_web/android/live2/MsgCenter";
 
@@ -68,11 +68,11 @@ public class PartnerChatFragment extends PartnerCommonFragment {
     @Override
     public void onResume() {
         super.onResume();
-        PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
+        Fragment.backBtnPressed_fromChat = PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
         MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
 
         // 建立Websocket連線 - bindMemIdWithSession
-        // myWebSocketClient = new TokenIdWebSocket(getActivity(), PartnerChatFragment.this).bindMemIdWithSession();
+        // myWebSocketClient = new TokenIdWebSocket(getActivity(), ChatFragment.this).bindMemIdWithSession();
         myWebSocketClient = new PartnerChatWebSocket().bindMemIdWithSession();
 
         // end of 建立Websocket連線
@@ -96,8 +96,8 @@ public class PartnerChatFragment extends PartnerCommonFragment {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newMsg = PartnerChatFragment.this.msg.getText().toString();
-                Util.showToast(getContext(), PartnerChatFragment.TAG + PartnerChatFragment.this.msg.getText().toString());
+                String newMsg = ChatFragment.this.msg.getText().toString();
+                Util.showToast(getContext(), ChatFragment.TAG + ChatFragment.this.msg.getText().toString());
                 if (newMsg.trim().isEmpty()) {
                     Util.showToast(getContext(), "message is empty.");
                     return;
@@ -107,7 +107,7 @@ public class PartnerChatFragment extends PartnerCommonFragment {
                 PartnerMsg partnerMsg = new PartnerMsg();
                 partnerMsg.setAction("chat");
                 partnerMsg.setMemChatMemId(memid);
-                partnerMsg.setMemChatToMemId(PartnerChatFragment.this.toMemId);
+                partnerMsg.setMemChatToMemId(ChatFragment.this.toMemId);
                 partnerMsg.setMemChatContent(newMsg);
                 partnerMsg.setMemChatDate(new Timestamp(new java.util.Date().getTime()));
                 // 在自己頁面顯示聊天視窗:
@@ -158,14 +158,14 @@ public class PartnerChatFragment extends PartnerCommonFragment {
 
         String uri = Common.URL + "/android/live2/PartnerMsgController";
         try {
-            this.partnerMsgList = new PartnerChatGetMsgTask(getContext(), PartnerChatFragment.this.toMemId).execute(uri).get();
+            this.partnerMsgList = new PartnerChatGetMsgTask(getContext(), ChatFragment.this.toMemId).execute(uri).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
         if (this.partnerMsgList != null && this.partnerMsgList.size() > 0) {
-            Log.d("PartnerChatFragment", "fcm - " + this.partnerMsgList.get(0).getMemChatContent());
+            Log.d("ChatFragment", "fcm - " + this.partnerMsgList.get(0).getMemChatContent());
         }
         this.partnerChatAdapter = new PartnerChatListAdapter(getContext(), this.partnerMsgList);
         this.chatContent.setAdapter(partnerChatAdapter);
@@ -173,7 +173,7 @@ public class PartnerChatFragment extends PartnerCommonFragment {
         this.chatContent.post(new Runnable(){
             @Override
             public void run(){
-                PartnerChatFragment.this.chatContent.setSelection(PartnerChatFragment.this.partnerChatAdapter.getCount() - 1);
+                ChatFragment.this.chatContent.setSelection(ChatFragment.this.partnerChatAdapter.getCount() - 1);
             }
         });
     }
@@ -181,8 +181,8 @@ public class PartnerChatFragment extends PartnerCommonFragment {
     @Override
     public void onPause() {
         super.onPause();
-        PartnerChatFragment.this.myWebSocketClient.close();
-        Log.d(PartnerChatFragment.TAG, " fcm - myWebSocketClient is closed via onPause()");
+        ChatFragment.this.myWebSocketClient.close();
+        Log.d(ChatFragment.TAG, " fcm - myWebSocketClient is closed via onPause()");
     }
 
     private class PartnerChatWebSocket {
@@ -201,15 +201,15 @@ public class PartnerChatFragment extends PartnerCommonFragment {
             if (memId != null) {
                 URI uri = null;
                 try {
-                    uri = new URI(PartnerChatFragment.URL_Chatroom);
+                    uri = new URI(ChatFragment.URL_Chatroom);
                 } catch (URISyntaxException e) {
-                    Log.e(PartnerChatFragment.TAG, e.toString());
+                    Log.e(ChatFragment.TAG, e.toString());
                 }
                 this.uri = uri;
                 PartnerMsg partnerMsg = new PartnerMsg();
                 partnerMsg.setAction("bindMemIdWithSession");
                 partnerMsg.setMemChatMemId(memId);
-                partnerMsg.setMemChatToMemId(PartnerChatFragment.this.toMemId);
+                partnerMsg.setMemChatToMemId(ChatFragment.this.toMemId);
                 tmpWebSocketClient = new PartnerChatWebSocket.MyWebSocketClient(partnerMsg);
                 tmpWebSocketClient.connect();
             }
@@ -288,13 +288,13 @@ public class PartnerChatFragment extends PartnerCommonFragment {
     }// end of PartnerChatWebSocket
 
     private void addMsgScrollDown(PartnerMsg partnerMsg){
-        PartnerChatFragment.this.partnerMsgList.add(partnerMsg);
-        PartnerChatFragment.this.partnerChatAdapter.notifyDataSetChanged();
+        ChatFragment.this.partnerMsgList.add(partnerMsg);
+        ChatFragment.this.partnerChatAdapter.notifyDataSetChanged();
         // scroll down to the bottom:
-        PartnerChatFragment.this.chatContent.post(new Runnable(){
+        ChatFragment.this.chatContent.post(new Runnable(){
             @Override
             public void run(){
-                PartnerChatFragment.this.chatContent.setSelection(PartnerChatFragment.this.partnerChatAdapter.getCount() - 1);
+                ChatFragment.this.chatContent.setSelection(ChatFragment.this.partnerChatAdapter.getCount() - 1);
             }
         });
     }

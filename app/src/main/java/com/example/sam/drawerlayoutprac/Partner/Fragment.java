@@ -9,7 +9,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,7 +28,8 @@ import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
-import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.MustLoginFragment;
+import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -51,7 +51,7 @@ import io.codetail.animation.ViewAnimationUtils;
 /**
  * Created by cuser on 2016/10/9.
  */
-public class PartnerFragment extends PartnerMustLoginFragment {
+public class Fragment extends MustLoginFragment {
     private final static String TAG = "SearchActivity";
     public static String URL_Partner = Common.URL + "/android/live2/partner.do";
 
@@ -102,7 +102,7 @@ public class PartnerFragment extends PartnerMustLoginFragment {
         // 處理聊天訊息回來畫面
         // 排除掉-曾經進入個人詳細頁面，又同時沒有在聊天訊息視窗透過backbutton正常回來的情況
         if (getState() == EuclidState.ProfilePageOpened && !(backBtnPressed_fromChat == PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR)) { // 改
-            PartnerFragment.this.backBtnPressed_fromChat = PartnerGoBackState.NOTHING;
+            Fragment.this.backBtnPressed_fromChat = PartnerGoBackState.NOTHING;
             try {
                 showProfileDetails(mItemSelected, mViewSelected);
             } catch (ExecutionException e) {
@@ -144,11 +144,11 @@ public class PartnerFragment extends PartnerMustLoginFragment {
             @Override
             public void onClick(View v) {
                 //Util.showToast(getContext(), "進入聊天視窗");
-                Fragment fragment = new PartnerChatFragment();
+                android.support.v4.app.Fragment fragment = new ChatFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("ToMemId", PartnerFragment.this.toMemId);
+                bundle.putString("ToMemId", Fragment.this.toMemId);
                 fragment.setArguments(bundle);
-                Util.switchFragment(PartnerFragment.this, fragment);
+                Util.switchFragment(Fragment.this, fragment);
             }
         });
     }
@@ -181,8 +181,8 @@ public class PartnerFragment extends PartnerMustLoginFragment {
             @Override
             public void onClick(View view) {
                 //Util.showToast(getContext(), "ftBtn clicked");
-                Fragment fragment = new PartnerMapFragment();
-                Util.switchFragment(PartnerFragment.this, fragment);
+                android.support.v4.app.Fragment fragment = new PartnerMapFragment();
+                Util.switchFragment(Fragment.this, fragment);
             }
         });
 
@@ -195,7 +195,7 @@ public class PartnerFragment extends PartnerMustLoginFragment {
         List<MemVO> memVOList = null;
         if (Common.networkConnected(getActivity())) {
             // send request to server and get the response - 重點在new這個動作
-            String url = PartnerFragment.URL_Partner;
+            String url = Fragment.URL_Partner;
             Log.d("url", url);
             try {
                 memVOList = (List<MemVO>) new PartnerGetAllTextTask(getContext(), this.listview).execute(url).get();
@@ -236,15 +236,15 @@ public class PartnerFragment extends PartnerMustLoginFragment {
 
         // mListViewAnimationAdapter - 是當進入個人詳細頁面後，返回時所用到的animator。而這個animator會放在此mListViewAnimationAdapter裡面。而我們會將真正屬於自己要用的dapter再放入此adpater裡面。
         mListViewAnimationAdapter = new SwingLeftInAnimationAdapter(new PartnerListAdapter(getContext(), R.layout.list_item, profilesList));
-        mListViewAnimationAdapter.setAbsListView(PartnerFragment.this.listview);
+        mListViewAnimationAdapter.setAbsListView(Fragment.this.listview);
         mListViewAnimator = mListViewAnimationAdapter.getViewAnimator();
         if (mListViewAnimator != null) {
             mListViewAnimator.setAnimationDurationMillis(getAnimationDurationCloseProfileDetails());
             mListViewAnimator.disableAnimations();
         }
 
-        PartnerFragment.this.listview.setAdapter(mListViewAnimationAdapter);
-        PartnerFragment.this.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Fragment.this.listview.setAdapter(mListViewAnimationAdapter);
+        Fragment.this.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Util.showToast(getContext(), "listview clicked");
@@ -263,13 +263,13 @@ public class PartnerFragment extends PartnerMustLoginFragment {
         });
     }
 
-    // 此方法由initList() -> PartnerFragment.this.listview.setOnItemClickListener事件觸發到這邊
+    // 此方法由initList() -> Fragment.this.listview.setOnItemClickListener事件觸發到這邊
     // 進入個人詳細頁面動畫01
     private void showProfileDetails(Map<String, Object> item, final View view) throws ExecutionException, InterruptedException {
         listview.setEnabled(false);
         int sScreenWidth = getResources().getDisplayMetrics().widthPixels;
 
-        int profileDetailsAnimationDelay = PartnerFragment.MAX_DELAY_SHOW_DETAILS_ANIMATION * Math.abs(view.getTop()) / sScreenWidth;
+        int profileDetailsAnimationDelay = Fragment.MAX_DELAY_SHOW_DETAILS_ANIMATION * Math.abs(view.getTop()) / sScreenWidth;
         // 處理聊天訊息回來畫面
         if (getState() == EuclidState.ProfilePageOpened) {
             // 模擬重新開啟一次個人頁面
@@ -301,8 +301,8 @@ public class PartnerFragment extends PartnerMustLoginFragment {
         ImageView profileImg = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_reveal_avatar);
         ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_avatar);
             // 將現在頁面的memId放入實體變數，若使用者進入訊息視窗，則將memId也帶過去
-        PartnerFragment.this.toMemId = (String) item.get(PartnerListAdapter.KEY_MEMID);
-        String url = PartnerFragment.URL_Partner;
+        Fragment.this.toMemId = (String) item.get(PartnerListAdapter.KEY_MEMID);
+        String url = Fragment.URL_Partner;
         int imageSize = 250;
         new PartnerGetOneImageTask(profileImg).execute(url, toMemId, imageSize);
         new PartnerGetOneImageTask(profileOverlay).execute(url, toMemId, imageSize);
@@ -345,7 +345,7 @@ public class PartnerFragment extends PartnerMustLoginFragment {
                 sProfileImageHeight / 2,
                 dpToPx(getCircleRadiusDp() * 2),
                 finalRadius);
-        mRevealAnimator.setDuration(PartnerFragment.REVEAL_ANIMATION_DURATION);
+        mRevealAnimator.setDuration(Fragment.REVEAL_ANIMATION_DURATION);
         mRevealAnimator.addListener(new SupportAnimator.AnimatorListener() {
             @Override
             public void onAnimationStart() {
@@ -374,7 +374,7 @@ public class PartnerFragment extends PartnerMustLoginFragment {
     // 進入個人詳細頁面動畫04
     private Animator getAvatarShowAnimator(int profileDetailsAnimationDelay) {
         final Animator mAvatarShowAnimator = ObjectAnimator.ofFloat(mOverlayListItemView, View.Y, mOverlayListItemView.getTop(), mToolbarProfile.getBottom());
-        mAvatarShowAnimator.setDuration(profileDetailsAnimationDelay + PartnerFragment.ANIMATION_DURATION_SHOW_PROFILE_DETAILS);
+        mAvatarShowAnimator.setDuration(profileDetailsAnimationDelay + Fragment.ANIMATION_DURATION_SHOW_PROFILE_DETAILS);
         mAvatarShowAnimator.setInterpolator(new DecelerateInterpolator());
         return mAvatarShowAnimator;
     }
@@ -393,7 +393,7 @@ public class PartnerFragment extends PartnerMustLoginFragment {
         // end of 處理聊天訊息回來畫面
         if (mProfileButtonShowAnimation == null) {
             mProfileButtonShowAnimation = AnimationUtils.loadAnimation(getContext(), com.example.sam.drawerlayoutprac.R.anim.profile_button_scale);
-            mProfileButtonShowAnimation.setDuration(PartnerFragment.ANIMATION_DURATION_SHOW_PROFILE_BUTTON);
+            mProfileButtonShowAnimation.setDuration(Fragment.ANIMATION_DURATION_SHOW_PROFILE_BUTTON);
             mProfileButtonShowAnimation.setInterpolator(new AccelerateInterpolator());
             mProfileButtonShowAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -425,7 +425,7 @@ public class PartnerFragment extends PartnerMustLoginFragment {
 
             mOpenProfileAnimatorSet = new AnimatorSet();
             mOpenProfileAnimatorSet.playTogether(profileAnimators);
-            mOpenProfileAnimatorSet.setDuration(PartnerFragment.ANIMATION_DURATION_SHOW_PROFILE_DETAILS);
+            mOpenProfileAnimatorSet.setDuration(Fragment.ANIMATION_DURATION_SHOW_PROFILE_DETAILS);
         }
         mOpenProfileAnimatorSet.setStartDelay(profileDetailsAnimationDelay);
         mOpenProfileAnimatorSet.setInterpolator(new DecelerateInterpolator());
@@ -600,7 +600,7 @@ public class PartnerFragment extends PartnerMustLoginFragment {
                     mButtonProfile.setVisibility(View.INVISIBLE);
                     mProfileDetails.setVisibility(View.INVISIBLE);
 
-                    PartnerFragment.this.listview.setEnabled(true);
+                    Fragment.this.listview.setEnabled(true);
                     mListViewAnimator.disableAnimations();
 
                     mState = EuclidState.ProfilePageClosed;

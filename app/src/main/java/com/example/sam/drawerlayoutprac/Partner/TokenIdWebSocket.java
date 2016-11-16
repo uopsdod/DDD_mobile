@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
-import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.google.gson.Gson;
 
@@ -27,7 +27,7 @@ public class TokenIdWebSocket {
     Activity activity; //
     Context context; // 給MyFirebaseInstanceIDService用
     URI uri;
-    PartnerChatFragment partnerChatFragment;
+    ChatFragment partnerChatFragment;
     List<PartnerMsg> partnerMsgList;
     public TokenIdWebSocket(Context aContext) {
         this.context = aContext;
@@ -35,7 +35,7 @@ public class TokenIdWebSocket {
     public TokenIdWebSocket(Activity aActivity) {
         this.activity = aActivity;
     }
-    public TokenIdWebSocket(Activity aActivity, PartnerChatFragment aPartnerChatFragment) {
+    public TokenIdWebSocket(Activity aActivity, ChatFragment aPartnerChatFragment) {
         this.activity = aActivity;
         this.partnerChatFragment = aPartnerChatFragment;
     }
@@ -52,9 +52,9 @@ public class TokenIdWebSocket {
         if (memId != null && tokenId != null) {
             URI uri = null;
             try {
-                uri = new URI(PartnerChatFragment.URL_Chatroom);
+                uri = new URI(ChatFragment.URL_Chatroom);
             } catch (URISyntaxException e) {
-                Log.e(PartnerChatFragment.TAG, e.toString());
+                Log.e(ChatFragment.TAG, e.toString());
             }
             this.uri = uri;
             PartnerMsg partnerMsg = new PartnerMsg();
@@ -78,9 +78,9 @@ public class TokenIdWebSocket {
         if (memId != null) {
             URI uri = null;
             try {
-                uri = new URI(PartnerChatFragment.URL_Chatroom);
+                uri = new URI(ChatFragment.URL_Chatroom);
             } catch (URISyntaxException e) {
-                Log.e(PartnerChatFragment.TAG, e.toString());
+                Log.e(ChatFragment.TAG, e.toString());
             }
             this.uri = uri;
             PartnerMsg partnerMsg = new PartnerMsg();

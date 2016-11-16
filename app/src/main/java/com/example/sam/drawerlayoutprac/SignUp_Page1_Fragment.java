@@ -22,8 +22,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
-
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,7 +30,7 @@ import java.util.Calendar;
 /**
  * Created by cuser on 2016/10/12.
  */
-public class SignUp_Page1_Fragment extends PartnerCommonFragment {
+public class SignUp_Page1_Fragment extends CommonFragment {
     private String TAG = "SignUp_Page1_Fragment";
     Button btSubmit, btBirthDatePicker, btDueDatePicker;
     TextInputLayout tilUserName, tilPassword, tilChPassword, tilPhoneNumber, tilIdNumber, tilCardNumber, tilChCardNumber;

@@ -13,12 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
 import java.util.List;
 
-public class HotelFragment extends Fragment {
+public class HotelFragment extends CommonFragment {
     String TAG = "HotelFragment";
     RecyclerView myRvSpot;
 

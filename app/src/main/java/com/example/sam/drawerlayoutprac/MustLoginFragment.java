@@ -1,29 +1,17 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MenuItem;
-import android.view.View;
 
-import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
-import com.example.sam.drawerlayoutprac.MainActivity;
-import com.example.sam.drawerlayoutprac.MemberFragment;
-import com.example.sam.drawerlayoutprac.Partner.HistoryMsg.PartnerHistoryMsgFragment;
-import com.example.sam.drawerlayoutprac.R;
-import com.example.sam.drawerlayoutprac.Util;
 
 /**
  * Created by cuser on 2016/11/15.
  */
 
-public class PartnerMustLoginFragment extends PartnerCommonFragment {
+public class MustLoginFragment extends CommonFragment {
     // BUG - 不知道為什麼其他頁面也會被影響!
 
     @Override
@@ -54,7 +42,7 @@ public class PartnerMustLoginFragment extends PartnerCommonFragment {
                         public void onClick(DialogInterface dialog, int which) {
 //                            Util.showToast(getContext(),"登入pressed");
                             MemberFragment.switchFromLoginPage = true;
-                            Util.switchFragment(PartnerMustLoginFragment.this,new MemberFragment());
+                            Util.switchFragment(MustLoginFragment.this,new MemberFragment());
                         }
                     })
                     .setNegativeButton("暫時不要", new DialogInterface.OnClickListener() {
