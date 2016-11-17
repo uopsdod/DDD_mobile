@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
@@ -24,9 +25,13 @@ public class MemUpdateTask extends AsyncTask<Object, Void, Void> {
         String action = params[1].toString();
         MemVO memVO = (MemVO) params[2];
         String result;
+        // 從資料庫拉出來的Date要經過轉型，若沒轉型就算有資料也無法辨識
+        //server那邊轉，這裡也要轉
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-mm-dd").create();
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", action);
-        jsonObject.addProperty("memVO", new Gson().toJson(memVO));
+        jsonObject.addProperty("memVO", gson.toJson(memVO));
 //        if(params[3] != null){
 //            String imageBase64 = params[3].toString();
 //            jsonObject.addProperty("imageBase64", imageBase64);

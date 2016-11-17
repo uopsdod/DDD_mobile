@@ -2,6 +2,7 @@ package com.example.sam.drawerlayoutprac;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -33,6 +34,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 import static java.lang.Integer.parseInt;
 
 
@@ -42,8 +44,10 @@ public class MemberUpdateFragment extends Fragment {
     Button btSubmit, btChangePhoto;
     ImageView ivPhoto;
     RadioGroup rgGender;
+    RadioButton rbMale, rbFemale;
     TextInputLayout tilName, tilLiveBudget, tilIntro;
-    byte[] image;
+    byte[] image, originalImage;
+    Bitmap finalBitmap = null;
     private static final int REQUEST_PICK_PICTURE = 2;
     private final static int REQ_PERMISSIONS = 0;
 
@@ -57,6 +61,8 @@ public class MemberUpdateFragment extends Fragment {
         etIntro = (EditText) view.findViewById(R.id.etIntro);
         etLiveBudget = (EditText) view.findViewById(R.id.etLiveBudget);
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
+        rbMale = (RadioButton) view.findViewById(R.id.rbMale);
+        rbFemale = (RadioButton) view.findViewById(R.id.rbFemale);
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
         tilName = (TextInputLayout) view.findViewById(R.id.tilName);
         tilLiveBudget = (TextInputLayout) view.findViewById(R.id.tilLiveBudget);
@@ -114,16 +120,17 @@ public class MemberUpdateFragment extends Fragment {
                 memVO.setMemGender(checked);
             }
         });
-        btSubmit.setOnClickListener(new InsertFinishClick());
+        btSubmit.setOnClickListener(new UpdateFinishClick());
 
         btChangePhoto.setOnClickListener(new changePhotoClick());
         return view;
     }
 
     private class changePhotoClick implements View.OnClickListener{
-
+        //選擇更換的照片
         @Override
         public void onClick(View view) {
+            askPermissions();
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, REQUEST_PICK_PICTURE);
         }
@@ -132,7 +139,8 @@ public class MemberUpdateFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        askPermissions();
+        showMemInfo();
+        showMemProfile();
     }
     //問User同不同意這個APP使用他手機的相簿功能
     private void askPermissions() {
@@ -199,14 +207,63 @@ public class MemberUpdateFragment extends Fragment {
         }
     }
 
-    private class InsertFinishClick implements View.OnClickListener{
+    private void showMemInfo(){
+        SharedPreferences pref = getActivity().getSharedPreferences(Common.PREF_FILE,
+                MODE_PRIVATE);
+        String  id = pref.getString("memId", null);
+        Log.d("-----****--", "id" + id);
+        if(id != null){
+            if(Common.networkConnected(getActivity())){
+                String url = Common.URL + "/android/mem.do";
+                try{
+                    memVO = new MemGetOneTask().execute(url, id).get();
+                }catch(Exception e){
+                    Log.e("MemberInfo", e.toString());
+                }
+
+                etName.setText(memVO.getMemName());
+                etLiveBudget.setText(memVO.getMemLiveBudget().toString());
+                etIntro.setText(memVO.getMemIntro());
+                if(memVO.getMemGender().equals("F") || memVO.getMemGender().equals("f")){
+                    rbFemale.setChecked(true);
+                }else{
+                    rbMale.setChecked(true);
+                }
+            }
+        }
+    }
+
+    private void showMemProfile(){
+        SharedPreferences pref = getActivity().getSharedPreferences(Common.PREF_FILE,
+                MODE_PRIVATE);
+        String id =pref.getString("memId", null);
+        if(id != null){
+            if(Common.networkConnected(getActivity())){
+                String url = Common.URL + "/android/mem.do";
+                int imageSize = 250;
+                Bitmap bitmap = null;
+                try{
+                    bitmap = new MemberGetImageTask(ivPhoto).execute(url, id, imageSize).get();
+                }catch(Exception e){
+                    Log.e("MemberInfo", e.toString());
+                }
+                // bitmap 傳形成 byte[]
+                ivPhoto.setImageBitmap(bitmap);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                originalImage = out.toByteArray();
+            }
+        }
+    }
+
+    private class UpdateFinishClick implements View.OnClickListener{
         @Override
         public void onClick(View view) {
             String name = etName.getText().toString().trim();
             Integer LiveBudget = parseInt(String.valueOf(etLiveBudget.getText()));
             String Intro = etIntro.getText().toString().trim();
             if(image == null){
-                memVO.setMemProfile(null);
+                memVO.setMemProfile(originalImage);
             }else{
                 memVO.setMemProfile(image);
             }
@@ -218,9 +275,10 @@ public class MemberUpdateFragment extends Fragment {
                 memVO.setMemIntro(Intro);
 //                memVO.setMemProfile(image);
 //                String imageBase64 = Base64.encodeToString(image, Base64.DEFAULT);
-                String action = "Insert";
+                String action = "Update";
 //                new MemUpdateTask().execute(url, action, memVO, imageBase64);
-//                new MemUpdateTask().execute(url, action, memVO);
+                new MemUpdateTask().execute(url, action, memVO);
+                Util.showToast(getActivity(), "Update success");
             }else{
                 Util.showToast(getActivity(), "No network connection available");
             }
