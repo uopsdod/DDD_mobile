@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.R;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public class PartnerListAdapter extends ArrayAdapter<Map<String, Object>> {
         // end of 開始拿view
 
         // 開始binding data
-        String url = PartnerFragment.URL_Partner;
+        String url = Common.URL_Partner;
         Integer memId = Integer.parseInt(mData.get(position).get(KEY_MEMID).toString().toUpperCase());
         Integer imageSize = 300;
             // 每次都開另一個thread去抓圖片

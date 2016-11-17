@@ -14,6 +14,10 @@ public class Common {
     //public static String URL = "http://10.0.2.2:8081/TextToJson_Web/SearchServlet";
     //public final static String URL = "http://10.0.2.2:8081/TextToJson_Web/Partner";
     public final static String URL = "http://10.0.2.2:8081/DDD_web";
+    public static String URL_Partner = Common.URL + "/android/live2/partner.do";
+    public static String URL_PartnerMsgController = Common.URL + "/android/live2/PartnerMsgController";
+
+
     public final static String PREF_FILE = "preference";
 
     public static boolean networkConnected(Activity activity) {

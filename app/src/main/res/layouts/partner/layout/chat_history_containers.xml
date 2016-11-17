@@ -10,7 +10,7 @@
     <ListView
         android:id="@+id/chat_history_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="30"
         android:orientation="vertical">
     </ListView>

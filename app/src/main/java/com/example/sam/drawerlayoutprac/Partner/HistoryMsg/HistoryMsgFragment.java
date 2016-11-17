@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,8 @@ public class HistoryMsgFragment extends MustLoginFragment {
     }// end of onCreateView
 
     private void initListView() {
-        String uri = Common.URL + "/android/live2/PartnerMsgController";
+        String uri = Common.URL_PartnerMsgController;
+//        String uri = Common.URL_Partner;
         try {
             this.partnerHistoryMsgsList = new PartnerHistoryMsgGetMsgTask(getContext()).execute(uri).get();
         } catch (InterruptedException e) {
@@ -67,6 +69,7 @@ public class HistoryMsgFragment extends MustLoginFragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        Log.d("partnerHistory: ", ""+this.partnerHistoryMsgsList.size());
         this.listView.setAdapter(new PartnerHistoryMsgAdapter(getContext(),this.partnerHistoryMsgsList));
 
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,7 +81,7 @@ public class HistoryMsgFragment extends MustLoginFragment {
                 if (!partnerMsg.getMemChatToMemId().equals(memId)){
                     toMemId = partnerMsg.getMemChatToMemId().toString();
                 }else{
-                    toMemId = partnerMsg.getMemChatMemId().toString();
+                    toMemId = partnerMsg. getMemChatMemVO().getMemId().toString();
                 }
                 Fragment fragment = new ChatFragment();
                 Bundle bundle = new Bundle();

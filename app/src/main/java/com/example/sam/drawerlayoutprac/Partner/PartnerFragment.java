@@ -53,7 +53,7 @@ import io.codetail.animation.ViewAnimationUtils;
  */
 public class PartnerFragment extends MustLoginFragment {
     private final static String TAG = "SearchActivity";
-    public static String URL_Partner = Common.URL + "/android/live2/partner.do";
+    //public static String URL_Partner = Common.URL + "/android/live2/partner.do";
 
     ListView listview;
 
@@ -195,7 +195,7 @@ public class PartnerFragment extends MustLoginFragment {
         List<MemVO> memVOList = null;
         if (Common.networkConnected(getActivity())) {
             // send request to server and get the response - 重點在new這個動作
-            String url = PartnerFragment.URL_Partner;
+            String url = Common.URL_Partner;
             Log.d("url", url);
             try {
                 memVOList = (List<MemVO>) new PartnerGetAllTextTask(getContext(), this.listview).execute(url).get();
@@ -302,7 +302,7 @@ public class PartnerFragment extends MustLoginFragment {
         ImageView profileOverlay = (ImageView) mOverlayListItemView.findViewById(com.example.sam.drawerlayoutprac.R.id.image_view_avatar);
             // 將現在頁面的memId放入實體變數，若使用者進入訊息視窗，則將memId也帶過去
         PartnerFragment.this.toMemId = (String) item.get(PartnerListAdapter.KEY_MEMID);
-        String url = PartnerFragment.URL_Partner;
+        String url = Common.URL_Partner;
         int imageSize = 250;
         new PartnerGetOneImageTask(profileImg).execute(url, toMemId, imageSize);
         new PartnerGetOneImageTask(profileOverlay).execute(url, toMemId, imageSize);

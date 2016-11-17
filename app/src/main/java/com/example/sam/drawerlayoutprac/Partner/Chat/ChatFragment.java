@@ -121,6 +121,7 @@ public class ChatFragment extends CommonFragment {
                             .create(); // 注意:如果VO中有Date,Timestamp，就要Server,Client端規格一致
                     String partnerMsgGson = gson.toJson(partnerMsg);
                     myWebSocketClient.send(partnerMsgGson);
+                    Log.d("ChatFragment","fcm - " + partnerMsgGson);
                 }
             }
         });
@@ -137,7 +138,7 @@ public class ChatFragment extends CommonFragment {
         SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
         String memId = preferences_r.getString("memId",null);
         // 拿memId自己的大頭照
-        String url = Common.URL + "/android/live2/partner.do";
+        String url = Common.URL_Partner;
         int imageSize = 150;
         Bitmap bitmap_memId = getProfileBigmap(url, memId, imageSize);
 
