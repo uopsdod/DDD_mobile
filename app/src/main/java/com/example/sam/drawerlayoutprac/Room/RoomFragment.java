@@ -16,13 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class RoomFragment extends Fragment {
+public class RoomFragment extends CommonFragment {
     private String TAG = "RoomFragment";
     private TextView tvRoomName,tvFacilitiesDetail, tvPrice;
     private String RoomId;

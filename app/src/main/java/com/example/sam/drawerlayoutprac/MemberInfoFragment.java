@@ -20,7 +20,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by cuser on 2016/11/17.
  */
 
-public class MemberInfoFragment extends Fragment {
+public class MemberInfoFragment extends MustLoginFragment {
     TextView memName, memGender, memLiveBudget, memIntro;
     ImageView ivPhoto;
     Button btSubmit, btLogout;
@@ -42,7 +42,7 @@ public class MemberInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new MemberUpdateFragment();
-                Util.switchFragment(getActivity(), fragment);
+                Util.switchFragment(MemberInfoFragment.this, fragment);
             }
         });
 
@@ -59,7 +59,7 @@ public class MemberInfoFragment extends Fragment {
                             .remove("memId")
                             .remove("login").apply();
                     Fragment fragment = new HotelFragment();
-                    Util.switchFragment(MemberInfoFragment.this, fragment);
+                    Util.switchFragment(getActivity(), fragment);
                     Util.showToast(getContext(),"登出了喔! 屁孩");
                 }
             }
