@@ -74,13 +74,13 @@ public class PartnerChatListAdapter extends BaseAdapter {
 
         // 開始binding data to viewholder:
 
-        holder.txt_name.setText(PartnerChatFragment.nameMap.get(data.getMemChatMemId()));
+        holder.txt_name.setText(ChatFragment.nameMap.get(data.getMemChatMemId()));
         holder.txt.setText(data.getMemChatContent().toString());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(data.getMemChatDate());
         holder.txt_time.setText(date);
         //Bitmap bitmap = BitmapFactory.decodeByteArray(memVO.getMemProfile(),0,memVO.getMemProfile().length);
-        holder.img_thumbnail.setImageBitmap(PartnerChatFragment.profileMap.get(data.getMemChatMemId()));
+        holder.img_thumbnail.setImageBitmap(ChatFragment.profileMap.get(data.getMemChatMemId()));
         return aConvertView;
     }// end
 

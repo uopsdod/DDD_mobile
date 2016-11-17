@@ -16,13 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
-import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class MemberFragment extends PartnerCommonFragment {
+public class MemberFragment extends CommonFragment {
     private String TAG = "MemberFragment";
     TextView tvTroLogin;
     TextInputLayout tilUserName, tilPassword;
@@ -30,6 +29,8 @@ public class MemberFragment extends PartnerCommonFragment {
     Button btLogin, btSignUp;
     Fragment fragment;
     MemVO memVO = new MemVO();
+    public static boolean switchFromLoginPage;
+
 
     @Nullable
     @Override
@@ -119,9 +120,14 @@ public class MemberFragment extends PartnerCommonFragment {
                     new TokenIdWebSocket(getActivity()).sendTokenIdToServer();
                     Util.showToast(getActivity(), "Login success");
                 }
-
-                fragment = new HotelFragment();
-                Util.switchFragment(MemberFragment.this, fragment);
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    Log.d("fm.popBackStack() ","switchFromLoginPage: " + MemberFragment.switchFromLoginPage);
+                    fm.popBackStack();
+                }else{
+                    fragment = new HotelFragment();
+                    Util.switchFragment(getActivity(), fragment);
+                }
             } else {
                 fragment = new SignUp_Page1_Fragment();
                 Util.switchFragment(MemberFragment.this, fragment);
@@ -149,6 +155,12 @@ public class MemberFragment extends PartnerCommonFragment {
     @Override
     public void onResume() {
         super.onResume();
+        // 此配合PartnerMustLoginFragment.java設定使用 - 預防crush
+        // 且需判斷是否為被導向登入頁面的狀況: 用是否backStack有Fragment物件塞在裡面:
+        int backStackEntryCount = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackEntryCount > 0){
+            MemberFragment.switchFromLoginPage = true;
+        }
         getFocus();
     }
 

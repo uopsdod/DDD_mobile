@@ -67,7 +67,7 @@ public class PartnerListAdapter extends ArrayAdapter<Map<String, Object>> {
         // end of 開始拿view
 
         // 開始binding data
-        String url = PartnerFragment.URL_Partner;
+        String url = Fragment.URL_Partner;
         Integer memId = Integer.parseInt(mData.get(position).get(KEY_MEMID).toString().toUpperCase());
         Integer imageSize = 300;
             // 每次都開另一個thread去抓圖片

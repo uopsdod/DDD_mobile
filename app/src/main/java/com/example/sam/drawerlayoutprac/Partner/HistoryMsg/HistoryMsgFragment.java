@@ -14,8 +14,8 @@ import android.widget.ListView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
-import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
-import com.example.sam.drawerlayoutprac.Partner.PartnerCommonFragment;
+import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
+import com.example.sam.drawerlayoutprac.MustLoginFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
  * Created by cuser on 2016/11/14.
  */
 
-public class PartnerHistoryMsgFragment extends PartnerCommonFragment {
+public class HistoryMsgFragment extends MustLoginFragment {
     public static final String TAG = "WebSocket Chat - ";
 
     private LinearLayout rootView;
@@ -52,7 +52,9 @@ public class PartnerHistoryMsgFragment extends PartnerCommonFragment {
         this.memId =  preferences_r.getString("memId", null);
 
         // this.chatContent(ListView) - setAdapter here
-        initListView();
+        if (this.memId != null){
+            initListView();
+        }
         return this.rootView;
     }// end of onCreateView
 
@@ -78,11 +80,11 @@ public class PartnerHistoryMsgFragment extends PartnerCommonFragment {
                 }else{
                     toMemId = partnerMsg.getMemChatMemId().toString();
                 }
-                Fragment fragment = new PartnerChatFragment();
+                Fragment fragment = new ChatFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("ToMemId", toMemId);
                 fragment.setArguments(bundle);
-                Util.switchFragment(PartnerHistoryMsgFragment.this, fragment);
+                Util.switchFragment(HistoryMsgFragment.this, fragment);
             }
         });
     }
@@ -91,6 +93,8 @@ public class PartnerHistoryMsgFragment extends PartnerCommonFragment {
     @Override
     public void onPause() {
         super.onPause();
+        // 關閉歷史訊息列表:
+        MainActivity.floatingBtnPressed = false;
     }
 
 
@@ -102,7 +106,7 @@ public class PartnerHistoryMsgFragment extends PartnerCommonFragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     // 回到上一個Fragment或是離開app
-                    FragmentManager fm = PartnerHistoryMsgFragment.this.getFragmentManager();
+                    FragmentManager fm = HistoryMsgFragment.this.getFragmentManager();
                     if (fm.getBackStackEntryCount() > 0) {
                         fm.popBackStack();
                         return true;

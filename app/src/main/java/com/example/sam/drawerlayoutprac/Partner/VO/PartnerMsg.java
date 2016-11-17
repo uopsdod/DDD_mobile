@@ -7,7 +7,7 @@ import com.example.sam.drawerlayoutprac.Partner.VO.MemChatVO;
  */
 // 這個類別現在被兩個.java使用:
 // 1. TokenIdWebSocket.java
-// 2. PartnerChatFragment.java
+// 2. ChatFragment.java
 public class PartnerMsg extends MemChatVO {
     String action;
     String tokenId;

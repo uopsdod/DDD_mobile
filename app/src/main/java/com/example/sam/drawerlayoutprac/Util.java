@@ -9,6 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Created by cuser on 2016/10/15.
  */
@@ -25,6 +29,7 @@ public class Util {
     // 當使用者是從左邊drawerlayout進入到其中一個分區的話，清掉目前的所有Fragment stack
     // 程式上的意義：只要是從 Activity -> Fragment的話，清掉所有在stack中的Fragment物件
     public static void switchFragment(FragmentActivity activity, Fragment fragment) {
+        Log.d("switchFragment","switchFromLoginPage: " + MemberFragment.switchFromLoginPage);
 //        Log.d("Util","1-1");
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
 //        Log.d("Util","1-2");
@@ -36,10 +41,12 @@ public class Util {
             int backStackId = activity.getSupportFragmentManager().getBackStackEntryAt(i).getId();
             fragmentManager.popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+
 //        Log.d("Util","1");
         fragmentTransaction.replace(R.id.drawer_layout_body, fragment);
 //        Log.d("Util","2");
         fragmentTransaction.commit();
+//        MemberFragment.switchFromLoginPage = false;
 //        Log.d("Util","3");
     }
 

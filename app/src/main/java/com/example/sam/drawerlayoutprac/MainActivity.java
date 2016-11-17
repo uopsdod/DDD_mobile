@@ -6,8 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -19,14 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
-import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
-import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
-import com.example.sam.drawerlayoutprac.Partner.HistoryMsg.PartnerHistoryMsgFragment;
+import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.Fragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
@@ -85,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             if (fromMemId != null) {
                 this.floatingBtn.setVisibility(View.INVISIBLE);
                 fromMemId = fromMemId.trim();
-                Fragment fragment = new PartnerChatFragment();
+                android.support.v4.app.Fragment fragment = new ChatFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("ToMemId", fromMemId);
                 fragment.setArguments(bundle);
@@ -148,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 View popMenu = findViewById(R.id.my_member);
                 item.setChecked(true);
                 drawerLayout.closeDrawers(); // important step
-                Fragment fragment = null;
+                android.support.v4.app.Fragment fragment = null;
                 switch (item.getItemId()) {
                     case R.id.lookfor_hotel:
                         //showToast("hotel clicked");
@@ -157,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.lookfor_partner:
                         //showToast("partner clicked");
-                        fragment = new PartnerFragment();
+                        fragment = new Fragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
                     case R.id.my_member:
@@ -240,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void inigDrawerBody() {
-        Fragment fragment = new HotelFragment();
+        android.support.v4.app.Fragment fragment = new HotelFragment();
         Util.switchFragment(MainActivity.this, fragment);
     }
 
@@ -289,14 +284,6 @@ public class MainActivity extends AppCompatActivity {
 
     // 以下為測試
     public void testFragmentClicked(View view) {
-//        LinearLayout linearLayout = (LinearLayout) view.getParent();
-//        EditText editText = (EditText) linearLayout.findViewById(R.id.memId_yo);
-////        Util.showToast(getApplicationContext(),"testFragmentClicked:  " + editText.getText().toString());
-//        // 把假memId放入preferences_yo
-//        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-//        preferences_w.edit()
-//                .putString("memId_yo", editText.getText().toString())
-//                .apply();
 
         // 從preferences_yo讀取假memId
         SharedPreferences preferences_r = getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
@@ -305,14 +292,16 @@ public class MainActivity extends AppCompatActivity {
             memid_test = preferences_r.getString("memId", null);
         }
         if (memid_test != null){
-            Util.showToast(getApplicationContext(), "Who is logged:  " + memid_test);
-            preferences_r.edit().remove("memId").apply();
+            // 下面這一行，之後要放在實際登出的頁面:
+            new TokenIdWebSocket(getApplicationContext()).removeTokenIdFromServer();
+            preferences_r.edit().remove("memId")
+                                .putBoolean("login",false)
+                                .apply();
         }
         if (preferences_r.getString("memId", null) == null){
             Util.showToast(getApplicationContext(), "log out:  " + memid_test);
-        }
-        // 之後繼續-如果登出，就要去跟MsgCenter講，把我的tokenId資訊拿掉
 
+        }
 
     }
 

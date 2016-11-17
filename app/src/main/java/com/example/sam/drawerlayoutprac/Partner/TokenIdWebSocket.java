@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
-import com.example.sam.drawerlayoutprac.Partner.Chat.PartnerChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.google.gson.Gson;
 
@@ -27,21 +27,14 @@ public class TokenIdWebSocket {
     Activity activity; //
     Context context; // 給MyFirebaseInstanceIDService用
     URI uri;
-    PartnerChatFragment partnerChatFragment;
+    ChatFragment partnerChatFragment;
     List<PartnerMsg> partnerMsgList;
     public TokenIdWebSocket(Context aContext) {
         this.context = aContext;
     }
-    public TokenIdWebSocket(Activity aActivity) {
-        this.activity = aActivity;
-    }
-    public TokenIdWebSocket(Activity aActivity, PartnerChatFragment aPartnerChatFragment) {
-        this.activity = aActivity;
-        this.partnerChatFragment = aPartnerChatFragment;
-    }
     public void sendTokenIdToServer(){
 
-        SharedPreferences preferences_r = this.activity.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
+        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
         String memId = null;
         String tokenId = null;
 
@@ -52,9 +45,9 @@ public class TokenIdWebSocket {
         if (memId != null && tokenId != null) {
             URI uri = null;
             try {
-                uri = new URI(PartnerChatFragment.URL_Chatroom);
+                uri = new URI(ChatFragment.URL_Chatroom);
             } catch (URISyntaxException e) {
-                Log.e(PartnerChatFragment.TAG, e.toString());
+                Log.e(ChatFragment.TAG, e.toString());
             }
             this.uri = uri;
             PartnerMsg partnerMsg = new PartnerMsg();
@@ -65,9 +58,8 @@ public class TokenIdWebSocket {
         }
     }
 
-    public WebSocketClient bindMemIdWithSession(){
-        WebSocketClient tmpWebSocketClient = null;
-        SharedPreferences preferences_r = this.activity.getSharedPreferences(Common.PREF_FILE, this.activity.MODE_PRIVATE);
+    public void removeTokenIdFromServer(){
+        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
         String memId = null;
         String tokenId = null;
 
@@ -75,21 +67,20 @@ public class TokenIdWebSocket {
             memId = preferences_r.getString("memId", null);
             tokenId = preferences_r.getString("tokenId", null);
         }
-        if (memId != null) {
+        if (memId != null && tokenId != null) {
             URI uri = null;
             try {
-                uri = new URI(PartnerChatFragment.URL_Chatroom);
+                uri = new URI(ChatFragment.URL_Chatroom);
             } catch (URISyntaxException e) {
-                Log.e(PartnerChatFragment.TAG, e.toString());
+                Log.e(ChatFragment.TAG, e.toString());
             }
             this.uri = uri;
             PartnerMsg partnerMsg = new PartnerMsg();
-            partnerMsg.setAction("bindMemIdWithSession");
+            partnerMsg.setAction("removeTokenId");
+            partnerMsg.setTokenId(tokenId);
             partnerMsg.setMemChatMemId(memId);
-            tmpWebSocketClient = new MyWebSocketClient(partnerMsg);
-            tmpWebSocketClient.connect();
+            new MyWebSocketClient(partnerMsg).connect();
         }
-        return tmpWebSocketClient;
     }
 
 
