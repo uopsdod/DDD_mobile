@@ -3,7 +3,6 @@ package com.example.sam.drawerlayoutprac.Room;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.icu.util.BuddhistCalendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,12 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
-import com.example.sam.drawerlayoutprac.Hotel.HotelGetOneTask;
-import com.example.sam.drawerlayoutprac.Hotel.HotelVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
@@ -74,7 +70,7 @@ public class RoomFragment extends Fragment {
             List<String> roomVOList = null;
             int imageSize = 250;
             try{
-                roomVOList = new RoomGetOneTask2().execute(url, id, imageSize).get();
+                roomVOList = new RoomGetOneAllPhotoTask().execute(url, id, imageSize).get();
             }catch(Exception e){
                 Log.e(TAG,e.toString());
             }
