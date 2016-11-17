@@ -311,11 +311,18 @@ public class MainActivity extends AppCompatActivity {
         }
         if (memid_test != null){
 //            Util.showToast(getApplicationContext(), "Who is logged:  " + memid_test);
-            preferences_r.edit().remove("memId").apply();
+            preferences_r.edit().remove("memId")
+                                .putBoolean("login",false)
+                                .apply();
         }
         if (preferences_r.getString("memId", null) == null){
             Util.showToast(getApplicationContext(), "log out:  " + memid_test);
         }
+//        SharedPreferences pref = getSharedPreferences(Common.PREF_FILE,
+//                MODE_PRIVATE);
+//        boolean login = pref.getBoolean("login",false);
+
+
         // 之後繼續-如果登出，就要去跟MsgCenter講，把我的tokenId資訊拿掉
 
 

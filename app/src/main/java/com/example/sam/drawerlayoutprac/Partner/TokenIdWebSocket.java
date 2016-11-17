@@ -32,16 +32,9 @@ public class TokenIdWebSocket {
     public TokenIdWebSocket(Context aContext) {
         this.context = aContext;
     }
-    public TokenIdWebSocket(Activity aActivity) {
-        this.activity = aActivity;
-    }
-    public TokenIdWebSocket(Activity aActivity, ChatFragment aPartnerChatFragment) {
-        this.activity = aActivity;
-        this.partnerChatFragment = aPartnerChatFragment;
-    }
     public void sendTokenIdToServer(){
 
-        SharedPreferences preferences_r = this.activity.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
+        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
         String memId = null;
         String tokenId = null;
 
@@ -64,34 +57,6 @@ public class TokenIdWebSocket {
             new MyWebSocketClient(partnerMsg).connect();
         }
     }
-
-    public WebSocketClient bindMemIdWithSession(){
-        WebSocketClient tmpWebSocketClient = null;
-        SharedPreferences preferences_r = this.activity.getSharedPreferences(Common.PREF_FILE, this.activity.MODE_PRIVATE);
-        String memId = null;
-        String tokenId = null;
-
-        if (preferences_r != null) {
-            memId = preferences_r.getString("memId", null);
-            tokenId = preferences_r.getString("tokenId", null);
-        }
-        if (memId != null) {
-            URI uri = null;
-            try {
-                uri = new URI(ChatFragment.URL_Chatroom);
-            } catch (URISyntaxException e) {
-                Log.e(ChatFragment.TAG, e.toString());
-            }
-            this.uri = uri;
-            PartnerMsg partnerMsg = new PartnerMsg();
-            partnerMsg.setAction("bindMemIdWithSession");
-            partnerMsg.setMemChatMemId(memId);
-            tmpWebSocketClient = new MyWebSocketClient(partnerMsg);
-            tmpWebSocketClient.connect();
-        }
-        return tmpWebSocketClient;
-    }
-
 
     private class MyWebSocketClient extends WebSocketClient{
         PartnerMsg partnerMsg;
