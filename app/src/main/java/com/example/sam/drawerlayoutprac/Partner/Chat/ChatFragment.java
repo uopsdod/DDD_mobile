@@ -106,8 +106,14 @@ public class ChatFragment extends CommonFragment {
                 String memid = preferences_r.getString("memId", null);
                 PartnerMsg partnerMsg = new PartnerMsg();
                 partnerMsg.setAction("chat");
-                partnerMsg.setMemChatMemId(memid);
-                partnerMsg.setMemChatToMemId(ChatFragment.this.toMemId);
+                MemVO memVO = new MemVO();
+                memVO.setMemId(memid);
+                partnerMsg.setMemChatMemVO(memVO);
+//                partnerMsg.setMemChatMemId(memid);
+                MemVO toMemVO = new MemVO();
+                toMemVO.setMemId(ChatFragment.this.toMemId);
+                partnerMsg.setMemChatToMemVO(toMemVO);
+//                partnerMsg.setMemChatToMemId(ChatFragment.this.toMemId);
                 partnerMsg.setMemChatContent(newMsg);
                 partnerMsg.setMemChatDate(new Timestamp(new java.util.Date().getTime()));
                 // 在自己頁面顯示聊天視窗:
@@ -208,8 +214,14 @@ public class ChatFragment extends CommonFragment {
                 this.uri = uri;
                 PartnerMsg partnerMsg = new PartnerMsg();
                 partnerMsg.setAction("bindMemIdWithSession");
-                partnerMsg.setMemChatMemId(memId);
-                partnerMsg.setMemChatToMemId(ChatFragment.this.toMemId);
+                MemVO memVO = new MemVO();
+                memVO.setMemId(memId);
+                partnerMsg.setMemChatMemVO(memVO);
+//                partnerMsg.setMemChatMemId(memId);
+                MemVO toMemVO = new MemVO();
+                toMemVO.setMemId(ChatFragment.this.toMemId);
+                partnerMsg.setMemChatToMemVO(toMemVO);
+//                partnerMsg.setMemChatToMemId(ChatFragment.this.toMemId);
                 tmpWebSocketClient = new PartnerChatWebSocket.MyWebSocketClient(partnerMsg);
                 tmpWebSocketClient.connect();
             }

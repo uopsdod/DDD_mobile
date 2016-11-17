@@ -75,10 +75,10 @@ public class HistoryMsgFragment extends MustLoginFragment {
                 PartnerMsg partnerMsg = (PartnerMsg)parent.getItemAtPosition(position);
                 //MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
                 String toMemId = null; // partnerMsg.getMemChatToMemId();
-                if (!partnerMsg.getMemChatToMemId().equals(memId)){
-                    toMemId = partnerMsg.getMemChatToMemId().toString();
+                if (!partnerMsg.getMemChatToMemVO().getMemId().equals(memId)){
+                    toMemId = partnerMsg.getMemChatToMemVO().getMemId().toString();
                 }else{
-                    toMemId = partnerMsg.getMemChatMemId().toString();
+                    toMemId = partnerMsg.getMemChatMemVO().getMemId().toString();
                 }
                 Fragment fragment = new ChatFragment();
                 Bundle bundle = new Bundle();

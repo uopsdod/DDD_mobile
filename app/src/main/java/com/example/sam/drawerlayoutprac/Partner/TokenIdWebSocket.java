@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.google.gson.Gson;
 
@@ -53,7 +54,10 @@ public class TokenIdWebSocket {
             PartnerMsg partnerMsg = new PartnerMsg();
             partnerMsg.setAction("uploadTokenId");
             partnerMsg.setTokenId(tokenId);
-            partnerMsg.setMemChatMemId(memId);
+            MemVO memVO = new MemVO();
+            memVO.setMemId(memId);
+            partnerMsg.setMemChatMemVO(memVO);
+//            partnerMsg.setMemChatMemId(memId);
             new MyWebSocketClient(partnerMsg).connect();
         }
     }
@@ -78,7 +82,9 @@ public class TokenIdWebSocket {
             PartnerMsg partnerMsg = new PartnerMsg();
             partnerMsg.setAction("removeTokenId");
             partnerMsg.setTokenId(tokenId);
-            partnerMsg.setMemChatMemId(memId);
+            MemVO memVO = new MemVO();
+            memVO.setMemId(memId);
+            partnerMsg.setMemChatMemVO(memVO);
             new MyWebSocketClient(partnerMsg).connect();
         }
     }
