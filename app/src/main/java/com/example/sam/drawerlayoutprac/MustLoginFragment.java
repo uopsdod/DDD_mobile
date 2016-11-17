@@ -19,7 +19,7 @@ public class MustLoginFragment extends CommonFragment {
         super.onResume();
         Log.d("MustLoginFragment","switchFromLoginPage: " + MemberFragment.switchFromLoginPage);
         // 預防crush: 當使用者看到登入彈跳視窗->點擊'現在登入'->然後又調皮的從navigation跳到其他頁面
-        // 因為透過switchFragment(Activity, Fragment)方法會把所有在stack的Fragment popout
+        // 因為透過switchFragment(Activity, PartnerFragment)方法會把所有在stack的Fragment popout
         // 而poppout的過程又會呼叫onResumed()方法，會因此讓警示燈入訊息不斷出現而造成crush。
         // 這個MemberFragment.switchFromLoginPage會配合在MemberFragmetnk的onResumed()方法中設定
         // 一旦使用者是從登入頁面->navigation->其他頁面的話，原本放在stack的那個Fragment就不會往下面的code走

@@ -54,10 +54,7 @@ public class TokenIdWebSocket {
             PartnerMsg partnerMsg = new PartnerMsg();
             partnerMsg.setAction("uploadTokenId");
             partnerMsg.setTokenId(tokenId);
-            MemVO memVO = new MemVO();
-            memVO.setMemId(memId);
-            partnerMsg.setMemChatMemVO(memVO);
-//            partnerMsg.setMemChatMemId(memId);
+            partnerMsg.setMemChatMemId(memId);
             new MyWebSocketClient(partnerMsg).connect();
         }
     }
@@ -82,9 +79,7 @@ public class TokenIdWebSocket {
             PartnerMsg partnerMsg = new PartnerMsg();
             partnerMsg.setAction("removeTokenId");
             partnerMsg.setTokenId(tokenId);
-            MemVO memVO = new MemVO();
-            memVO.setMemId(memId);
-            partnerMsg.setMemChatMemVO(memVO);
+            partnerMsg.setMemChatMemId(memId);
             new MyWebSocketClient(partnerMsg).connect();
         }
     }

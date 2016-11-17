@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +20,7 @@ import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
-import com.example.sam.drawerlayoutprac.Partner.Fragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
@@ -152,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.lookfor_partner:
                         //showToast("partner clicked");
-                        fragment = new Fragment();
+                        fragment = new PartnerFragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
                     case R.id.my_member:
