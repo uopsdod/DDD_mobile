@@ -17,14 +17,11 @@ import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
 import static android.content.Context.MODE_PRIVATE;
 
-/**
- * Created by cuser on 2016/11/17.
- */
-
 public class MemberInfoFragment extends MustLoginFragment {
     TextView memName, memGender, memLiveBudget, memIntro;
     ImageView ivPhoto;
     Button btSubmit, btLogout;
+    MemVO memVO;
 
     @Nullable
     @Override
@@ -75,6 +72,7 @@ public class MemberInfoFragment extends MustLoginFragment {
     public void onStart() {
         super.onStart();
         showMemInfo();
+        showMemProfile();
     }
 
     private void showMemInfo(){
@@ -85,7 +83,6 @@ public class MemberInfoFragment extends MustLoginFragment {
         if(id != null){
             if(Common.networkConnected(getActivity())){
                 String url = Common.URL + "/android/mem.do";
-                MemVO memVO = null;
                 try{
                    memVO = new MemGetOneTask().execute(url, id).get();
                 }catch(Exception e){
@@ -100,8 +97,25 @@ public class MemberInfoFragment extends MustLoginFragment {
                 }else{
                     memGender.setText("男");
                 }
+
             }
         }
+    }
 
+    private void showMemProfile(){
+        SharedPreferences pref = getActivity().getSharedPreferences(Common.PREF_FILE,
+                MODE_PRIVATE);
+        String id =pref.getString("memId", null);
+        if(id != null){
+            if(Common.networkConnected(getActivity())){
+                String url = Common.URL + "/android/mem.do";
+                int imageSize = 250;
+                try{
+                     new MemberGetImageTask(ivPhoto).execute(url, id, imageSize).get();
+                }catch(Exception e){
+                    Log.e("MemberInfo", e.toString());
+                }
+            }
+        }
     }
 }
