@@ -59,20 +59,12 @@ public class MainActivity extends AppCompatActivity {
         // 左邊拉出視窗顯現
         initDrawer();
 
-        // fcm testing;
+        // FCM
         // 狀況一(在這邊處理): 確定有登入 + 已有tokenId
         // 狀況二(在登入後處理)：尚未登入 + 已有tokenId
         // 狀況三(在FirebaseInstanceIdService::onTokenRefresed()方法中處理)：尚未登入 + tokenId還在更新中
-
-
-        //this.floatingBtn.setVisibility(View.VISIBLE);
-        // 印出所有key-value pairs
-//            for (String key : fcmBundle.keySet()) {
-//                String value = fcmBundle.get(key).toString();
-//                Log.d(TAG, "fcm - Key: " + key + " Value: " + value);
-//            }
         new TokenIdWebSocket(this).sendTokenIdToServer();
-        // fcm - 當使用者點擊notification
+        // fcm - 當使用者點擊notification,直接跳轉到聊天訊息視窗
         Bundle fcmBundle = getIntent().getExtras();
         if (fcmBundle != null) {
             String fromMemId = (String) fcmBundle.get("fromMemId");
@@ -87,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
+        // end of FCM
+
         // 使用設定預設首頁 - HotelFragment.java
         inigDrawerBody();
 
@@ -111,13 +105,6 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         this.actionBarMenu = aMenu;
         getMenuInflater().inflate(R.menu.action_bar_menu, this.actionBarMenu);
-//        this.actionBarMenu.findItem(R.id.action_bar_message).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                Util.showToast(MainActivity.this,"action_bar_message clicked");
-//                return false;
-//            }
-//        });
         return true;
     }
 
