@@ -17,6 +17,8 @@ import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.MustLoginFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerGoBackState;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -40,6 +42,7 @@ public class HistoryMsgFragment extends MustLoginFragment {
     public void onResume() {
         super.onResume();
         backBtnPressed();
+        PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
         MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
     }
 
@@ -107,6 +110,8 @@ public class HistoryMsgFragment extends MustLoginFragment {
         getView().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // 為了以下這行而複寫backBtnPressed()
+                PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.BACKBTN_PRESSED;
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     // 回到上一個Fragment或是離開app
                     FragmentManager fm = HistoryMsgFragment.this.getFragmentManager();

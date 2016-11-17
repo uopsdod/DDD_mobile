@@ -101,7 +101,10 @@ public class PartnerFragment extends MustLoginFragment {
         backBtnPressed();
         // 處理聊天訊息回來畫面
         // 排除掉-曾經進入個人詳細頁面，又同時沒有在聊天訊息視窗透過backbutton正常回來的情況
+        Log.d("back - getState: ", "" + getState());
+        Log.d("back - backBtnState: ", "" + backBtnPressed_fromChat);
         if (getState() == EuclidState.ProfilePageOpened && !(backBtnPressed_fromChat == PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR)) { // 改
+            Log.d("back", "back here");
             PartnerFragment.this.backBtnPressed_fromChat = PartnerGoBackState.NOTHING;
             try {
                 showProfileDetails(mItemSelected, mViewSelected);
@@ -518,7 +521,7 @@ public class PartnerFragment extends MustLoginFragment {
     }
 
     // closing動畫01
-    private void backBtnPressed() {
+    protected void backBtnPressed() {
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
         getView().setOnKeyListener(new View.OnKeyListener() {
