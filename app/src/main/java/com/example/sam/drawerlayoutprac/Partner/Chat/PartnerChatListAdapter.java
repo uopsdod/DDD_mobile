@@ -57,7 +57,7 @@ public class PartnerChatListAdapter extends BaseAdapter {
         final PartnerMsg data = this.partnerMsgList.get(aPosition);
 
         holder = new ViewHolder();
-        if (data.getMemChatMemVO().getMemId().equals(memId)) { // 是自己的訊息
+        if (data.getMemChatMemId().equals(memId)) { // 是自己的訊息
             aConvertView = View.inflate(this.context, R.layout.chat_right_container, null);
         } else {                                    // 是對方的訊息
             aConvertView = View.inflate(this.context, R.layout.chat_left_container, null);
@@ -74,13 +74,13 @@ public class PartnerChatListAdapter extends BaseAdapter {
 
         // 開始binding data to viewholder:
 
-        holder.txt_name.setText(ChatFragment.nameMap.get(data.getMemChatMemVO().getMemId()));
+        holder.txt_name.setText(ChatFragment.nameMap.get(data.getMemChatMemId()));
         holder.txt.setText(data.getMemChatContent().toString());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(data.getMemChatDate());
         holder.txt_time.setText(date);
         //Bitmap bitmap = BitmapFactory.decodeByteArray(memVO.getMemProfile(),0,memVO.getMemProfile().length);
-        holder.img_thumbnail.setImageBitmap(ChatFragment.profileMap.get(data.getMemChatMemVO().getMemId()));
+        holder.img_thumbnail.setImageBitmap(ChatFragment.profileMap.get(data.getMemChatMemId()));
         return aConvertView;
     }// end
 
