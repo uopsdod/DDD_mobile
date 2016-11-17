@@ -1,27 +1,27 @@
-package com.example.sam.drawerlayoutprac.Room;
+package com.example.sam.drawerlayoutprac;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
-public class RoomGetAllTask extends AsyncTask<Object, String, List<RoomVO>>{
-    private String TAG = "RoomGetAllTask";
-    private String ACTION = "getAll";
+
+
+public class MemGetOneTask extends AsyncTask<Object, Void, MemVO> {
+    private String TAG = "MemGetOneTask";
+    private String ACTION = "getOne";
     @Override
-    protected List<RoomVO> doInBackground(Object... params) {
+    protected MemVO doInBackground(Object... params) {
         String url = params[0].toString();
         String id = params[1].toString();
         String jsonIn;
@@ -35,9 +35,9 @@ public class RoomGetAllTask extends AsyncTask<Object, String, List<RoomVO>>{
             return null;
         }
 
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<RoomVO>>(){} .getType();//因要給.class檔，但因泛型關係所以用Type轉型成RoomVO.class檔
-        return gson.fromJson(jsonIn, listType);
+        // 從資料庫拉出來的Date要經過轉型，若沒轉型就算有資料也無法辨識
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-mm-dd").create();
+        return gson.fromJson(jsonIn, MemVO.class);
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {

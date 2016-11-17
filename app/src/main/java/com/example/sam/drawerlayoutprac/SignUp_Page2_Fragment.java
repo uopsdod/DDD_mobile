@@ -37,7 +37,7 @@ import static android.app.Activity.RESULT_OK;
 import static java.lang.Integer.parseInt;
 
 
-public class SignUp_Page2_Fragment extends Fragment {
+public class SignUp_Page2_Fragment extends CommonFragment {
     private MemVO memVO;
     EditText etIntro, etLiveBudget, etName;
     Button btSubmit, btChangePhoto;

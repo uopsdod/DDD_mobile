@@ -12,7 +12,7 @@ import android.widget.TextView;
  * Created by cuser on 2016/11/13.
  */
 
-public class OrdInfoFragment extends Fragment{
+public class OrdInfoFragment extends CommonFragment{
     TextView tvInfo;
 
     @Nullable

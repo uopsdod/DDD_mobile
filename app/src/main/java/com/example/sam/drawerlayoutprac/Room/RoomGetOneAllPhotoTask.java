@@ -19,7 +19,7 @@ import java.net.URL;
 import java.util.List;
 
 
-public class RoomGetOneTask2 extends AsyncTask<Object, String, List<String>> {
+public class RoomGetOneAllPhotoTask extends AsyncTask<Object, String, List<String>> {
     private String TAG = "RoomGetOne";
     private String ACTION = "getOneAllPhotoId";
     @Override

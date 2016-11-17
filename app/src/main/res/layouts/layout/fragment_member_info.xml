@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+
+    <ImageView
+        android:id="@+id/ivPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivLogo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:src="@drawable/member_hotel" />
+
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivPhoto"
+        android:layout_marginTop="20dp"
+        android:text="會員姓名 : "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/memName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tvName"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/tvName"
+        android:text="譚芝穎"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvName"
+        android:layout_marginTop="5dp"
+        android:text="會員性別 : "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/memGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tvGender"
+        android:layout_toRightOf="@id/tvGender"
+        android:text="女"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvLiveBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvGender"
+        android:layout_marginTop="5dp"
+        android:text="住房預算 : "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/memLiveBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tvLiveBudget"
+        android:layout_toRightOf="@id/tvLiveBudget"
+        android:text="2500"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvIntro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvLiveBudget"
+        android:layout_marginTop="5dp"
+        android:text="會員簡介 : "
+        android:textSize="30sp" />
+    <ScrollView
+        android:id="@+id/svIntro"
+        android:layout_below="@id/tvIntro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/memIntro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvIntro"
+        android:text="大家好"
+        android:textSize="30sp"
+        android:inputType="textMultiLine"/>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/svIntro"
+        android:layout_marginTop="10dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改資料" />
+
+        <Button
+            android:layout_marginLeft="30dp"
+            android:id="@+id/btLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登出" />
+
+    </LinearLayout>
+
+</RelativeLayout>

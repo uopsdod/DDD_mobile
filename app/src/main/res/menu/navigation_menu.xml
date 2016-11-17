@@ -26,12 +26,6 @@
             android:title="一般會員"/>
 
         <item
-            android:id="@+id/my_member_update"
-            android:icon="@drawable/member"
-            android:title="會員修改資料"/>
-
-
-        <item
             android:id="@+id/my_member_hotel"
             android:icon="@drawable/member_hotel"
             android:title="廠商會員" />
@@ -41,11 +35,6 @@
             android:icon="@drawable/info"
             android:title="訂房須知" />
 
-        <item
-            android:id="@+id/logOut"
-            android:icon="@drawable/info"
-            android:title="登 出"
-            />
 
         <item
             android:id="@+id/test_yo"

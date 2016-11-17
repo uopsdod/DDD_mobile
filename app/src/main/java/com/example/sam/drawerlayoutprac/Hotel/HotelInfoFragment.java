@@ -19,6 +19,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Room.RoomFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomGetAllTask;
@@ -29,7 +30,7 @@ import com.example.sam.drawerlayoutprac.Util;
 import java.io.Serializable;
 import java.util.List;
 
-public class HotelInfoFragment extends Fragment implements Serializable {
+public class HotelInfoFragment extends CommonFragment implements Serializable {
     private static final String TAG = "HotelInfoFragment";
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rv_hotelInfo;
