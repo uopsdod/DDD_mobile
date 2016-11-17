@@ -294,14 +294,6 @@ public class MainActivity extends AppCompatActivity {
 
     // 以下為測試
     public void testFragmentClicked(View view) {
-//        LinearLayout linearLayout = (LinearLayout) view.getParent();
-//        EditText editText = (EditText) linearLayout.findViewById(R.id.memId_yo);
-////        Util.showToast(getApplicationContext(),"testFragmentClicked:  " + editText.getText().toString());
-//        // 把假memId放入preferences_yo
-//        SharedPreferences preferences_w = getSharedPreferences("preferences_yo", MODE_PRIVATE);
-//        preferences_w.edit()
-//                .putString("memId_yo", editText.getText().toString())
-//                .apply();
 
         // 從preferences_yo讀取假memId
         SharedPreferences preferences_r = getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
@@ -310,21 +302,16 @@ public class MainActivity extends AppCompatActivity {
             memid_test = preferences_r.getString("memId", null);
         }
         if (memid_test != null){
-//            Util.showToast(getApplicationContext(), "Who is logged:  " + memid_test);
+            // 下面這一行，之後要放在實際登出的頁面:
+            new TokenIdWebSocket(getApplicationContext()).removeTokenIdFromServer();
             preferences_r.edit().remove("memId")
                                 .putBoolean("login",false)
                                 .apply();
         }
         if (preferences_r.getString("memId", null) == null){
             Util.showToast(getApplicationContext(), "log out:  " + memid_test);
+
         }
-//        SharedPreferences pref = getSharedPreferences(Common.PREF_FILE,
-//                MODE_PRIVATE);
-//        boolean login = pref.getBoolean("login",false);
-
-
-        // 之後繼續-如果登出，就要去跟MsgCenter講，把我的tokenId資訊拿掉
-
 
     }
 

@@ -58,6 +58,32 @@ public class TokenIdWebSocket {
         }
     }
 
+    public void removeTokenIdFromServer(){
+        SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE, this.context.MODE_PRIVATE);
+        String memId = null;
+        String tokenId = null;
+
+        if (preferences_r != null) {
+            memId = preferences_r.getString("memId", null);
+            tokenId = preferences_r.getString("tokenId", null);
+        }
+        if (memId != null && tokenId != null) {
+            URI uri = null;
+            try {
+                uri = new URI(ChatFragment.URL_Chatroom);
+            } catch (URISyntaxException e) {
+                Log.e(ChatFragment.TAG, e.toString());
+            }
+            this.uri = uri;
+            PartnerMsg partnerMsg = new PartnerMsg();
+            partnerMsg.setAction("removeTokenId");
+            partnerMsg.setTokenId(tokenId);
+            partnerMsg.setMemChatMemId(memId);
+            new MyWebSocketClient(partnerMsg).connect();
+        }
+    }
+
+
     private class MyWebSocketClient extends WebSocketClient{
         PartnerMsg partnerMsg;
 
