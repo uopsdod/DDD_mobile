@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.google.gson.Gson;
 

@@ -78,10 +78,10 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         SharedPreferences preferences_r = this.context.getSharedPreferences(Common.PREF_FILE,this.context.MODE_PRIVATE);
         String memId =preferences_r.getString("memId",null);
         String toMemId = null;
-        if (!data.getMemChatToMemId().toString().equals(memId)){
-            toMemId = data.getMemChatToMemId().toString();
+        if (!data.getMemChatToMemVO().getMemId().toString().equals(memId)){
+            toMemId = data.getMemChatToMemVO().getMemId().toString();
         }else{
-            toMemId = data.getMemChatMemId().toString();
+            toMemId = data.getMemChatMemVO().getMemId().toString();
         }
         // end of 判斷對方會員的memId
         try {

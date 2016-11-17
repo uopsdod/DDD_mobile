@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -51,6 +52,9 @@ public class MemberInfoFragment extends MustLoginFragment {
                         MODE_PRIVATE);
                 boolean login2 = pref2.getBoolean("login",false);
                 if(login2){
+                    // 當使用者登出，要去跟server說把我的tokenId去掉，以免被人騷擾:
+                    new TokenIdWebSocket(getContext()).removeTokenIdFromServer();
+
                     pref2.edit().remove("userName")
                             .remove("password")
                             .remove("memId")

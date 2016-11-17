@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.CommonFragment;
-import com.example.sam.drawerlayoutprac.Partner.Fragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemVO;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneImageTask;
 import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneTextTask;
@@ -68,7 +68,7 @@ public class ChatFragment extends CommonFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Fragment.backBtnPressed_fromChat = PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
+        PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
         MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
 
         // 建立Websocket連線 - bindMemIdWithSession
