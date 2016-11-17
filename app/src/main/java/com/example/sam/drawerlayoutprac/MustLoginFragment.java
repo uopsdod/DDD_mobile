@@ -34,7 +34,9 @@ public class MustLoginFragment extends CommonFragment {
         }
         if (memid == null){
             Util.showToast(getContext(),"You must login to proceed");
+            //new AlertDialog.Builder(getActivity()).setCancelable()
             new AlertDialog.Builder(getActivity())
+                    .setCancelable(false) // 讓使用者不能點擊旁邊取消
                     .setTitle("你沒有權限進入此頁")
                     .setMessage("請登入後繼續")
                     .setPositiveButton("現在登入", new DialogInterface.OnClickListener() {
@@ -53,6 +55,8 @@ public class MustLoginFragment extends CommonFragment {
                         }
                     })
                     .show();
+            // 如果使用者點旁邊，則也跳回到我們的首頁-HotelFragment
+
 
 
 
