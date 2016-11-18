@@ -46,7 +46,7 @@ public class TokenIdWebSocket {
         if (memId != null && tokenId != null) {
             URI uri = null;
             try {
-                uri = new URI(ChatFragment.URL_Chatroom);
+                uri = new URI(Common.URL_Chatroom);
             } catch (URISyntaxException e) {
                 Log.e(ChatFragment.TAG, e.toString());
             }
@@ -71,7 +71,7 @@ public class TokenIdWebSocket {
         if (memId != null && tokenId != null) {
             URI uri = null;
             try {
-                uri = new URI(ChatFragment.URL_Chatroom);
+                uri = new URI(Common.URL_Chatroom);
             } catch (URISyntaxException e) {
                 Log.e(ChatFragment.TAG, e.toString());
             }

@@ -46,7 +46,7 @@ import java.util.concurrent.ExecutionException;
 
 public class ChatFragment extends CommonFragment {
     public static final String TAG = "WebSocket Chat - ";
-    public static final String URL_Chatroom = "ws://10.0.2.2:8081/DDD_web/android/live2/MsgCenter";
+
 
     private static final String USER_NAME = "會員一號";
     private static final String KEY_MEMID = "memId";
@@ -160,7 +160,7 @@ public class ChatFragment extends CommonFragment {
 
     private void initMsgHistoryList() {
 
-        String uri = Common.URL + "/android/live2/PartnerMsgController";
+        String uri = Common.URL_PartnerMsgController;
         try {
             this.partnerMsgList = new PartnerChatGetMsgTask(getContext(), ChatFragment.this.toMemId).execute(uri).get();
         } catch (InterruptedException e) {
@@ -205,7 +205,7 @@ public class ChatFragment extends CommonFragment {
             if (memId != null) {
                 URI uri = null;
                 try {
-                    uri = new URI(ChatFragment.URL_Chatroom);
+                    uri = new URI(Common.URL_Chatroom);
                 } catch (URISyntaxException e) {
                     Log.e(ChatFragment.TAG, e.toString());
                 }
