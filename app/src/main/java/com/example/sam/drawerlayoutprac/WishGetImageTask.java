@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac.Hotel;
+package com.example.sam.drawerlayoutprac;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.example.sam.drawerlayoutprac.R;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedWriter;
@@ -17,13 +15,13 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HotelGetImageTask extends AsyncTask<Object /*傳進來的參數*/, String/*進度條的顯示*/, Bitmap /*最後輸出的結果*/> {
-    private String TAG = "HotelGetImageTask";
+public class WishGetImageTask extends AsyncTask<Object /*傳進來的參數*/, String/*進度條的顯示*/, Bitmap /*最後輸出的結果*/> {
+    private String TAG = "WishGetImageTask";
     private String ACTION = "getImage";
     private WeakReference<ImageView> imageViewWeakReference;
     float aFloat;
 
-    HotelGetImageTask(ImageView imageView){
+    WishGetImageTask(ImageView imageView){
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
 

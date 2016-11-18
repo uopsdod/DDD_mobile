@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Member;
 
 
 import android.app.DatePickerDialog;
@@ -21,6 +21,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+
+import com.example.sam.drawerlayoutprac.CommonFragment;
+import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Util;
 
 import java.sql.Date;
 import java.text.ParseException;

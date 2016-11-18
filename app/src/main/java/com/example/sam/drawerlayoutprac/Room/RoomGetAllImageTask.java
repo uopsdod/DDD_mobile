@@ -17,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class RoomGetAllImageTask extends AsyncTask<Object /*傳進來的參數*/, String/*進度條的顯示*/, Bitmap /*最後輸出的結果*/> {
-    private String TAG = "HotelGetImageTask";
+    private String TAG = "RoomGetImageTask";
     private String ACTION = "getAllImage";
     private WeakReference<ImageView> imageViewWeakReference;
 

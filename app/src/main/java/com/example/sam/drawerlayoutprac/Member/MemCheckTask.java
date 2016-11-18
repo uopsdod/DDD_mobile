@@ -1,11 +1,9 @@
-package com.example.sam.drawerlayoutprac;
-
+package com.example.sam.drawerlayoutprac.Member;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
@@ -16,37 +14,37 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MemUpdateTask extends AsyncTask<Object, Void, Void> {
-    private final String TAG = "MemUpdateTask";
+/**
+ * Created by cuser on 2016/11/8.
+ */
+
+public class MemCheckTask extends AsyncTask<Object, Void, MemVO> {
+    private String TAG = "MemCheckTask";
+    private String ACTION = "memCheck";
 
     @Override
-    protected Void doInBackground(Object... params) {
+    protected MemVO doInBackground(Object... params) {
         String url = params[0].toString();
-        String action = params[1].toString();
-        MemVO memVO = (MemVO) params[2];
-        String result;
-        // 從資料庫拉出來的Date要經過轉型，若沒轉型就算有資料也無法辨識
-        //server那邊轉，這裡也要轉
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-mm-dd").create();
-
+        String userName = params[1].toString();
+        String password = params[2].toString();
+        String jsonIn;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("action", action);
-        jsonObject.addProperty("memVO", gson.toJson(memVO));
-//        if(params[3] != null){
-//            String imageBase64 = params[3].toString();
-//            jsonObject.addProperty("imageBase64", imageBase64);
-//        }
+        jsonObject.addProperty("action", ACTION);
+        jsonObject.addProperty("userName", userName);
+        jsonObject.addProperty("password", password);
         try{
-            getRemoteData(url, jsonObject.toString());
-        }catch (IOException e){
+            jsonIn = getRemoteData(url, jsonObject.toString());
+            Log.d(TAG, "jsonIn : " + jsonIn);
+        }catch(IOException e){
             Log.e(TAG, e.toString());
             return null;
         }
-       return null;
+        Gson gson = new Gson();
+        return gson.fromJson(jsonIn, MemVO.class);
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder jsonIn = new StringBuilder();
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setDoInput(true); // allow inputs
         connection.setDoOutput(true); // allow outputs
@@ -64,13 +62,13 @@ public class MemUpdateTask extends AsyncTask<Object, Void, Void> {
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line);
+                jsonIn.append(line);
             }
         } else {
             Log.d(TAG, "response code: " + responseCode);
         }
         connection.disconnect();
-        Log.d(TAG, "jsonIn: " + sb);
-        return sb.toString();
+        Log.d(TAG, "jsonIn: " + jsonIn);
+        return jsonIn.toString();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Member;
 
 import android.Manifest;
 import android.content.Intent;
@@ -27,7 +27,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashSet;

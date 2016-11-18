@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.Member.MemberFragment;
 
 /**
  * Created by cuser on 2016/11/15.

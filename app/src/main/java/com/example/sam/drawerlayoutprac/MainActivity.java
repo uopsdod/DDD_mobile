@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.Member.MemberFragment;
+import com.example.sam.drawerlayoutprac.Member.MemberInfoFragment;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
@@ -38,12 +40,15 @@ public class MainActivity extends AppCompatActivity {
     public static FloatingActionButton floatingBtn;
     public static boolean floatingBtnPressed = false;
     public static Menu actionBarMenu;
+    public static SharedPreferences pref;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // 登入登出用:
+        this.pref = this.getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
 
         //findViews
         this.floatingBtn = (FloatingActionButton) findViewById(R.id.floatingBtn);
@@ -108,14 +113,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     private void setUpActionBar() {
         ActionBar actionbar = getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
 
     private void initDrawer() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -136,19 +139,24 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new HotelFragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
+
                     case R.id.lookfor_partner:
                         //showToast("partner clicked");
                         fragment = new PartnerFragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
-                    case R.id.my_member:
 
+                    case R.id.my_wishlist:
+                        fragment = new MemberWishFragment();
+                        Util.switchFragment(MainActivity.this, fragment);
+                        break;
+
+                    case R.id.my_member:
                         SharedPreferences pref = getSharedPreferences(Common.PREF_FILE,
                                 MODE_PRIVATE);
                         boolean login = pref.getBoolean("login",false);
                         if(login){
                             //如果已經登入，就轉到會員資料的頁面
-//                            fragment = new MemberUpdateFragment();
                             fragment = new MemberInfoFragment();
                             Util.switchFragment(MainActivity.this, fragment);
                             Util.showToast(getApplicationContext(),"要修改資料喔! 屁孩");

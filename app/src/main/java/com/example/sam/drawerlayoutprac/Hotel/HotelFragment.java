@@ -59,6 +59,7 @@ public class HotelFragment extends CommonFragment {
         super.onStart();
         showAllHotel();
     }
+
     private class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.MyViewHolder> {
         private Context context;
         private List<HotelVO> myListSpot;

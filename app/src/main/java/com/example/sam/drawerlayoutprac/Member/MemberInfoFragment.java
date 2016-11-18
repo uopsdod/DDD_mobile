@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Member;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,8 +12,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.MustLoginFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
+import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Util;
 
 import static android.content.Context.MODE_PRIVATE;
 

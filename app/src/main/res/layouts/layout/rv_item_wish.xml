@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+>
+
+    <View
+        android:id="@+id/wishItemView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#aaaaaa"/>
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/pic_default"
+        android:layout_marginBottom="3dp"
+        />
+
+    <TextView
+        android:id="@+id/tvHotel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="福華飯店 單人房"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="76dp" />
+
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="500$"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_below="@+id/tvHotel"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/btDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wishItemView"
+        android:layout_centerHorizontal="true"
+        android:text="刪除"/>
+</RelativeLayout>
