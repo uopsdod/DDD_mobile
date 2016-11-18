@@ -32,6 +32,7 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
     private List<PartnerMsg> partnerMsgList;
 
     public PartnerHistoryMsgAdapter(Context aContext, List<PartnerMsg> aMyList) {
+        Log.d("ParHisMsgAdapter", ""+"constructor called");
         this.context = aContext;
         this.partnerMsgList = aMyList;
     }
@@ -54,6 +55,7 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
     // LIST如何知道要呼叫幾次getView()方法?
     @Override
     public View getView(int aPosition, View aConvertView, ViewGroup parent) {
+        Log.d("ParHisMsgAdapter", "getView - called");
         aConvertView = View.inflate(this.context, R.layout.chat_history_list_item, null);
         final PartnerMsg data = this.partnerMsgList.get(aPosition);
         final ViewHolder holder = new ViewHolder();
@@ -71,7 +73,7 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
 
 
         // 開始binding data to viewholder:
-        String url = Common.URL + "/android/live2/partner.do";
+        String url = Common.URL_Partner;
         MemVO memVO = null;
         // 判斷對方會員的memId - 由於資料庫sql指令的關係，此list資料是依據發訊息者或是接收訊息者其中一方是自己本身的話就放入list，
         // 因此我們在這裡得做額外判斷

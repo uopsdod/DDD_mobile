@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +46,7 @@ import java.util.concurrent.ExecutionException;
 
 public class ChatFragment extends CommonFragment {
     public static final String TAG = "WebSocket Chat - ";
-    public static final String URL_Chatroom = "ws://10.0.2.2:8081/DDD_web/android/live2/MsgCenter";
+
 
     private static final String USER_NAME = "會員一號";
     private static final String KEY_MEMID = "memId";
@@ -69,6 +71,7 @@ public class ChatFragment extends CommonFragment {
     public void onResume() {
         super.onResume();
         PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.SWITCH_VIA_NAVIGATIONBAR; // 0: 從頭開始, 1: 正常回來, 2: 不正常回來(預設狀態)
+        backBtnPressed();
         MainActivity.floatingBtn.setVisibility(View.INVISIBLE);
 
         // 建立Websocket連線 - bindMemIdWithSession
@@ -121,6 +124,7 @@ public class ChatFragment extends CommonFragment {
                             .create(); // 注意:如果VO中有Date,Timestamp，就要Server,Client端規格一致
                     String partnerMsgGson = gson.toJson(partnerMsg);
                     myWebSocketClient.send(partnerMsgGson);
+                    Log.d("ChatFragment","fcm - " + partnerMsgGson);
                 }
             }
         });
@@ -137,7 +141,7 @@ public class ChatFragment extends CommonFragment {
         SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
         String memId = preferences_r.getString("memId",null);
         // 拿memId自己的大頭照
-        String url = Common.URL + "/android/live2/partner.do";
+        String url = Common.URL_Partner;
         int imageSize = 150;
         Bitmap bitmap_memId = getProfileBigmap(url, memId, imageSize);
 
@@ -156,7 +160,7 @@ public class ChatFragment extends CommonFragment {
 
     private void initMsgHistoryList() {
 
-        String uri = Common.URL + "/android/live2/PartnerMsgController";
+        String uri = Common.URL_PartnerMsgController;
         try {
             this.partnerMsgList = new PartnerChatGetMsgTask(getContext(), ChatFragment.this.toMemId).execute(uri).get();
         } catch (InterruptedException e) {
@@ -201,7 +205,7 @@ public class ChatFragment extends CommonFragment {
             if (memId != null) {
                 URI uri = null;
                 try {
-                    uri = new URI(ChatFragment.URL_Chatroom);
+                    uri = new URI(Common.URL_Chatroom);
                 } catch (URISyntaxException e) {
                     Log.e(ChatFragment.TAG, e.toString());
                 }
@@ -324,4 +328,24 @@ public class ChatFragment extends CommonFragment {
     }
 
 
+    private void backBtnPressed() {
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // 為了以下這行而複寫backBtnPressed()
+                PartnerFragment.backBtnPressed_fromChat = PartnerGoBackState.BACKBTN_PRESSED;
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    // 回到上一個Fragment或是離開app
+                    FragmentManager fm = ChatFragment.this.getFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        fm.popBackStack();
+                        return true;
+                    }
+                }// end if
+                return false;
+            }
+        });
+    }// end of backBtnPressed
 }
