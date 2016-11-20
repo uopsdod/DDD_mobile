@@ -56,6 +56,7 @@ public class PartnerMapFragment extends MustLoginFragment {
     private GoogleMap googleMap;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
+    private Marker CurrLocationMarker;
     private GoogleApiClient.ConnectionCallbacks myConnectionCallBacks =
             new GoogleApiClient.ConnectionCallbacks() {
 
@@ -74,7 +75,7 @@ public class PartnerMapFragment extends MustLoginFragment {
                     //移動到現在位置
                     LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
                     //Place current location marker
-                    placeMarkerAt(latLng);
+                    PartnerMapFragment.this.CurrLocationMarker = placeMarkerAt(latLng);
                     // For zooming automatically to the location of the marker
                     moveToLocation(latLng,12);
 
@@ -183,7 +184,10 @@ public class PartnerMapFragment extends MustLoginFragment {
                         Log.d("PartnerMapFragment","onMyLocationButtonClick");
                         LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
                         //Place current location marker
-                        placeMarkerAt(latLng);
+                        if (PartnerMapFragment.this.CurrLocationMarker != null) {
+                            PartnerMapFragment.this.CurrLocationMarker.remove();
+                        }
+                        PartnerMapFragment.this.CurrLocationMarker = placeMarkerAt(latLng);
                         // For zooming automatically to the location of the marker
                         moveToLocation(latLng,12);
                         return false;
@@ -204,12 +208,12 @@ public class PartnerMapFragment extends MustLoginFragment {
         return rootView;
     }
 
-    private void placeMarkerAt(LatLng aLatLng) {
+    private Marker placeMarkerAt(LatLng aLatLng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(aLatLng);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        PartnerMapFragment.this.googleMap.addMarker(markerOptions);
+        return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
     }
 
     private void moveToLocation(LatLng aLatLng,int aZoomSize) {
