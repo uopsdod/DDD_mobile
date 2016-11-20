@@ -173,7 +173,6 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             }else{
                 holder.ivImage.setImageResource(R.drawable.search);
             }
-//            holder.ivImage.setImageResource(myspot.getimgId());
             holder.tvHotel.setText(myspot.getRoomName());
             holder.tvPrice.setText("$" + Integer.toString(myspot.getRoomPrice()));
             holder.itemView.setOnClickListener(new View.OnClickListener(){

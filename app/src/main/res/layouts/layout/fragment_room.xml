@@ -14,10 +14,11 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/pic_default" />
 
-   <android.support.v7.widget.RecyclerView
-       android:id="@+id/rv_RoomImage"
-       android:layout_width="match_parent"
-       android:layout_height="70dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_RoomImage"
+        android:layout_width="match_parent"
+        android:layout_height="70dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -58,6 +59,25 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:src="@drawable/single_bed" />
+
+        <ImageView
+            android:id="@+id/ivUnLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ivBed"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/like_notyet" />
+
+        <ImageView
+            android:id="@+id/ivLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ivBed"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/like"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/tvCount"

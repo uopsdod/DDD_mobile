@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -143,11 +144,10 @@ public class MemberFragment extends CommonFragment {
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferences pref = getContext().getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
-        boolean login = pref.getBoolean("login", false);
+        boolean login = MainActivity.pref.getBoolean("login", false);
         if(login){
-            String userName = pref.getString("user", "");
-            String password = pref.getString("password", "");
+            String userName = MainActivity.pref.getString("user", "");
+            String password = MainActivity.pref.getString("password", "");
 //            if(isUserValid(userName, password)){
 //                setResult
 //            }

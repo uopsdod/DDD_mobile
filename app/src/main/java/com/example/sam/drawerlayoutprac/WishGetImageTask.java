@@ -42,11 +42,8 @@ public class WishGetImageTask extends AsyncTask<Object /*傳進來的參數*/, S
             Log.e(TAG, e.toString());
             return null;
         }
-
         return bitmap;
     }
-
-
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {

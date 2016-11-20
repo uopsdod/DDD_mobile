@@ -34,6 +34,7 @@ public class RoomGetImageTask extends AsyncTask<Object, String, Bitmap>{
         jsonObject.addProperty("action", ACTION);
         jsonObject.addProperty("id", id);
         jsonObject.addProperty("imageSize", imageSize);
+
         Bitmap bitmap;
         try{
             bitmap = getRemoteImage(url, jsonObject.toString());

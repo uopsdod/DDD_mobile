@@ -1,7 +1,6 @@
 package com.example.sam.drawerlayoutprac;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,17 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
-import com.example.sam.drawerlayoutprac.Room.RoomFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by cuser on 2016/11/17.
@@ -29,6 +25,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class MemberWishFragment extends MustLoginFragment {
     String TAG = "MemWishFragment";
     RecyclerView myRvWish;
+    List<RoomVO> roomVOList = null;
+    private MemWishAdapter myAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,21 +54,20 @@ public class MemberWishFragment extends MustLoginFragment {
     private void showAllWish() {
 
         if (Common.networkConnected(getActivity())) {
-//            SharedPreferences pref = getActivity().getSharedPreferences(Common.PREF_FILE,
-//                    MODE_PRIVATE);
+
             String url = Common.URL + "/android/Wish/wish.do";
             String id = MainActivity.pref.getString("memId", null);
-            List<RoomVO> roomVO = null;
             if (id != null) {
                 try {
-                    roomVO = new WishGetAllTask().execute(url, id).get();
+                    roomVOList = new WishGetAllTask().execute(url, id).get();
                 } catch (Exception e) {
                     Log.d(TAG, e.toString());
                 }
-                if (roomVO == null || roomVO.isEmpty()) {
+                if (roomVOList == null || roomVOList.isEmpty()) {
                     Util.showToast(getActivity(), "wishVO not found!!");
                 } else {
-                    myRvWish.setAdapter(new MemWishAdapter(getActivity(), roomVO));
+                    myAdapter = new MemWishAdapter(getActivity(), roomVOList);
+                    myRvWish.setAdapter(myAdapter);
                 }
             } else {
                 Util.showToast(getActivity(), "You need login mother fucker!");
@@ -93,12 +90,15 @@ public class MemberWishFragment extends MustLoginFragment {
             ImageView ivImage;
             TextView tvHotel;
             TextView tvPrice;
-
+            Button btDelete;
+            float f = 0.6f;
             public MyViewHolder(View itemView) {
                 super(itemView);
                 this.ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
                 this.tvHotel = (TextView) itemView.findViewById(R.id.tvHotel);
                 this.tvPrice = (TextView) itemView.findViewById(R.id.tvPrice);
+                this.btDelete = (Button) itemView.findViewById(R.id.btDelete);
+                this.ivImage.setAlpha(f);
             }
         }
 
@@ -114,17 +114,25 @@ public class MemberWishFragment extends MustLoginFragment {
         }
 
         @Override
-        public void onBindViewHolder(MemWishAdapter.MyViewHolder holder, int position) {
-//            SharedPreferences pref = getActivity().getSharedPreferences(Common.PREF_FILE,
-//                    MODE_PRIVATE);
+        public void onBindViewHolder(MemWishAdapter.MyViewHolder holder, final int position) {
             RoomVO roomVO = myWishVO.get(position);
-            String id = MainActivity.pref.getString("memId", null);
-            String url = Common.URL + "/android/Wish/wish.do";
+            final String roomId = roomVO.getRoomId();
+            final String id = MainActivity.pref.getString("memId", null);
+            final String url = Common.URL + "/android/Wish/wish.do";
             int imageSize = 250;
+
             if (id != null) {
-                new WishGetImageTask(holder.ivImage).execute(url, id, imageSize);
+                new WishGetImageTask(holder.ivImage).execute(url, roomId, imageSize);
                 holder.tvHotel.setText(roomVO.getRoomName());
                 holder.tvPrice.setText(roomVO.getRoomPrice().toString());
+                holder.btDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new WishDeleteTask().execute(url,id, roomId);
+                        myWishVO.remove(myWishVO.get(position)); //每次刪除一個，就從myWishVO裡面移除選取的目標
+                        myAdapter.notifyDataSetChanged(); // 當myWishVO有被更動(新增、修改、刪除) 時，就重新刷新一次頁面
+                    }
+                });
             } else {
                 Util.showToast(getActivity(), "You need login mother fucker!");
             }
