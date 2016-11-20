@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.MainActivity;
+import com.example.sam.drawerlayoutprac.MustLoginFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.android.gms.maps.CameraUpdate;
@@ -42,7 +44,7 @@ import java.util.Set;
  * Created by cuser on 2016/10/31.
  */
 
-public class PartnerMapFragment extends Fragment {
+public class PartnerMapFragment extends MustLoginFragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -56,10 +58,12 @@ public class PartnerMapFragment extends Fragment {
         mMapView.onResume(); // needed to get the map to display immediately
 
         // 設定floatingBtn click lisner - 讓它返回到上一個Fragment
+        MainActivity.floatingBtn.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_white05));
         MainActivity.floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Util.showToast(getContext(), "ftBtn clicked");
+                MainActivity.floatingBtn.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.map_white));
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.popBackStack();
             }
