@@ -1,5 +1,6 @@
 package com.example.sam.drawerlayoutprac;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     public static boolean floatingBtnPressed = false;
     public static Menu actionBarMenu;
     public static SharedPreferences pref;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
