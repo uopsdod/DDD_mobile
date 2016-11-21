@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.PartnerMapFragment;
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 /**
  * Created by cuser on 2016/11/21.
@@ -168,6 +171,30 @@ public class HotelMapFragment extends CommonFragment {
         return rootView;
     }
 
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+        if (this.googleApiClient != null) {
+            this.googleApiClient.disconnect();
+            Log.i("PartnerMapFragment", "GoogleApiClient disconnected.");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
+
     private Marker placeMemMarkerAt(LatLng aLatLng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(aLatLng);
@@ -209,8 +236,6 @@ public class HotelMapFragment extends CommonFragment {
 //
 //        return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
     }
-    
-    
 
     private void moveToLocation(LatLng aLatLng, int aZoomSize) {
         CameraPosition cameraPosition = new CameraPosition.Builder().target(aLatLng).zoom(aZoomSize).build();
@@ -233,28 +258,6 @@ public class HotelMapFragment extends CommonFragment {
     }
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapView.onPause();
-        if (this.googleApiClient != null) {
-            this.googleApiClient.disconnect();
-            Log.i("PartnerMapFragment", "GoogleApiClient disconnected.");
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
-    }
-
     private OnMapReadyCallback myOnMapReadyCallback = new OnMapReadyCallback() {
 
         @Override
@@ -265,10 +268,35 @@ public class HotelMapFragment extends CommonFragment {
             // 顯示馬上到現在位置的按鈕
             showGoToCurrPositionBtn();
             // 顯示所有hotel的marker
+            showHotelMarkers();
             
 
 
         }// end of onMapReady
+
+        private void showHotelMarkers() {
+            List<HotelVO> hotelVOList = null;
+            if(Common.networkConnected(getActivity())) {
+                String url = Common.URL + "/android/hotel.do";
+                try {
+                    hotelVOList = new HotelGetAllTask().execute(url).get();
+                } catch (Exception e) {
+                    Log.e("HotelMapFragment", e.toString());
+                }
+                if(hotelVOList == null || hotelVOList.isEmpty()){
+                    Util.showToast(getActivity(), "No hotel fonnd");
+                }else{
+                    Log.d("HotelMapFragment",""+hotelVOList.get(0).getHotelName());
+                }
+            }
+
+            for (HotelVO myVO: hotelVOList){
+                LatLng latlng = new LatLng(myVO.getHotelLat(),myVO.getHotelLon());
+                placeMarkerAt(latlng);
+            }
+
+
+        }
 
         private void showGoToCurrPositionBtn() {
             if (ActivityCompat.checkSelfPermission(
@@ -310,4 +338,7 @@ public class HotelMapFragment extends CommonFragment {
 
 
     };// end of myOnMapReadyCallback
+
+
+
 }
