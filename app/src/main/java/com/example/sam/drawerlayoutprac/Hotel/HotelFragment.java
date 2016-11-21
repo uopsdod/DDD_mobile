@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.CommonFragment;
+import com.example.sam.drawerlayoutprac.MainActivity;
+import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerMapFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
@@ -34,8 +37,11 @@ public class HotelFragment extends CommonFragment {
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.VISIBLE);
 
         myRvSpot.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        setFloatingBtnClickListener();
         return myLayout;
     }
+
 
     private void  showAllHotel(){
         if(Common.networkConnected(getActivity())){
@@ -121,5 +127,20 @@ public class HotelFragment extends CommonFragment {
             });
         }
     }// end class SpotAdapter
+
+    // onCreateView設定:
+    private void setFloatingBtnClickListener() {
+        // set up floatingBtn click Listener
+        MainActivity.floatingBtn.setVisibility(View.VISIBLE);
+        MainActivity.floatingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Util.showToast(getContext(), "ftBtn clicked");
+                android.support.v4.app.Fragment fragment = new HotelMapFragment();
+                Util.switchFragment(HotelFragment.this, fragment);
+            }
+        });
+
+    }
 
 }

@@ -1,56 +1,48 @@
-package com.example.sam.drawerlayoutprac.Partner;
+package com.example.sam.drawerlayoutprac.Hotel;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
-import com.example.sam.drawerlayoutprac.MustLoginFragment;
+import com.example.sam.drawerlayoutprac.Partner.PartnerMapFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.MapsInitializer;
-
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
- * Created by cuser on 2016/10/31.
+ * Created by cuser on 2016/11/21.
  */
 
-public class PartnerMapFragment extends MustLoginFragment {
+public class HotelMapFragment extends CommonFragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -68,15 +60,15 @@ public class PartnerMapFragment extends MustLoginFragment {
                             && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
-                    PartnerMapFragment.this.lastLocation = LocationServices.FusedLocationApi.getLastLocation(PartnerMapFragment.this.googleApiClient);
-                    Log.d("PartnerMapFragment", "init lastLacation: " + PartnerMapFragment.this.lastLocation);
+                    HotelMapFragment.this.lastLocation = LocationServices.FusedLocationApi.getLastLocation(HotelMapFragment.this.googleApiClient);
+                    Log.d("HotelMapFragment", "init lastLacation: " + HotelMapFragment.this.lastLocation);
                     // end of 第一次: 取得最新位置
 
                     // 自動移到自己位置 (特別注意: 一定要在確認拿到lastLocation之後，才用mMapView.getMapAsync，不然會crush)
                     if (lastLocation != null) {
-                        mMapView.getMapAsync(PartnerMapFragment.this.myOnMapReadyCallback);// end of getMapAsync
-                    }else{
-                        Log.d("PartnerMapFragment","can't get lastLocation");
+                        mMapView.getMapAsync(HotelMapFragment.this.myOnMapReadyCallback);// end of getMapAsync
+                    } else {
+                        Log.d("HotelMapFragment", "can't get lastLocation");
                     }// end of if
 
                     // 設定定位請求參數
@@ -93,16 +85,16 @@ public class PartnerMapFragment extends MustLoginFragment {
                     LocationListener locationListener = new LocationListener() {
                         @Override
                         public void onLocationChanged(Location aLocation) {
-                            PartnerMapFragment.this.lastLocation = aLocation;
+                            HotelMapFragment.this.lastLocation = aLocation;
                             uploadCurrentPosToServer();
-                            Log.d("PartnerMapFragment", "changed lastLacation: " + PartnerMapFragment.this.lastLocation);
+                            Log.d("PartnerMapFragment", "changed lastLacation: " + HotelMapFragment.this.lastLocation);
 
                         }
                     };
                     // end of 設定locationListener監聽器物件
 
                     // 總totla註冊-設定監聽位置是否改變監聽器:
-                    LocationServices.FusedLocationApi.requestLocationUpdates(PartnerMapFragment.this.googleApiClient,
+                    LocationServices.FusedLocationApi.requestLocationUpdates(HotelMapFragment.this.googleApiClient,
                             locationRequest,
                             locationListener);
 
@@ -152,9 +144,9 @@ public class PartnerMapFragment extends MustLoginFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.partner_map_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.hotel_map_fragment, container, false);
 
-        mMapView = (MapView) rootView.findViewById(R.id.partnerMap);
+        mMapView = (MapView) rootView.findViewById(R.id.hotelMap);
         mMapView.onCreate(savedInstanceState); //接收傳入此Fragment
         mMapView.onResume(); // needed to get the map to display immediately
 
@@ -176,13 +168,49 @@ public class PartnerMapFragment extends MustLoginFragment {
         return rootView;
     }
 
-    private Marker placeMarkerAt(LatLng aLatLng) {
+    private Marker placeMemMarkerAt(LatLng aLatLng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(aLatLng);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
+        return HotelMapFragment.this.googleMap.addMarker(markerOptions);
     }
+
+    private Marker placeMarkerAt(LatLng aLatLng) {
+
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        Bitmap bmp = Bitmap.createBitmap(400, 100, conf);
+        Canvas canvas1 = new Canvas(bmp);
+
+// paint defines the text color, stroke width and size
+        Paint color = new Paint();
+        color.setTextSize(35);
+        color.setColor(Color.BLACK);
+
+// modify canvas
+        canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),
+                R.drawable.hotel_price02), 70, 0, color);
+        canvas1.drawText("Hotel Name!", 95, 60, color);
+
+// add marker to Map
+        return HotelMapFragment.this.googleMap.addMarker(new MarkerOptions()
+                .position(aLatLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(bmp))
+                // Specifies the anchor to be at a particular point in the marker image.
+                .anchor(0.5f, 1));
+
+        //現在版本:
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(aLatLng);
+//        markerOptions.title("Current Position");
+//        //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.hotel_price02));
+//
+//
+//        return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
+    }
+    
+    
 
     private void moveToLocation(LatLng aLatLng, int aZoomSize) {
         CameraPosition cameraPosition = new CameraPosition.Builder().target(aLatLng).zoom(aZoomSize).build();
@@ -231,21 +259,18 @@ public class PartnerMapFragment extends MustLoginFragment {
 
         @Override
         public void onMapReady(GoogleMap mMap) {
-            PartnerMapFragment.this.googleMap = mMap;
-            // set up floatingBtn click Listener
-
+            HotelMapFragment.this.googleMap = mMap;
             // 回到自己現在位置
-            LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
-            //Place current location marker
-            if (PartnerMapFragment.this.CurrLocationMarker != null) {
-                PartnerMapFragment.this.CurrLocationMarker.remove();
-            }
-            PartnerMapFragment.this.CurrLocationMarker = placeMarkerAt(latLng);
-            // For zooming automatically to the location of the marker
-            moveToLocation(latLng, 12);
-
-
+            goToCurrPosition();
             // 顯示馬上到現在位置的按鈕
+            showGoToCurrPositionBtn();
+            // 顯示所有hotel的marker
+            
+
+
+        }// end of onMapReady
+
+        private void showGoToCurrPositionBtn() {
             if (ActivityCompat.checkSelfPermission(
                     getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -258,19 +283,31 @@ public class PartnerMapFragment extends MustLoginFragment {
                 @Override
                 public boolean onMyLocationButtonClick() {
                     Log.d("PartnerMapFragment", "onMyLocationButtonClick");
-                    LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
+                    LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
                     //Place current location marker
-                    if (PartnerMapFragment.this.CurrLocationMarker != null) {
-                        PartnerMapFragment.this.CurrLocationMarker.remove();
+                    if (HotelMapFragment.this.CurrLocationMarker != null) {
+                        HotelMapFragment.this.CurrLocationMarker.remove();
                     }
                     ;
-                    PartnerMapFragment.this.CurrLocationMarker = placeMarkerAt(latLng);
+                    HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
                     // For zooming automatically to the location of the marker
                     moveToLocation(latLng, 12);
                     return false;
                 }
             });
-
         }
+
+        private void goToCurrPosition() {
+            LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
+            //Place current location marker
+            if (HotelMapFragment.this.CurrLocationMarker != null) {
+                HotelMapFragment.this.CurrLocationMarker.remove();
+            }
+            HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+            // For zooming automatically to the location of the marker
+            moveToLocation(latLng, 12);
+        }
+
+
     };// end of myOnMapReadyCallback
 }
