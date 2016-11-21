@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac.Hotel;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,6 +45,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -272,7 +277,8 @@ public class HotelMapFragment extends CommonFragment {
 
     private void moveToLocation(LatLng aLatLng, int aZoomSize) {
         CameraPosition cameraPosition = new CameraPosition.Builder().target(aLatLng).zoom(aZoomSize).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
     }
 
@@ -336,38 +342,6 @@ public class HotelMapFragment extends CommonFragment {
         }
     }
 
-    private class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-        private final View infoWindow;
-
-        MyInfoWindowAdapter() {
-            infoWindow = View.inflate(getActivity(), R.layout.custom_info_window, null);
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-//            int logoId = Markers.get(marker);
-//            ImageView ivLogo = ((ImageView) infoWindow
-//                    .findViewById(R.id.ivLogo));
-//            ivLogo.setImageResource(logoId);
-//
-//            String title = marker.getTitle();
-//            TextView tvTitle = ((TextView) infoWindow
-//                    .findViewById(R.id.tvTitle));
-//            tvTitle.setText(title);
-//
-//            String snippet = marker.getSnippet();
-//            TextView tvSnippet = ((TextView) infoWindow
-//                    .findViewById(R.id.tvSnippet));
-//            tvSnippet.setText(snippet);
-            return infoWindow;
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
-        }
-    }
-
 
     private OnMapReadyCallback myOnMapReadyCallback = new OnMapReadyCallback() {
 
@@ -382,106 +356,161 @@ public class HotelMapFragment extends CommonFragment {
             showGoToCurrPositionBtn();
             // 顯示所有hotel的marker
             showHotelMarkers();
-            
-
+            // 取得動態價格
+            getDynamicPrice();
 
         }// end of onMapReady
 
-        private void initMap() {
-            HotelMapFragment.this.googleMap.getUiSettings().setZoomControlsEnabled(true);
-            // public final void setPadding (int left, int top, int right, int bottom)
-            HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.map_bottom_padding);
-
-            HotelMapFragment.this.googleMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
-            MyMarkerListener myMarkerListener = new MyMarkerListener();
-            HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
-            HotelMapFragment.this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    HotelMapFragment.this.hotelBlock.setVisibility(View.INVISIBLE);
-                    HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.this.map_bottom_padding);
-                    MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY);
-                }
-            });
+    };// end of myOnMapReadyCallback
+    private void getDynamicPrice() {
+        //取得動態價格變動:
+        URI uri = null;
+        try {
+            uri = new URI(Common.URL_DYNAMICPRICE);
+        } catch (URISyntaxException e) {
+            Log.e(ChatFragment.TAG, e.toString());
         }
+        HotelMapFragment.this.hotelMapWebsocket = new HotelMapWebsocket(uri,getActivity());
+        if (hotelMapWebsocket != null){
+            hotelMapWebsocket.connect();
+        }
+    }
 
-        private void showHotelMarkers() {
-            //放上hotel Marker 並且 取得第一次各旅館的最低房價:
-            List<HotelGetLowestPriceVO> hotelLowestPriceList = null;
-            try {
-                hotelLowestPriceList = new HotelGetLowestPriceTask().execute().get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+    private void initMap() {
+        HotelMapFragment.this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        // public final void setPadding (int left, int top, int right, int bottom)
+        HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.map_bottom_padding);
+
+        HotelMapFragment.this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                HotelMapFragment.this.hotelBlock.setVisibility(View.INVISIBLE);
+                HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.this.map_bottom_padding);
+                MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY);
             }
+        });
+    }
+
+    private void showHotelMarkers() {
+        //放上hotel Marker 並且 取得第一次各旅館的最低房價:
+        List<HotelGetLowestPriceVO> hotelLowestPriceList = null;
+        try {
+            hotelLowestPriceList = new HotelGetLowestPriceTask().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 //            Log.d("HotelMapFragment", hotelLowestPriceList.get(0).getHotelCheapestRoomPrice());
 
-            for (HotelGetLowestPriceVO myVO: hotelLowestPriceList){
-                LatLng latlng = new LatLng(Double.parseDouble(myVO.getHotelLat()),Double.parseDouble(myVO.getHotelLon()));
-                Marker tmpMarker = placeMarkerAt(latlng, myVO.getHotelCheapestRoomPrice());
-                HotelMapFragment.this.markerMap.put(tmpMarker,myVO);
-            }
-
-
-
-            //取得動態價格變動:
-            URI uri = null;
-            try {
-                uri = new URI(Common.URL_DYNAMICPRICE);
-            } catch (URISyntaxException e) {
-                Log.e(ChatFragment.TAG, e.toString());
-            }
-            HotelMapFragment.this.hotelMapWebsocket = new HotelMapWebsocket(uri,getActivity());
-            if (hotelMapWebsocket != null){
-                hotelMapWebsocket.connect();
-            }
-
-
+        for (HotelGetLowestPriceVO myVO: hotelLowestPriceList){
+            LatLng latlng = new LatLng(Double.parseDouble(myVO.getHotelLat()),Double.parseDouble(myVO.getHotelLon()));
+            Marker tmpMarker = placeMarkerAt(latlng, myVO.getHotelCheapestRoomPrice());
+            HotelMapFragment.this.markerMap.put(tmpMarker,myVO);
         }
 
-        private void showGoToCurrPositionBtn() {
-            if (ActivityCompat.checkSelfPermission(
-                    getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
+        // 設定Marker點擊事件
+        MyMarkerListener myMarkerListener = new MyMarkerListener();
+        HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
+    }
+
+    private void showGoToCurrPositionBtn() {
+        if (ActivityCompat.checkSelfPermission(
+                getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+        // 設定點擊觸發事件
+        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                Log.d("PartnerMapFragment", "onMyLocationButtonClick");
+                LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
+                //Place current location marker
+                if (HotelMapFragment.this.CurrLocationMarker != null) {
+                    HotelMapFragment.this.CurrLocationMarker.remove();
+                }
+                ;
+                HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+                // For zooming automatically to the location of the marker
+                moveToLocation(latLng, 15);
+                return false;
             }
-            googleMap.setMyLocationEnabled(true);
-            // 設定點擊觸發事件
-            googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+        });
+    }
+
+    private void goToCurrPosition() {
+        LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
+        //Place current location marker
+        if (HotelMapFragment.this.CurrLocationMarker != null) {
+            HotelMapFragment.this.CurrLocationMarker.remove();
+        }
+        HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+        // For zooming automatically to the location of the marker
+        moveToLocation(latLng, 15);
+    }
+
+    public class HotelMapWebsocket extends WebSocketClient {
+        URI uri;
+        Activity activity;
+
+        public HotelMapWebsocket(URI aUri,Activity aActivity ) {
+            super(aUri, new Draft_17());
+            this.uri = aUri;
+            this.activity = aActivity;
+        }
+
+        @Override
+        public void onOpen(ServerHandshake handshakedata) {
+            Log.d("hotelMapWebsocket - ", " open websocket successfully ");
+            this.send("text From mobile 02");
+        }
+
+        @Override
+        public void onMessage(String message) {
+            // 不知道為何，必須將websocket放在Fragment下面，才能夠抓到message
+
+            Log.d("hotelMapWebsocket - ", message);
+            Thread myThread = new Thread(new Runnable() {
                 @Override
-                public boolean onMyLocationButtonClick() {
-                    Log.d("PartnerMapFragment", "onMyLocationButtonClick");
-                    LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
-                    //Place current location marker
-                    if (HotelMapFragment.this.CurrLocationMarker != null) {
-                        HotelMapFragment.this.CurrLocationMarker.remove();
+                public void run() {
+                    try {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d("hotelMapWebsocket - ", "run on Ui Thread");
+                                // 清除全部的marker
+                                HotelMapFragment.this.googleMap.clear();
+                                //HotelMapFragment.this.hotelMapView.getOverlay().clear();
+
+                                // 放上新的markers:
+                                showHotelMarkers();
+//                                MyMarkerListener myMarkerListener = new MyMarkerListener();
+//                                HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    ;
-                    HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
-                    // For zooming automatically to the location of the marker
-                    moveToLocation(latLng, 15);
-                    return false;
                 }
             });
+            myThread.start();
+
+
+        }// end of onMessage
+
+        @Override
+        public void onClose(int code, String reason, boolean remote) {
+
         }
 
-        private void goToCurrPosition() {
-            LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
-            //Place current location marker
-            if (HotelMapFragment.this.CurrLocationMarker != null) {
-                HotelMapFragment.this.CurrLocationMarker.remove();
-            }
-            HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
-            // For zooming automatically to the location of the marker
-            moveToLocation(latLng, 15);
+        @Override
+        public void onError(Exception ex) {
+
         }
-
-
-
-
-    };// end of myOnMapReadyCallback
+    }
 
 
 
