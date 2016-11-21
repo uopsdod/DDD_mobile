@@ -63,6 +63,7 @@ import java.util.concurrent.ExecutionException;
 
 public class HotelMapFragment extends CommonFragment {
 
+    // 版面配置
     private static int map_bottom_padding = 150;
     private static int map_bottom_padding_withWindow = map_bottom_padding + 440;
     private static int map_right_padding = 32;
@@ -70,94 +71,46 @@ public class HotelMapFragment extends CommonFragment {
     private static float floatingBtnY = MainActivity.floatingBtn.getY();
     private static float floatingBtnY_withWindow = floatingBtnY - 415;
 
-
-
-    MapView mMapView;
+    // googleMap:
     private GoogleMap googleMap;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
-    private Marker CurrLocationMarker;
-    private HotelMapWebsocket hotelMapWebsocket;
+
+    // Markers:
     private HashMap<Marker,HotelGetLowestPriceVO> markerMap = new HashMap<>();
     private String currClickedMarkerHotelId;
+    private Marker CurrLocationMarker;
+
+    // 拿取動態價格:
+    private HotelMapWebsocket hotelMapWebsocket;
 
     // Views:
+    private MapView mMapView;
     private ImageView hotelImg;
     private TextView hotelName;
     private TextView hotelPrice;
     private RelativeLayout hotelBlock;
 
-    private GoogleApiClient.ConnectionCallbacks myConnectionCallBacks =
-            new GoogleApiClient.ConnectionCallbacks() {
+    // onMapReady是在myConnectionCallBacks呼叫的，成功連線後才註冊此物件
+    // mMapView.getMapAsync(HotelMapFragment.this.myOnMapReadyCallback);
+    private OnMapReadyCallback myOnMapReadyCallback = new OnMapReadyCallback() {
 
-                @Override
-                public void onConnected(@Nullable Bundle bundle) {
-                    Log.i("PartnerMapFragment", "GoogleApiClient connected.");
-                    // 第一次: 取得最新位置
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    HotelMapFragment.this.lastLocation = LocationServices.FusedLocationApi.getLastLocation(HotelMapFragment.this.googleApiClient);
-                    Log.d("HotelMapFragment", "init lastLacation: " + HotelMapFragment.this.lastLocation);
-                    // end of 第一次: 取得最新位置
+        @Override
+        public void onMapReady(GoogleMap mMap) {
+            HotelMapFragment.this.googleMap = mMap;
+            // init Map
+            initMap();
+            // 回到自己現在位置
+            goToCurrPosition();
+            // 顯示馬上到現在位置的按鈕
+            showGoToCurrPositionBtn();
+            // 顯示所有hotel的marker
+            showHotelMarkers();
+            // 取得動態價格
+            getDynamicPrice();
+        }// end of onMapReady
 
-                    // 自動移到自己位置 (特別注意: 一定要在確認拿到lastLocation之後，才用mMapView.getMapAsync，不然會crush)
-                    if (lastLocation != null) {
-                        mMapView.getMapAsync(HotelMapFragment.this.myOnMapReadyCallback);// end of getMapAsync
-                    } else {
-                        Log.d("HotelMapFragment", "can't get lastLocation");
-                    }// end of if
-
-                    // 設定定位請求參數
-                    LocationRequest locationRequest = LocationRequest.create()
-                            // 設定使用GPS定位
-                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                            // 設定多久查詢一次定位，單位為毫秒
-                            .setInterval(1000)
-                            // 設定離上次定位達多少公尺後，才到表更新位置
-                            .setSmallestDisplacement(1000);
-                    // end of 設定定位請求參數
-
-                    // 設定locationListener監聽器物件
-                    LocationListener locationListener = new LocationListener() {
-                        @Override
-                        public void onLocationChanged(Location aLocation) {
-                            HotelMapFragment.this.lastLocation = aLocation;
-                            uploadCurrentPosToServer();
-                            Log.d("PartnerMapFragment", "changed lastLacation: " + HotelMapFragment.this.lastLocation);
-
-                        }
-                    };
-                    // end of 設定locationListener監聽器物件
-
-                    // 總totla註冊-設定監聽位置是否改變監聽器:
-                    LocationServices.FusedLocationApi.requestLocationUpdates(HotelMapFragment.this.googleApiClient,
-                            locationRequest,
-                            locationListener);
-
-
-//                    //移動到現在位置
-//                    LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
-//                    //Place current location marker
-//                    PartnerMapFragment.this.CurrLocationMarker = placeMarkerAt(latLng);
-//                    // For zooming automatically to the location of the marker
-//                    moveToLocation(latLng,12);
-//
-//                    // 將初始位置資訊傳給server:
-//                    uploadCurrentPosToServer();
-
-
-                }// end of onConnected()
-
-                @Override
-                public void onConnectionSuspended(int i) {
-                    Util.showToast(getContext(), "GoogleApiClient connection suspended");
-                }
-            };
-
-    private void uploadCurrentPosToServer() {
-    }
+    };// end of myOnMapReadyCallback
 
 
     @Override
@@ -212,8 +165,6 @@ public class HotelMapFragment extends CommonFragment {
         return rootView;
     }
 
-
-
     @Override
     public void onPause() {
         super.onPause();
@@ -267,23 +218,6 @@ public class HotelMapFragment extends CommonFragment {
                 .icon(BitmapDescriptorFactory.fromBitmap(bmp))
                 // Specifies the anchor to be at a particular point in the marker image.
                 .anchor(0.5f, 1));
-
-        //現在版本:
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(aLatLng);
-//        markerOptions.title("Current Position");
-//        //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.hotel_price02));
-//
-//
-//        return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
-    }
-
-    private void moveToLocation(LatLng aLatLng, int aZoomSize) {
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(aLatLng).zoom(aZoomSize).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
     }
 
     private void setUpFloatingBtn() {
@@ -300,73 +234,6 @@ public class HotelMapFragment extends CommonFragment {
 
     }
 
-    public class MyMarkerListener implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
-        @Override
-        public boolean onMarkerClick(Marker aMarker) {
-            // 設定資料上Layout
-            HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(aMarker);
-            HotelMapFragment.this.currClickedMarkerHotelId = myVO.getHotelId();
-            HotelMapFragment.this.hotelBlock.setVisibility(View.VISIBLE);
-            HotelMapFragment.this.hotelName.setText(myVO.getHotelName());
-            HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
-            String url = Common.URL + "/android/hotel.do";
-            int imageSize = 250;
-            new HotelGetImageTask(HotelMapFragment.this.hotelImg).execute(url, myVO.getHotelId(), imageSize);
-
-            // 調整原來版面位置:
-            HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.map_bottom_padding_withWindow);
-            MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY_withWindow);
-
-            // 設定點擊事件,進到旅館詳細頁面:
-            String url_markerClicked = Common.URL + "/android/hotel.do";
-            try {
-                final HotelVO hotelVO = new HotelGetOneTask().execute(url_markerClicked,myVO.getHotelId()).get();
-                HotelMapFragment.this.hotelBlock.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Fragment fragment = new HotelInfoFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("hotelVO", hotelVO);
-                        fragment.setArguments(bundle);
-                        Util.switchFragment(HotelMapFragment.this, fragment);
-                    }
-                });
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-
-
-            return true; // return true 取消預設的事件
-        }
-
-        @Override
-        public void onInfoWindowClick(Marker marker) {
-//                showToast(marker.getTitle());
-        }
-    }
-
-
-    private OnMapReadyCallback myOnMapReadyCallback = new OnMapReadyCallback() {
-
-        @Override
-        public void onMapReady(GoogleMap mMap) {
-            HotelMapFragment.this.googleMap = mMap;
-            // init Map
-            initMap();
-            // 回到自己現在位置
-            goToCurrPosition();
-            // 顯示馬上到現在位置的按鈕
-            showGoToCurrPositionBtn();
-            // 顯示所有hotel的marker
-            showHotelMarkers();
-            // 取得動態價格
-            getDynamicPrice();
-
-        }// end of onMapReady
-
-    };// end of myOnMapReadyCallback
     private void getDynamicPrice() {
         //取得動態價格變動:
         URI uri = null;
@@ -446,6 +313,13 @@ public class HotelMapFragment extends CommonFragment {
                 return false;
             }
         });
+    }
+
+    private void moveToLocation(LatLng aLatLng, int aZoomSize) {
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(aLatLng).zoom(aZoomSize).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
     }
 
     private void goToCurrPosition() {
@@ -550,6 +424,111 @@ public class HotelMapFragment extends CommonFragment {
         }
     }
 
+    private void uploadCurrentPosToServer() {
+    }
+
+    private GoogleApiClient.ConnectionCallbacks myConnectionCallBacks =
+            new GoogleApiClient.ConnectionCallbacks() {
+
+                @Override
+                public void onConnected(@Nullable Bundle bundle) {
+                    Log.i("PartnerMapFragment", "GoogleApiClient connected.");
+                    // 第一次: 取得最新位置
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    HotelMapFragment.this.lastLocation = LocationServices.FusedLocationApi.getLastLocation(HotelMapFragment.this.googleApiClient);
+                    Log.d("HotelMapFragment", "init lastLacation: " + HotelMapFragment.this.lastLocation);
+                    // end of 第一次: 取得最新位置
+
+                    // 自動移到自己位置 (特別注意: 一定要在確認拿到lastLocation之後，才用mMapView.getMapAsync，不然會crush)
+                    if (lastLocation != null) {
+                        mMapView.getMapAsync(HotelMapFragment.this.myOnMapReadyCallback);// end of getMapAsync
+                    } else {
+                        Log.d("HotelMapFragment", "can't get lastLocation");
+                    }// end of if
+
+                    // 設定定位請求參數
+                    LocationRequest locationRequest = LocationRequest.create()
+                            // 設定使用GPS定位
+                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                            // 設定多久查詢一次定位，單位為毫秒
+                            .setInterval(1000)
+                            // 設定離上次定位達多少公尺後，才到表更新位置
+                            .setSmallestDisplacement(1000);
+                    // end of 設定定位請求參數
+
+                    // 設定locationListener監聽器物件
+                    LocationListener locationListener = new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location aLocation) {
+                            HotelMapFragment.this.lastLocation = aLocation;
+                            uploadCurrentPosToServer();
+                            Log.d("PartnerMapFragment", "changed lastLacation: " + HotelMapFragment.this.lastLocation);
+
+                        }
+                    };
+                    // end of 設定locationListener監聽器物件
+
+                    // 總totla註冊-設定監聽位置是否改變監聽器:
+                    LocationServices.FusedLocationApi.requestLocationUpdates(HotelMapFragment.this.googleApiClient,
+                            locationRequest,
+                            locationListener);
+                }// end of onConnected()
+
+                @Override
+                public void onConnectionSuspended(int i) {
+                    Util.showToast(getContext(), "GoogleApiClient connection suspended");
+                }
+            };
+
+    public class MyMarkerListener implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+        @Override
+        public boolean onMarkerClick(Marker aMarker) {
+            // 設定資料上Layout
+            HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(aMarker);
+            HotelMapFragment.this.currClickedMarkerHotelId = myVO.getHotelId(); // 紀錄下來，用來判斷是否window視窗已開啟，之後動態價格更新時拿用　- change price on Marker window:
+            HotelMapFragment.this.hotelBlock.setVisibility(View.VISIBLE);
+            HotelMapFragment.this.hotelName.setText(myVO.getHotelName());
+            HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
+            String url = Common.URL + "/android/hotel.do";
+            int imageSize = 250;
+            new HotelGetImageTask(HotelMapFragment.this.hotelImg).execute(url, myVO.getHotelId(), imageSize);
+
+            // 調整原來版面位置:
+            HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.map_bottom_padding_withWindow);
+            MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY_withWindow);
+
+            // 設定點擊事件,進到旅館詳細頁面:
+            String url_markerClicked = Common.URL + "/android/hotel.do";
+            try {
+                final HotelVO hotelVO = new HotelGetOneTask().execute(url_markerClicked,myVO.getHotelId()).get();
+                HotelMapFragment.this.hotelBlock.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Fragment fragment = new HotelInfoFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("hotelVO", hotelVO);
+                        fragment.setArguments(bundle);
+                        Util.switchFragment(HotelMapFragment.this, fragment);
+                    }
+                });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+
+            return true; // return true 取消預設的事件
+        }
+
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+//                showToast(marker.getTitle());
+        }
+    }
 
 
 }
