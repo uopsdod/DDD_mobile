@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 
 public class RoomFragment extends CommonFragment {
     private String TAG = "RoomFragment";
-    private TextView tvRoomName, tvFacilitiesDetail, tvPrice;
+    private TextView tvRoomName, tvFacilitiesDetail, tvPrice, status_text;
     private String RoomId;
     private ImageView imageView, ivLike, ivUnLike;
     private RecyclerView rv_RoomImage;
@@ -48,6 +48,7 @@ public class RoomFragment extends CommonFragment {
         tvRoomName = (TextView) view.findViewById(R.id.tvRoomName);
         tvPrice = (TextView) view.findViewById(R.id.tvPrice);
         tvFacilitiesDetail = (TextView) view.findViewById(R.id.tvFacilitiesDetail);
+        status_text = (TextView) view.findViewById(R.id.status_text);
         imageView = (ImageView) view.findViewById(R.id.imageView);
         ivLike = (ImageView) view.findViewById(R.id.ivLike);
         ivUnLike = (ImageView) view.findViewById(R.id.ivUnLike);
@@ -163,18 +164,25 @@ public class RoomFragment extends CommonFragment {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/room.do";
             String id = RoomId;
-            RoomVO room = null;
+            RoomVO roomVO = null;
             try {
-                room = new RoomGetOneTask().execute(url, id).get();
+                roomVO = new RoomGetOneTask().execute(url, id).get();
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-            if (room == null) {
+            if (roomVO == null) {
                 Util.showToast(getActivity(), "No hotel fonnd");
             } else {
-                tvRoomName.setText(room.getRoomName());
-                tvPrice.setText(room.getRoomPrice().toString());
-                tvFacilitiesDetail.setText(room.getRoomFun() + "\n" + room.getRoomMeal() + "\n" + room.getRoomSleep() + "\n" + room.getRoomFacility() + "\n" + room.getRoomSweetFacility());
+                tvRoomName.setText(roomVO.getRoomName());
+                if(roomVO.getRoomPrice() == null || roomVO.getRoomPrice().equals(0)){
+                    status_text.setVisibility(View.VISIBLE);
+                    tvPrice.setVisibility(View.GONE);
+                }else{
+                    tvPrice.setText(roomVO.getRoomPrice().toString());
+                    Util.showToast(getActivity(), "***********************");
+                }
+
+                tvFacilitiesDetail.setText(roomVO.getRoomFun() + "\n" + roomVO.getRoomMeal() + "\n" + roomVO.getRoomSleep() + "\n" + roomVO.getRoomFacility() + "\n" + roomVO.getRoomSweetFacility());
             }
         }
     }

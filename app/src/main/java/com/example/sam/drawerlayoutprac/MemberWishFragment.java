@@ -3,6 +3,7 @@ package com.example.sam.drawerlayoutprac;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.Room.RoomFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class MemberWishFragment extends MustLoginFragment {
     String TAG = "MemWishFragment";
     RecyclerView myRvWish;
     List<RoomVO> roomVOList = null;
+    TextView status_text;
     private MemWishAdapter myAdapter;
 
     @Override
@@ -38,6 +41,7 @@ public class MemberWishFragment extends MustLoginFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_member_wish, container, false);
+        status_text = (TextView) view.findViewById(R.id.status_text);
         myRvWish = (RecyclerView) view.findViewById(R.id.rv_hotel);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
 
@@ -124,13 +128,29 @@ public class MemberWishFragment extends MustLoginFragment {
             if (id != null) {
                 new WishGetImageTask(holder.ivImage).execute(url, roomId, imageSize);
                 holder.tvHotel.setText(roomVO.getRoomName());
-                holder.tvPrice.setText(roomVO.getRoomPrice().toString());
+                if(roomVO.getRoomPrice().equals(0)){
+                    holder.tvPrice.setText("今日尚未上架本房間");
+//                    holder.tvPrice.setTextColor(getResources().getColor(R.color.notice_color));
+                    holder.tvPrice.setTextColor(00000000);
+                }else{
+                    holder.tvPrice.setText(roomVO.getRoomPrice().toString());
+                }
                 holder.btDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         new WishDeleteTask().execute(url,id, roomId);
                         myWishVO.remove(myWishVO.get(position)); //每次刪除一個，就從myWishVO裡面移除選取的目標
                         myAdapter.notifyDataSetChanged(); // 當myWishVO有被更動(新增、修改、刪除) 時，就重新刷新一次頁面
+                    }
+                });
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Fragment fragment = new RoomFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("RoomId", roomId);
+                        fragment.setArguments(bundle);
+                        Util.switchFragment(MemberWishFragment.this, fragment);
                     }
                 });
             } else {

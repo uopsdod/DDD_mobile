@@ -8,5 +8,6 @@
     <color name="main_color2">#243757</color>
     <color name="sub1_color">#709ACF</color>
     <color name="sub2_color">#DD71B4</color>
+    <color name="notice_color">#FF0000</color>
 
 </resources>

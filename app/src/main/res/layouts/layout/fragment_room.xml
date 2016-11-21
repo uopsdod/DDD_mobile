@@ -80,6 +80,17 @@
             android:visibility="invisible"/>
 
         <TextView
+            android:id="@id/status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ivBed"
+            android:text="今日尚未上架本房間"
+            android:layout_centerInParent="true"
+            android:textColor="#FF0000"
+            android:textSize="24sp"
+            android:visibility="gone"/>
+
+        <TextView
             android:id="@+id/tvCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
