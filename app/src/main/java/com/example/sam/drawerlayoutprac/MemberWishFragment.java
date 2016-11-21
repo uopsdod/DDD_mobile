@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,6 @@ public class MemberWishFragment extends MustLoginFragment {
     String TAG = "MemWishFragment";
     RecyclerView myRvWish;
     List<RoomVO> roomVOList = null;
-    TextView status_text;
     private MemWishAdapter myAdapter;
 
     @Override
@@ -41,7 +41,6 @@ public class MemberWishFragment extends MustLoginFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_member_wish, container, false);
-        status_text = (TextView) view.findViewById(R.id.status_text);
         myRvWish = (RecyclerView) view.findViewById(R.id.rv_hotel);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
 
@@ -130,7 +129,8 @@ public class MemberWishFragment extends MustLoginFragment {
                 holder.tvHotel.setText(roomVO.getRoomName());
                 if(roomVO.getRoomPrice().equals(0)){
                     holder.tvPrice.setText("今日尚未上架本房間");
-                    holder.tvPrice.setTextColor(getResources().getColor(R.color.notice_color));
+//                    holder.tvPrice.setTextColor(getResources().getColor(R.color.notice_color)); //設顯示文字為紅色
+                    holder.tvPrice.setTextColor(Color.parseColor("#FF0000")); //設顯示文字為紅色
                 }else{
                     holder.tvPrice.setText(roomVO.getRoomPrice().toString());
                 }

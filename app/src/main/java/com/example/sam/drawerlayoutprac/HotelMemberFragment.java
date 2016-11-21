@@ -98,7 +98,7 @@ public class HotelMemberFragment extends Fragment {
         public void onClick(View view) {
             if (view.equals(btLogin)) {
                 String userName = etUserName.getText().toString().trim();
-                String password = etPassword.getText().toString().trim();
+                String password = "AA104" + etPassword.getText().toString().trim();
                 if(!isUserValid(userName,password)){
                     etUserName.setError("Account or Password is not valid");
                     etPassword.setError(null);
@@ -107,8 +107,8 @@ public class HotelMemberFragment extends Fragment {
                 }else{
 //                    String memId = memVO.getMemId().trim();
                     //用Context.getSharedPreferences()呼叫，並指定偏好設定檔名與模式
-                    SharedPreferences pref = getContext().getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
-                    pref.edit().putString("userName", userName)
+                    SharedPreferences prefHotel = getContext().getSharedPreferences(Common.PREF_FILE_Hotel, MODE_PRIVATE);
+                    prefHotel.edit().putString("userName", userName)
                                .putString("password", password)
                                .putBoolean("login" , true)
                                .apply();

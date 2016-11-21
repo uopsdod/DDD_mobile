@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 
 public class RoomFragment extends CommonFragment {
     private String TAG = "RoomFragment";
-    private TextView tvRoomName, tvFacilitiesDetail, tvPrice, status_text;
+    private TextView tvRoomName, tvFacilitiesDetail, tvPrice, tvStatus;
     private String RoomId;
     private ImageView imageView, ivLike, ivUnLike;
     private RecyclerView rv_RoomImage;
@@ -48,7 +48,7 @@ public class RoomFragment extends CommonFragment {
         tvRoomName = (TextView) view.findViewById(R.id.tvRoomName);
         tvPrice = (TextView) view.findViewById(R.id.tvPrice);
         tvFacilitiesDetail = (TextView) view.findViewById(R.id.tvFacilitiesDetail);
-        status_text = (TextView) view.findViewById(R.id.status_text);
+        tvStatus = (TextView) view.findViewById(R.id.tvStatus);
         imageView = (ImageView) view.findViewById(R.id.imageView);
         ivLike = (ImageView) view.findViewById(R.id.ivLike);
         ivUnLike = (ImageView) view.findViewById(R.id.ivUnLike);
@@ -175,11 +175,10 @@ public class RoomFragment extends CommonFragment {
             } else {
                 tvRoomName.setText(roomVO.getRoomName());
                 if(roomVO.getRoomPrice() == null || roomVO.getRoomPrice().equals(0)){
-                    status_text.setVisibility(View.VISIBLE);
+                    tvStatus.setVisibility(View.VISIBLE);
                     tvPrice.setVisibility(View.GONE);
                 }else{
                     tvPrice.setText(roomVO.getRoomPrice().toString());
-                    Util.showToast(getActivity(), "***********************");
                 }
 
                 tvFacilitiesDetail.setText(roomVO.getRoomFun() + "\n" + roomVO.getRoomMeal() + "\n" + roomVO.getRoomSleep() + "\n" + roomVO.getRoomFacility() + "\n" + roomVO.getRoomSweetFacility());
