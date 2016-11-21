@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +27,6 @@ import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
-import com.example.sam.drawerlayoutprac.Partner.PartnerMapFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -52,8 +50,11 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -78,6 +79,9 @@ public class HotelMapFragment extends CommonFragment {
     private Marker CurrLocationMarker;
     private HotelMapWebsocket hotelMapWebsocket;
     private HashMap<Marker,HotelGetLowestPriceVO> markerMap = new HashMap<>();
+    private String currClickedMarkerHotelId;
+
+    // Views:
     private ImageView hotelImg;
     private TextView hotelName;
     private TextView hotelPrice;
@@ -301,6 +305,7 @@ public class HotelMapFragment extends CommonFragment {
         public boolean onMarkerClick(Marker aMarker) {
             // 設定資料上Layout
             HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(aMarker);
+            HotelMapFragment.this.currClickedMarkerHotelId = myVO.getHotelId();
             HotelMapFragment.this.hotelBlock.setVisibility(View.VISIBLE);
             HotelMapFragment.this.hotelName.setText(myVO.getHotelName());
             HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
@@ -384,6 +389,7 @@ public class HotelMapFragment extends CommonFragment {
         HotelMapFragment.this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                HotelMapFragment.this.currClickedMarkerHotelId = null;
                 HotelMapFragment.this.hotelBlock.setVisibility(View.INVISIBLE);
                 HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.this.map_bottom_padding);
                 MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY);
@@ -392,6 +398,7 @@ public class HotelMapFragment extends CommonFragment {
     }
 
     private void showHotelMarkers() {
+        HotelMapFragment.this.markerMap.clear();
         //放上hotel Marker 並且 取得第一次各旅館的最低房價:
         List<HotelGetLowestPriceVO> hotelLowestPriceList = null;
         try {
@@ -494,6 +501,29 @@ public class HotelMapFragment extends CommonFragment {
                                     HotelMapFragment.this.CurrLocationMarker.remove();
                                 }
                                 HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+
+
+                                // change price on Marker window:
+                                Log.d("hotelMapWebsocket - ","hotelId: "+ HotelMapFragment.this.currClickedMarkerHotelId);
+                                if (HotelMapFragment.this.currClickedMarkerHotelId != null){
+                                    Collection<HotelGetLowestPriceVO> collection = HotelMapFragment.this.markerMap.values();
+                                    Iterator<HotelGetLowestPriceVO> itr = collection.iterator();
+                                    while(itr.hasNext()){
+                                        HotelGetLowestPriceVO myVO = itr.next();
+                                        Log.d("hotelMapWebsocket - ","hotelId - to compare: "+ myVO.getHotelId());
+                                        if (HotelMapFragment.this.currClickedMarkerHotelId.equals(myVO.getHotelId())){
+                                            HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
+                                        }
+                                    }
+//                                    Set<Marker> itr = HotelMapFragment.this.markerMap.keySet();
+//                                    for (Marker tmpMarker: itr){
+//                                        HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(tmpMarker);
+//                                        if (HotelMapFragment.this.currClickedMarkerHotelId.equals(myVO.getHotelId())){
+//                                            HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
+//                                        }
+//                                    }
+                                }
+
 
 //                                MyMarkerListener myMarkerListener = new MyMarkerListener();
 //                                HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
