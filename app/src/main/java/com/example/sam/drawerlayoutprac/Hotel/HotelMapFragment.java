@@ -487,6 +487,14 @@ public class HotelMapFragment extends CommonFragment {
 
                                 // 放上新的markers:
                                 showHotelMarkers();
+                                // 把原本自己現在位置marker放回去
+                                LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
+                                //Place current location marker
+                                if (HotelMapFragment.this.CurrLocationMarker != null) {
+                                    HotelMapFragment.this.CurrLocationMarker.remove();
+                                }
+                                HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+
 //                                MyMarkerListener myMarkerListener = new MyMarkerListener();
 //                                HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
                             }
