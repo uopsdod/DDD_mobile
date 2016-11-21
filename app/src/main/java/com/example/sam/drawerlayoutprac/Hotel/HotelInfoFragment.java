@@ -44,7 +44,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        hotelVO =(HotelVO) getArguments().getSerializable("hotelVO");
+        hotelVO = (HotelVO) getArguments().getSerializable("hotelVO");
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
 
@@ -107,19 +107,19 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     }
 
     private void showRoomInfo() {
-        if(Common.networkConnected(getActivity())){
+        if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/room.do";
             String id = hotelVO.getHotelId();
             List<RoomVO> room = null;
-            try{
+            try {
                 room = new RoomGetAllTask().execute(url, id).get();
-            }catch(Exception e){
+            } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-            if(room == null || room.isEmpty()){
+            if (room == null || room.isEmpty()) {
                 tvStatus.setVisibility(View.VISIBLE);
                 Util.showToast(getActivity(), "No Room fonnd");
-            }else{
+            } else {
                 rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), room));
             }
         }
@@ -163,20 +163,18 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             String url = Common.URL + "/android/room.do";
             int imageSize = 250;
             Bitmap bitmap = null;
-            try{
+            try {
                 bitmap = new RoomGetImageTask(null).execute(url, RoomId, imageSize).get();
-            }catch (Exception e){
+            } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-            if(bitmap != null){
+            if (bitmap != null) {
                 holder.ivImage.setImageBitmap(bitmap);
-            }else{
+            } else {
                 holder.ivImage.setImageResource(R.drawable.search);
             }
-//            holder.ivImage.setImageResource(myspot.getimgId());
-            holder.tvHotel.setText(myspot.getRoomName());
             holder.tvPrice.setText("$" + Integer.toString(myspot.getRoomPrice()));
-            holder.itemView.setOnClickListener(new View.OnClickListener(){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
