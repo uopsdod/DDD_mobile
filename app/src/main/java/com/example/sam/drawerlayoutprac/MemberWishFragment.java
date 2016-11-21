@@ -95,7 +95,7 @@ public class MemberWishFragment extends MustLoginFragment {
             TextView tvHotel;
             TextView tvPrice;
             Button btDelete;
-            float f = 0.6f;
+            float f = 0.7f;
             public MyViewHolder(View itemView) {
                 super(itemView);
                 this.ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
@@ -130,8 +130,7 @@ public class MemberWishFragment extends MustLoginFragment {
                 holder.tvHotel.setText(roomVO.getRoomName());
                 if(roomVO.getRoomPrice().equals(0)){
                     holder.tvPrice.setText("今日尚未上架本房間");
-//                    holder.tvPrice.setTextColor(getResources().getColor(R.color.notice_color));
-                    holder.tvPrice.setTextColor(00000000);
+                    holder.tvPrice.setTextColor(getResources().getColor(R.color.notice_color));
                 }else{
                     holder.tvPrice.setText(roomVO.getRoomPrice().toString());
                 }
