@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
+import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerMapFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -39,7 +40,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by cuser on 2016/11/21.
@@ -52,6 +56,7 @@ public class HotelMapFragment extends CommonFragment {
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
     private Marker CurrLocationMarker;
+    private HotelMapWebsocket hotelMapWebsocket;
     private GoogleApiClient.ConnectionCallbacks myConnectionCallBacks =
             new GoogleApiClient.ConnectionCallbacks() {
 
@@ -203,7 +208,7 @@ public class HotelMapFragment extends CommonFragment {
         return HotelMapFragment.this.googleMap.addMarker(markerOptions);
     }
 
-    private Marker placeMarkerAt(LatLng aLatLng) {
+    private Marker placeMarkerAt(LatLng aLatLng, String aPrice) {
 
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bmp = Bitmap.createBitmap(400, 100, conf);
@@ -216,8 +221,8 @@ public class HotelMapFragment extends CommonFragment {
 
 // modify canvas
         canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),
-                R.drawable.hotel_price02), 70, 0, color);
-        canvas1.drawText("Hotel Name!", 95, 60, color);
+                R.drawable.hotel_price05), 70, 0, color);
+        canvas1.drawText("$"+aPrice, 115, 55, color);
 
 // add marker to Map
         return HotelMapFragment.this.googleMap.addMarker(new MarkerOptions()
@@ -263,6 +268,8 @@ public class HotelMapFragment extends CommonFragment {
         @Override
         public void onMapReady(GoogleMap mMap) {
             HotelMapFragment.this.googleMap = mMap;
+            // init Map
+            initMap();
             // 回到自己現在位置
             goToCurrPosition();
             // 顯示馬上到現在位置的按鈕
@@ -274,25 +281,58 @@ public class HotelMapFragment extends CommonFragment {
 
         }// end of onMapReady
 
+        private void initMap() {
+            HotelMapFragment.this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+            // public final void setPadding (int left, int top, int right, int bottom)
+            HotelMapFragment.this.googleMap.setPadding(0,0,25,150);
+        }
+
         private void showHotelMarkers() {
-            List<HotelVO> hotelVOList = null;
-            if(Common.networkConnected(getActivity())) {
-                String url = Common.URL + "/android/hotel.do";
-                try {
-                    hotelVOList = new HotelGetAllTask().execute(url).get();
-                } catch (Exception e) {
-                    Log.e("HotelMapFragment", e.toString());
-                }
-                if(hotelVOList == null || hotelVOList.isEmpty()){
-                    Util.showToast(getActivity(), "No hotel fonnd");
-                }else{
-                    Log.d("HotelMapFragment",""+hotelVOList.get(0).getHotelName());
-                }
+//            List<HotelVO> hotelVOList = null;
+//            if(Common.networkConnected(getActivity())) {
+//                String url = Common.URL + "/android/hotel.do";
+//                try {
+//                    hotelVOList = new HotelGetAllTask().execute(url).get();
+//                } catch (Exception e) {
+//                    Log.e("HotelMapFragment", e.toString());
+//                }
+//                if(hotelVOList == null || hotelVOList.isEmpty()){
+//                    Util.showToast(getActivity(), "No hotel fonnd");
+//                }else{
+//                    Log.d("HotelMapFragment",""+hotelVOList.get(0).getHotelName());
+//                }
+//            }
+
+
+
+            //放上hotel Marker 並且 取得第一次各旅館的最低房價:
+            List<HotelGetLowestPriceVO> hotelLowestPriceList = null;
+            try {
+                hotelLowestPriceList = new HotelGetLowestPriceTask().execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+//            Log.d("HotelMapFragment", hotelLowestPriceList.get(0).getHotelCheapestRoomPrice());
+
+            for (HotelGetLowestPriceVO myVO: hotelLowestPriceList){
+                LatLng latlng = new LatLng(Double.parseDouble(myVO.getHotelLat()),Double.parseDouble(myVO.getHotelLon()));
+                placeMarkerAt(latlng, myVO.getHotelCheapestRoomPrice());
             }
 
-            for (HotelVO myVO: hotelVOList){
-                LatLng latlng = new LatLng(myVO.getHotelLat(),myVO.getHotelLon());
-                placeMarkerAt(latlng);
+
+
+            //取得動態價格變動:
+            URI uri = null;
+            try {
+                uri = new URI(Common.URL_DYNAMICPRICE);
+            } catch (URISyntaxException e) {
+                Log.e(ChatFragment.TAG, e.toString());
+            }
+            HotelMapFragment.this.hotelMapWebsocket = new HotelMapWebsocket(uri,getActivity());
+            if (hotelMapWebsocket != null){
+                hotelMapWebsocket.connect();
             }
 
 
@@ -319,7 +359,7 @@ public class HotelMapFragment extends CommonFragment {
                     ;
                     HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
                     // For zooming automatically to the location of the marker
-                    moveToLocation(latLng, 12);
+                    moveToLocation(latLng, 15);
                     return false;
                 }
             });
@@ -333,7 +373,7 @@ public class HotelMapFragment extends CommonFragment {
             }
             HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
             // For zooming automatically to the location of the marker
-            moveToLocation(latLng, 12);
+            moveToLocation(latLng, 15);
         }
 
 
