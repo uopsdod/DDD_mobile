@@ -27,6 +27,7 @@ import java.util.List;
 
 public class HotelGetLowestPriceVO {
     private String hotelId;
+    private String hotelName;
     private String hotelLat;
     private String hotelLon;
     private String hotelCheapestRoomId;
@@ -70,5 +71,13 @@ public class HotelGetLowestPriceVO {
 
     public void setHotelCheapestRoomPrice(String hotelCheapestRoomPrice) {
         this.hotelCheapestRoomPrice = hotelCheapestRoomPrice;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
     }
 }

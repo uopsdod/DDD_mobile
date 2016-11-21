@@ -17,6 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.CommonFragment;
@@ -42,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -57,6 +61,12 @@ public class HotelMapFragment extends CommonFragment {
     private Location lastLocation;
     private Marker CurrLocationMarker;
     private HotelMapWebsocket hotelMapWebsocket;
+    private HashMap<Marker,HotelGetLowestPriceVO> markerMap = new HashMap<>();
+    private ImageView hotelImg;
+    private TextView hotelName;
+    private TextView hotelPrice;
+    private LinearLayout hotelBlock;
+
     private GoogleApiClient.ConnectionCallbacks myConnectionCallBacks =
             new GoogleApiClient.ConnectionCallbacks() {
 
@@ -153,6 +163,11 @@ public class HotelMapFragment extends CommonFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.hotel_map_fragment, container, false);
+        HotelMapFragment.this.hotelImg = (ImageView) rootView.findViewById(R.id.ivImage);
+        HotelMapFragment.this.hotelName = (TextView) rootView.findViewById(R.id.tvHotel);
+        HotelMapFragment.this.hotelPrice = (TextView) rootView.findViewById(R.id.tvPrice);
+        HotelMapFragment.this.hotelBlock = (LinearLayout) rootView.findViewById(R.id.hotel_block);
+
 
         mMapView = (MapView) rootView.findViewById(R.id.hotelMap);
         mMapView.onCreate(savedInstanceState); //接收傳入此Fragment
@@ -262,6 +277,59 @@ public class HotelMapFragment extends CommonFragment {
 
     }
 
+    public class MyMarkerListener implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+        @Override
+        public boolean onMarkerClick(Marker aMarker) {
+            HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(aMarker);
+
+            HotelMapFragment.this.hotelBlock.setVisibility(View.VISIBLE);
+            HotelMapFragment.this.hotelName.setText(myVO.getHotelName());
+            HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
+            String url = Common.URL + "/android/hotel.do";
+            int imageSize = 250;
+            new HotelGetImageTask(HotelMapFragment.this.hotelImg).execute(url, myVO.getHotelId(), imageSize);
+            //Util.showToast(getContext(),aMarker.getTitle());
+            return true; // return true 取消預設的事件
+        }
+
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+//                showToast(marker.getTitle());
+        }
+    }
+
+    private class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private final View infoWindow;
+
+        MyInfoWindowAdapter() {
+            infoWindow = View.inflate(getActivity(), R.layout.custom_info_window, null);
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+//            int logoId = Markers.get(marker);
+//            ImageView ivLogo = ((ImageView) infoWindow
+//                    .findViewById(R.id.ivLogo));
+//            ivLogo.setImageResource(logoId);
+//
+//            String title = marker.getTitle();
+//            TextView tvTitle = ((TextView) infoWindow
+//                    .findViewById(R.id.tvTitle));
+//            tvTitle.setText(title);
+//
+//            String snippet = marker.getSnippet();
+//            TextView tvSnippet = ((TextView) infoWindow
+//                    .findViewById(R.id.tvSnippet));
+//            tvSnippet.setText(snippet);
+            return infoWindow;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
+        }
+    }
+
 
     private OnMapReadyCallback myOnMapReadyCallback = new OnMapReadyCallback() {
 
@@ -285,26 +353,19 @@ public class HotelMapFragment extends CommonFragment {
             HotelMapFragment.this.googleMap.getUiSettings().setZoomControlsEnabled(true);
             // public final void setPadding (int left, int top, int right, int bottom)
             HotelMapFragment.this.googleMap.setPadding(0,0,25,150);
+
+            HotelMapFragment.this.googleMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
+            MyMarkerListener myMarkerListener = new MyMarkerListener();
+            HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
+            HotelMapFragment.this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    HotelMapFragment.this.hotelBlock.setVisibility(View.INVISIBLE);
+                }
+            });
         }
 
         private void showHotelMarkers() {
-//            List<HotelVO> hotelVOList = null;
-//            if(Common.networkConnected(getActivity())) {
-//                String url = Common.URL + "/android/hotel.do";
-//                try {
-//                    hotelVOList = new HotelGetAllTask().execute(url).get();
-//                } catch (Exception e) {
-//                    Log.e("HotelMapFragment", e.toString());
-//                }
-//                if(hotelVOList == null || hotelVOList.isEmpty()){
-//                    Util.showToast(getActivity(), "No hotel fonnd");
-//                }else{
-//                    Log.d("HotelMapFragment",""+hotelVOList.get(0).getHotelName());
-//                }
-//            }
-
-
-
             //放上hotel Marker 並且 取得第一次各旅館的最低房價:
             List<HotelGetLowestPriceVO> hotelLowestPriceList = null;
             try {
@@ -318,7 +379,8 @@ public class HotelMapFragment extends CommonFragment {
 
             for (HotelGetLowestPriceVO myVO: hotelLowestPriceList){
                 LatLng latlng = new LatLng(Double.parseDouble(myVO.getHotelLat()),Double.parseDouble(myVO.getHotelLon()));
-                placeMarkerAt(latlng, myVO.getHotelCheapestRoomPrice());
+                Marker tmpMarker = placeMarkerAt(latlng, myVO.getHotelCheapestRoomPrice());
+                HotelMapFragment.this.markerMap.put(tmpMarker,myVO);
             }
 
 
@@ -375,6 +437,8 @@ public class HotelMapFragment extends CommonFragment {
             // For zooming automatically to the location of the marker
             moveToLocation(latLng, 15);
         }
+
+
 
 
     };// end of myOnMapReadyCallback
