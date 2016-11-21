@@ -25,6 +25,7 @@ public class Common {
 
 
     public final static String PREF_FILE = "preference";
+    public final static String PREF_FILE_Hotel = "preference";
 
     public static boolean networkConnected(Activity activity) {
         ConnectivityManager conManager =

@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean floatingBtnPressed = false;
     public static Menu actionBarMenu;
     public static SharedPreferences pref;
+    public static SharedPreferences pref_Hotel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // 登入登出用:
         this.pref = this.getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
-
+        //廠商會員登入登出用
+        this.pref_Hotel = this.getSharedPreferences(Common.PREF_FILE_Hotel, MODE_PRIVATE);
         //findViews
         this.floatingBtn = (FloatingActionButton) findViewById(R.id.floatingBtn);
 
@@ -152,19 +154,16 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.my_member:
-                        SharedPreferences pref = getSharedPreferences(Common.PREF_FILE,
-                                MODE_PRIVATE);
+
                         boolean login = pref.getBoolean("login",false);
                         if(login){
                             //如果已經登入，就轉到會員資料的頁面
                             fragment = new MemberInfoFragment();
                             Util.switchFragment(MainActivity.this, fragment);
-                            Util.showToast(getApplicationContext(),"要修改資料喔! 屁孩");
                         }else{
                             //若還沒登入，就轉到會員登入、註冊頁面
                             fragment = new MemberFragment();
                             Util.switchFragment(MainActivity.this, fragment);
-                            Util.showToast(getApplicationContext(),"還沒登入喔! 屁孩");
                         }
 //                        PopupMenu popupMenu = new PopupMenu(navigationView.getContext(), popMenu);
 //                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -177,8 +176,15 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.my_member_hotel:
-                        fragment = new HotelMemberFragment();
-                        Util.switchFragment(MainActivity.this, fragment);
+                        String hotelAccount = pref_Hotel.getString("userName", null);
+                        if(hotelAccount == null){
+                            fragment = new HotelMemberFragment();
+                            Util.switchFragment(MainActivity.this, fragment);
+                        }else{
+                            fragment = new QRBarcodeScanFragment();
+                            Util.switchFragment(MainActivity.this, fragment);
+                        }
+
                         break;
 
                     case R.id.info:
