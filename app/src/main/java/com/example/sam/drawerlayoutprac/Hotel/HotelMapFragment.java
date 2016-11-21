@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
@@ -55,6 +57,15 @@ import java.util.concurrent.ExecutionException;
 
 public class HotelMapFragment extends CommonFragment {
 
+    private static int map_bottom_padding = 150;
+    private static int map_bottom_padding_withWindow = map_bottom_padding + 440;
+    private static int map_right_padding = 32;
+
+    private static float floatingBtnY = MainActivity.floatingBtn.getY();
+    private static float floatingBtnY_withWindow = floatingBtnY - 415;
+
+
+
     MapView mMapView;
     private GoogleMap googleMap;
     private GoogleApiClient googleApiClient;
@@ -65,7 +76,7 @@ public class HotelMapFragment extends CommonFragment {
     private ImageView hotelImg;
     private TextView hotelName;
     private TextView hotelPrice;
-    private LinearLayout hotelBlock;
+    private RelativeLayout hotelBlock;
 
     private GoogleApiClient.ConnectionCallbacks myConnectionCallBacks =
             new GoogleApiClient.ConnectionCallbacks() {
@@ -145,6 +156,7 @@ public class HotelMapFragment extends CommonFragment {
         super.onResume();
         mMapView.onResume();
         this.googleApiClient.connect();
+        MainActivity.floatingBtn.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -166,7 +178,7 @@ public class HotelMapFragment extends CommonFragment {
         HotelMapFragment.this.hotelImg = (ImageView) rootView.findViewById(R.id.ivImage);
         HotelMapFragment.this.hotelName = (TextView) rootView.findViewById(R.id.tvHotel);
         HotelMapFragment.this.hotelPrice = (TextView) rootView.findViewById(R.id.tvPrice);
-        HotelMapFragment.this.hotelBlock = (LinearLayout) rootView.findViewById(R.id.hotel_block);
+        HotelMapFragment.this.hotelBlock = (RelativeLayout) rootView.findViewById(R.id.hotel_block);
 
 
         mMapView = (MapView) rootView.findViewById(R.id.hotelMap);
@@ -201,6 +213,7 @@ public class HotelMapFragment extends CommonFragment {
             this.googleApiClient.disconnect();
             Log.i("PartnerMapFragment", "GoogleApiClient disconnected.");
         }
+        MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY);
     }
 
     @Override
@@ -280,15 +293,40 @@ public class HotelMapFragment extends CommonFragment {
     public class MyMarkerListener implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
         @Override
         public boolean onMarkerClick(Marker aMarker) {
+            // 設定資料上Layout
             HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(aMarker);
-
             HotelMapFragment.this.hotelBlock.setVisibility(View.VISIBLE);
             HotelMapFragment.this.hotelName.setText(myVO.getHotelName());
             HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
             String url = Common.URL + "/android/hotel.do";
             int imageSize = 250;
             new HotelGetImageTask(HotelMapFragment.this.hotelImg).execute(url, myVO.getHotelId(), imageSize);
-            //Util.showToast(getContext(),aMarker.getTitle());
+
+            // 調整原來版面位置:
+            HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.map_bottom_padding_withWindow);
+            MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY_withWindow);
+
+            // 設定點擊事件,進到旅館詳細頁面:
+            String url_markerClicked = Common.URL + "/android/hotel.do";
+            try {
+                final HotelVO hotelVO = new HotelGetOneTask().execute(url_markerClicked,myVO.getHotelId()).get();
+                HotelMapFragment.this.hotelBlock.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Fragment fragment = new HotelInfoFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("hotelVO", hotelVO);
+                        fragment.setArguments(bundle);
+                        Util.switchFragment(HotelMapFragment.this, fragment);
+                    }
+                });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+
             return true; // return true 取消預設的事件
         }
 
@@ -352,7 +390,7 @@ public class HotelMapFragment extends CommonFragment {
         private void initMap() {
             HotelMapFragment.this.googleMap.getUiSettings().setZoomControlsEnabled(true);
             // public final void setPadding (int left, int top, int right, int bottom)
-            HotelMapFragment.this.googleMap.setPadding(0,0,25,150);
+            HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.map_bottom_padding);
 
             HotelMapFragment.this.googleMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
             MyMarkerListener myMarkerListener = new MyMarkerListener();
@@ -361,6 +399,8 @@ public class HotelMapFragment extends CommonFragment {
                 @Override
                 public void onMapClick(LatLng latLng) {
                     HotelMapFragment.this.hotelBlock.setVisibility(View.INVISIBLE);
+                    HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.this.map_bottom_padding);
+                    MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY);
                 }
             });
         }
