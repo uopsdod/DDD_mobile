@@ -1,5 +1,6 @@
 package com.example.sam.drawerlayoutprac.Hotel;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,8 +20,18 @@ import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerMapFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.handshake.ServerHandshake;
+
+import java.net.URI;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class HotelFragment extends CommonFragment {
     String TAG = "HotelFragment";
@@ -82,6 +93,13 @@ public class HotelFragment extends CommonFragment {
             ImageView ivImage;
             TextView tvHotel;
             TextView tvPrice;
+            // rating stars:
+            ImageView star1;
+            ImageView star2;
+            ImageView star3;
+            ImageView star4;
+            ImageView star5;
+
 
             // 把拿到的到個view的資料一個個存好成實體變數
             public MyViewHolder(View itemView) {
@@ -91,6 +109,13 @@ public class HotelFragment extends CommonFragment {
                 this.tvHotel = (TextView) itemView.findViewById(R.id.tvHotel);
                 this.tvPrice = (TextView) itemView.findViewById(R.id.tvPrice);
                 this.ivImage.setAlpha(f); // 設定圖片透明度 (float)
+                // rating stars:
+                this.star1 = (ImageView) itemView.findViewById(R.id.star1);
+                this.star2 = (ImageView) itemView.findViewById(R.id.star2);
+                this.star3 = (ImageView) itemView.findViewById(R.id.star3);
+                this.star4 = (ImageView) itemView.findViewById(R.id.star4);
+                this.star5 = (ImageView) itemView.findViewById(R.id.star5);
+
             }
         }
 
@@ -140,6 +165,79 @@ public class HotelFragment extends CommonFragment {
                 Util.switchFragment(HotelFragment.this, fragment);
             }
         });
+
+    }
+
+
+    public class HotelPriceWebsocket extends WebSocketClient {
+        URI uri;
+        Activity activity;
+
+        public HotelPriceWebsocket(URI aUri,Activity aActivity ) {
+            super(aUri, new Draft_17());
+            this.uri = aUri;
+            this.activity = aActivity;
+        }
+
+        @Override
+        public void onOpen(ServerHandshake handshakedata) {
+            Log.d("HotelPriceWebsocket - ", " open websocket successfully ");
+        }
+
+        @Override
+        public void onMessage(String message) {
+            // 不知道為何，必須將websocket放在Fragment下面，才能夠抓到message
+
+            Log.d("HotelPriceWebsocket - ", message);
+            Thread myThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d("HotelPriceWebsocket - ", "run on Ui Thread");
+                                List<HotelGetLowestPriceVO> hotelLowestPriceList = null;
+                                try {
+                                    hotelLowestPriceList = new HotelGetLowestPriceTask().execute().get();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                } catch (ExecutionException e) {
+                                    e.printStackTrace();
+                                }
+                                for (HotelGetLowestPriceVO myVO: hotelLowestPriceList){
+
+
+
+                                }
+
+
+
+
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            myThread.start();
+
+
+        }// end of onMessage
+
+        @Override
+        public void onClose(int code, String reason, boolean remote) {
+
+        }
+
+        @Override
+        public void onError(Exception ex) {
+
+        }
+    }// end HotelPriceWebsocket
+
+    public void getLowestPriceEachHotel(){
 
     }
 
