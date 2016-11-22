@@ -160,6 +160,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
             final RoomVO myspot = list.get(position);
             final String RoomId = myspot.getRoomId();
+            final String hotelId = hotelVO.getHotelId();
             String url = Common.URL + "/android/room.do";
             int imageSize = 250;
             Bitmap bitmap = null;
@@ -181,6 +182,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
                     Fragment fragment = new RoomFragment();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("RoomId", RoomId);
+                    bundle.putSerializable("hotelId", hotelId);
                     fragment.setArguments(bundle);
                     Util.switchFragment(HotelInfoFragment.this, fragment);
                 }

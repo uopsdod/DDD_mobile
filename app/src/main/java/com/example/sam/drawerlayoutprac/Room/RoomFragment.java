@@ -3,9 +3,11 @@ package com.example.sam.drawerlayoutprac.Room;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +24,8 @@ import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Member.MemberFragment;
+import com.example.sam.drawerlayoutprac.MustLoginFragment;
+import com.example.sam.drawerlayoutprac.OrderFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.example.sam.drawerlayoutprac.WishDeleteTask;
@@ -34,9 +39,10 @@ import java.util.concurrent.ExecutionException;
 public class RoomFragment extends CommonFragment {
     private String TAG = "RoomFragment";
     private TextView tvRoomName, tvFacilitiesDetail, tvPrice, tvStatus;
-    private String RoomId;
+    private String RoomId, hotelId;
     private ImageView imageView, ivLike, ivUnLike;
     private RecyclerView rv_RoomImage;
+    private Button btOrder;
 
     @Nullable
     @Override
@@ -45,6 +51,7 @@ public class RoomFragment extends CommonFragment {
         View view = inflater.inflate(R.layout.fragment_room, container, false);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
         RoomId = getArguments().getString("RoomId");
+        hotelId = getArguments().getString("hotelId");
         tvRoomName = (TextView) view.findViewById(R.id.tvRoomName);
         tvPrice = (TextView) view.findViewById(R.id.tvPrice);
         tvFacilitiesDetail = (TextView) view.findViewById(R.id.tvFacilitiesDetail);
@@ -52,6 +59,7 @@ public class RoomFragment extends CommonFragment {
         imageView = (ImageView) view.findViewById(R.id.imageView);
         ivLike = (ImageView) view.findViewById(R.id.ivLike);
         ivUnLike = (ImageView) view.findViewById(R.id.ivUnLike);
+        btOrder = (Button) view.findViewById(R.id.btOrder);
         rv_RoomImage = (RecyclerView) view.findViewById(R.id.rv_RoomImage);
 
         //按下中空愛心，會把這間房間加入至當前會員的願望清單，並把圖示變更為實心的愛心
@@ -112,6 +120,45 @@ public class RoomFragment extends CommonFragment {
                         Log.d(TAG, e.toString());
                     }
                 }
+            }
+        });
+
+        btOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean login = MainActivity.pref.getBoolean("login", false);
+                if(login){
+                    Fragment fragment = new OrderFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("RoomId", RoomId);
+                    bundle.putString("hotelId", hotelId);
+                    fragment.setArguments(bundle);
+                    Util.switchFragment(RoomFragment.this, fragment);
+                }else{
+                    Util.showToast(getContext(),"You must login to proceed");
+                    //new AlertDialog.Builder(getActivity()).setCancelable()
+                    new AlertDialog.Builder(getActivity())
+                            .setCancelable(false) // 讓使用者不能點擊旁邊取消
+                            .setTitle("你沒有權限進入此頁")
+                            .setMessage("請登入後繼續")
+                            .setPositiveButton("現在登入", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+//                            Util.showToast(getContext(),"登入pressed");
+                                    MemberFragment.switchFromLoginPage = true;
+                                    Util.switchFragment(RoomFragment.this,new MemberFragment());
+                                }
+                            })
+                            .setNegativeButton("暫時不要", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Util.showToast(getContext(),"暫時不要pressed");
+                                }
+                            })
+                            .show();
+                    // 如果使用者點旁邊，則也跳回到我們的首頁-HotelFragment
+                }
+
             }
         });
         rv_RoomImage.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
