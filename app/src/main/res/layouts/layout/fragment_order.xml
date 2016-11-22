@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+
+    <TextView
+        android:id="@+id/tvHotel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="旅館名稱 : "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@id/tvHotelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvHotel"
+        android:layout_toRightOf="@+id/tvHotel"
+        android:text=" 中壢大飯店"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@id/tvAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvHotel"
+        android:layout_marginTop="10dp"
+        android:text="旅館地址 : "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@id/tvHotelCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAddress"
+        android:layout_marginTop="10dp"
+        android:text="桃園市"
+        android:textColor="@color/colorAccent"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@id/tvHotelCounty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tvHotelCity"
+        android:layout_toRightOf="@id/tvHotelCity"
+        android:text="中壢區"
+        android:textColor="@color/colorAccent"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@id/tvHotelRoad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tvHotelCity"
+        android:layout_toRightOf="@id/tvHotelCounty"
+        android:text="延平路645號4樓"
+        android:textColor="@color/colorAccent"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvHotelCity"
+        android:layout_marginTop="10dp"
+        android:text="旅館電話 : "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvHotelPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvHotelCity"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/tvPhone"
+        android:text="0925990128"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvPhone"
+        android:layout_marginTop="10dp"
+        android:text="房間名稱 : "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvRoomName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvPhone"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/tvRoom"
+        android:text="豪華客房"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRoom"
+        android:layout_marginTop="10dp"
+        android:text="房間價錢 : "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvRoomPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRoom"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/tvPrice"
+        android:text="6000"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/btCash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btCrditCard"
+        android:layout_marginTop="30dp"
+        android:background="#709ACF"
+        android:text="現金付款"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/btCrditCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:background="#709ACF"
+        android:text="信用卡結帳"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+</RelativeLayout>
