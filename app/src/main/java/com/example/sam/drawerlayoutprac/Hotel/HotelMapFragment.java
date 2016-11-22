@@ -84,6 +84,7 @@ public class HotelMapFragment extends CommonFragment {
     // 拿取動態價格:
     private HotelMapWebsocket hotelMapWebsocket;
 
+
     // Views:
     private MapView mMapView;
     private ImageView hotelImg;
