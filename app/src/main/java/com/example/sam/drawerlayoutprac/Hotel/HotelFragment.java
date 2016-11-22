@@ -30,6 +30,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -115,11 +116,7 @@ public class HotelFragment extends CommonFragment {
             TextView tvHotel;
             TextView tvPrice;
             // rating stars:
-            ImageView star1;
-            ImageView star2;
-            ImageView star3;
-            ImageView star4;
-            ImageView star5;
+            List<ImageView> stars = new ArrayList<>();
 
 
             // 把拿到的到個view的資料一個個存好成實體變數
@@ -131,11 +128,11 @@ public class HotelFragment extends CommonFragment {
                 this.tvPrice = (TextView) itemView.findViewById(R.id.tvPrice);
                 this.ivImage.setAlpha(f); // 設定圖片透明度 (float)
                 // rating stars:
-                this.star1 = (ImageView) itemView.findViewById(R.id.star1);
-                this.star2 = (ImageView) itemView.findViewById(R.id.star2);
-                this.star3 = (ImageView) itemView.findViewById(R.id.star3);
-                this.star4 = (ImageView) itemView.findViewById(R.id.star4);
-                this.star5 = (ImageView) itemView.findViewById(R.id.star5);
+                stars.add((ImageView) itemView.findViewById(R.id.star1));
+                stars.add((ImageView) itemView.findViewById(R.id.star2));
+                stars.add((ImageView) itemView.findViewById(R.id.star3));
+                stars.add((ImageView) itemView.findViewById(R.id.star4));
+                stars.add((ImageView) itemView.findViewById(R.id.star5));
 
             }
         }
@@ -160,6 +157,17 @@ public class HotelFragment extends CommonFragment {
             new HotelGetImageTask(holder.ivImage).execute(url, HotelId, imageSize);
             holder.tvHotel.setText(hotelListVO.getHotelName());
             holder.tvPrice.setText(hotelListVO.getHotelCheapestRoomPrice());
+            // 設定星星數
+            Integer starNo = Integer.parseInt(hotelListVO.getHotelRatingResult());
+            int index = 0;
+            for (; index < starNo; index++) {
+                holder.stars.get(index).setVisibility(View.VISIBLE);
+            }
+            for (; index < 5; index++) {
+                holder.stars.get(index).setVisibility(View.INVISIBLE);
+            }
+
+
 //            holder.tvPrice.setText(Integer.toString(mySpot.getPrice()) + "$");
             holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -174,7 +182,10 @@ public class HotelFragment extends CommonFragment {
                 }
             });
         }
+
     }// end class SpotAdapter
+
+
 
     // onCreateView設定:
     private void setFloatingBtnClickListener() {
