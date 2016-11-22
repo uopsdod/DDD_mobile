@@ -77,7 +77,7 @@ public class HotelMapFragment extends CommonFragment {
     private Location lastLocation;
 
     // Markers:
-    private HashMap<Marker,HotelGetLowestPriceVO> markerMap = new HashMap<>();
+    private HashMap<Marker, HotelGetLowestPriceVO> markerMap = new HashMap<>();
     private String currClickedMarkerHotelId;
     private Marker CurrLocationMarker;
 
@@ -212,7 +212,7 @@ public class HotelMapFragment extends CommonFragment {
 // modify canvas
         canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),
                 R.drawable.hotel_price05), 70, 0, color);
-        canvas1.drawText("$"+aPrice, 115, 55, color);
+        canvas1.drawText("$" + aPrice, 115, 55, color);
 
 // add marker to Map
         return HotelMapFragment.this.googleMap.addMarker(new MarkerOptions()
@@ -244,8 +244,8 @@ public class HotelMapFragment extends CommonFragment {
         } catch (URISyntaxException e) {
             Log.e(ChatFragment.TAG, e.toString());
         }
-        HotelMapFragment.this.hotelMapWebsocket = new HotelMapWebsocket(uri,getActivity());
-        if (hotelMapWebsocket != null){
+        HotelMapFragment.this.hotelMapWebsocket = new HotelMapWebsocket(uri, getActivity());
+        if (hotelMapWebsocket != null) {
             hotelMapWebsocket.connect();
         }
     }
@@ -253,14 +253,14 @@ public class HotelMapFragment extends CommonFragment {
     private void initMap() {
         HotelMapFragment.this.googleMap.getUiSettings().setZoomControlsEnabled(true);
         // public final void setPadding (int left, int top, int right, int bottom)
-        HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.map_bottom_padding);
+        HotelMapFragment.this.googleMap.setPadding(0, 0, HotelMapFragment.map_right_padding, HotelMapFragment.map_bottom_padding);
 
         HotelMapFragment.this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 HotelMapFragment.this.currClickedMarkerHotelId = null;
                 HotelMapFragment.this.hotelBlock.setVisibility(View.INVISIBLE);
-                HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.this.map_bottom_padding);
+                HotelMapFragment.this.googleMap.setPadding(0, 0, HotelMapFragment.map_right_padding, HotelMapFragment.this.map_bottom_padding);
                 MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY);
             }
         });
@@ -286,10 +286,10 @@ public class HotelMapFragment extends CommonFragment {
         }
 //            Log.d("HotelMapFragment", hotelLowestPriceList.get(0).getHotelCheapestRoomPrice());
 
-        for (HotelGetLowestPriceVO myVO: hotelLowestPriceList){
-            LatLng latlng = new LatLng(Double.parseDouble(myVO.getHotelLat()),Double.parseDouble(myVO.getHotelLon()));
+        for (HotelGetLowestPriceVO myVO : hotelLowestPriceList) {
+            LatLng latlng = new LatLng(Double.parseDouble(myVO.getHotelLat()), Double.parseDouble(myVO.getHotelLon()));
             Marker tmpMarker = placeMarkerAt(latlng, myVO.getHotelCheapestRoomPrice());
-            HotelMapFragment.this.markerMap.put(tmpMarker,myVO);
+            HotelMapFragment.this.markerMap.put(tmpMarker, myVO);
         }
 
         // 設定Marker點擊事件
@@ -346,7 +346,7 @@ public class HotelMapFragment extends CommonFragment {
         URI uri;
         Activity activity;
 
-        public HotelMapWebsocket(URI aUri,Activity aActivity ) {
+        public HotelMapWebsocket(URI aUri, Activity aActivity) {
             super(aUri, new Draft_17());
             this.uri = aUri;
             this.activity = aActivity;
@@ -388,13 +388,13 @@ public class HotelMapFragment extends CommonFragment {
 
                                 // change price on Marker window:
                                 //Log.d("hotelMapWebsocket - ","hotelId: "+ HotelMapFragment.this.currClickedMarkerHotelId);
-                                if (HotelMapFragment.this.currClickedMarkerHotelId != null){
+                                if (HotelMapFragment.this.currClickedMarkerHotelId != null) {
                                     Collection<HotelGetLowestPriceVO> collection = HotelMapFragment.this.markerMap.values();
                                     Iterator<HotelGetLowestPriceVO> itr = collection.iterator();
-                                    while(itr.hasNext()){
+                                    while (itr.hasNext()) {
                                         HotelGetLowestPriceVO myVO = itr.next();
                                         //Log.d("hotelMapWebsocket - ","hotelId - to compare: "+ myVO.getHotelId());
-                                        if (HotelMapFragment.this.currClickedMarkerHotelId.equals(myVO.getHotelId())){
+                                        if (HotelMapFragment.this.currClickedMarkerHotelId.equals(myVO.getHotelId())) {
                                             HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
                                         }
                                     }
@@ -496,7 +496,7 @@ public class HotelMapFragment extends CommonFragment {
         @Override
         public boolean onMarkerClick(Marker aMarker) {
             // 設定資料上Layout
-            HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(aMarker);
+            final HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(aMarker);
             HotelMapFragment.this.currClickedMarkerHotelId = myVO.getHotelId(); // 紀錄下來，用來判斷是否window視窗已開啟，之後動態價格更新時拿用　- change price on Marker window:
             HotelMapFragment.this.hotelBlock.setVisibility(View.VISIBLE);
             HotelMapFragment.this.hotelName.setText(myVO.getHotelName());
@@ -506,28 +506,23 @@ public class HotelMapFragment extends CommonFragment {
             new HotelGetImageTask(HotelMapFragment.this.hotelImg).execute(url, myVO.getHotelId(), imageSize);
 
             // 調整原來版面位置:
-            HotelMapFragment.this.googleMap.setPadding(0,0,HotelMapFragment.map_right_padding,HotelMapFragment.map_bottom_padding_withWindow);
+            HotelMapFragment.this.googleMap.setPadding(0, 0, HotelMapFragment.map_right_padding, HotelMapFragment.map_bottom_padding_withWindow);
             MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY_withWindow);
 
             // 設定點擊事件,進到旅館詳細頁面:
             String url_markerClicked = Common.URL + "/android/hotel.do";
-            try {
-                final HotelVO hotelVO = new HotelGetOneTask().execute(url_markerClicked,myVO.getHotelId()).get();
-                HotelMapFragment.this.hotelBlock.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Fragment fragment = new HotelInfoFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("hotelVO", hotelVO);
-                        fragment.setArguments(bundle);
-                        Util.switchFragment(HotelMapFragment.this, fragment);
-                    }
-                });
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+            //final HotelVO hotelVO = new HotelGetOneTask().execute(url_markerClicked,myVO.getHotelId()).get();
+            HotelMapFragment.this.hotelBlock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment fragment = new HotelInfoFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("hotelId", myVO.getHotelId());
+                    //bundle.putSerializable("hotelVO", hotelVO);
+                    fragment.setArguments(bundle);
+                    Util.switchFragment(HotelMapFragment.this, fragment);
+                }
+            });
 
 
             return true; // return true 取消預設的事件

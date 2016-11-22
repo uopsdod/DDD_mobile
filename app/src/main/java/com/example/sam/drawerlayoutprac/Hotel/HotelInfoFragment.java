@@ -29,6 +29,7 @@ import com.example.sam.drawerlayoutprac.Util;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class HotelInfoFragment extends CommonFragment implements Serializable {
     private static final String TAG = "HotelInfoFragment";
@@ -44,7 +45,19 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        hotelVO = (HotelVO) getArguments().getSerializable("hotelVO");
+        String hotelId = getArguments().getString("hotelId");
+        String url = Common.URL + "/android/hotel.do";
+        try {
+            hotelVO = new HotelGetOneTask().execute(url,hotelId).get();
+//            hotelVO = (HotelVO) getArguments().getSerializable("hotelVO");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
 

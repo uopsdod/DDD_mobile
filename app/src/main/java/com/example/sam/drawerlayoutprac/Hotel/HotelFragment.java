@@ -167,7 +167,7 @@ public class HotelFragment extends CommonFragment {
                 public void onClick(View view) {
                     Fragment fragment = new HotelInfoFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("Hotelid",hotelListVO.getHotelId());
+                    bundle.putString("hotelId",hotelListVO.getHotelId());
                     //bundle.putSerializable("hotelVO", hotelListVO);
                     fragment.setArguments(bundle);
                     Util.switchFragment(HotelFragment.this, fragment);
