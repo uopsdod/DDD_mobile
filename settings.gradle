@@ -1,2 +1,2 @@
-include ':app', ':Euclidlib', ':commons-beanutils-1.9.3'
+include ':app', ':Euclidlib', ':commons-beanutils-1.9.3', ':jackson-annotations-2.8.5', ':jackson-core-2.8.5', ':jackson-databind-2.8.5'
 project(':Euclidlib').projectDir = new File('libs/Euclidlib')

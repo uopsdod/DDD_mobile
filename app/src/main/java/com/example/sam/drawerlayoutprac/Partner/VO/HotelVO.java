@@ -2,6 +2,8 @@ package com.example.sam.drawerlayoutprac.Partner.VO;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class HotelVO implements java.io.Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -44,7 +46,7 @@ public class HotelVO implements java.io.Serializable{
 	private String hotelCreditCardNo;
 	private String hotelCreditCheckNo;
 	private String hotelCreditDueDate;
-	
+	@JsonIgnore
 	private Set<OrdVO> hotelOrds = new LinkedHashSet<OrdVO>();
 	
 	public String getHotelId() {

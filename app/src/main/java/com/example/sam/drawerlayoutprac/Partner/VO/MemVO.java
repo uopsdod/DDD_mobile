@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
  
 public class MemVO implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
@@ -31,6 +32,7 @@ public class MemVO implements java.io.Serializable{
 	private String memCreditCheckNo;
 	private String memCreditDueDate;
 	
+	@JsonIgnore
 	private Set<OrdVO> memOrds = new LinkedHashSet<OrdVO>();
 	
 	public String getMemId() {
