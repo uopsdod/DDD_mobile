@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac.Hotel;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,7 +28,12 @@ import com.example.sam.drawerlayoutprac.Room.RoomGetImageTask;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.example.sam.drawerlayoutprac.Util;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.handshake.ServerHandshake;
+
 import java.io.Serializable;
+import java.net.URI;
 import java.util.List;
 
 public class HotelInfoFragment extends CommonFragment implements Serializable {
@@ -126,6 +132,34 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             }
         }
 
+    }
+
+    private class HotelRoomPriceSocket extends WebSocketClient{
+        URI uri;
+        Activity activity;
+        public HotelRoomPriceSocket(URI serverUri, Draft draft) {
+            super(serverUri, draft);
+        }
+
+        @Override
+        public void onOpen(ServerHandshake handshakedata) {
+
+        }
+
+        @Override
+        public void onMessage(String message) {
+
+        }
+
+        @Override
+        public void onClose(int code, String reason, boolean remote) {
+
+        }
+
+        @Override
+        public void onError(Exception ex) {
+
+        }
     }
 
     private class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
