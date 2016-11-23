@@ -377,10 +377,6 @@ public class HotelMapFragment extends CommonFragment {
         @Override
         public void onMessage(String message) {
             // 不知道為何，必須將websocket放在Fragment下面，才能夠抓到message
-
-            //Log.d("hotelMapWebsocket - ", message);
-//            myThread = new Thread();
-//            myThread.start();
             android.os.Handler handler = new android.os.Handler(myHandlerThread.getLooper());
             handler.post(r1);
 

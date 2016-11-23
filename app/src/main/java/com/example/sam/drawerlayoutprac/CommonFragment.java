@@ -36,13 +36,13 @@ public class CommonFragment extends Fragment {
                 Log.d("floatingBtnPressed", ""+MainActivity.floatingBtnPressed);
                 if (!MainActivity.floatingBtnPressed) {
                     MainActivity.floatingBtnPressed = true;
-                    Util.showToast(getContext(),"CommonFragment menu opened");
+                    //Util.showToast(getContext(),"CommonFragment menu opened");
                     Fragment fragment = new HistoryMsgFragment();
                     Util.switchFragment(this,fragment);
                 // 關閉歷史訊息列表:
                 } else {
                     MainActivity.floatingBtnPressed = false;
-                    Util.showToast(getContext(),"CommonFragment menu closed");
+                    //Util.showToast(getContext(),"CommonFragment menu closed");
                     FragmentManager fm = getFragmentManager();
                     if (fm.getBackStackEntryCount() > 0) {
                         fm.popBackStack();

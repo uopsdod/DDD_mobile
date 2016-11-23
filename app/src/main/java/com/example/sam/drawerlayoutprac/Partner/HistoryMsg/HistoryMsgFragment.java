@@ -9,6 +9,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -59,6 +61,8 @@ public class HistoryMsgFragment extends MustLoginFragment {
         if (this.memId != null){
             initListView();
         }
+        Animation slide_up = AnimationUtils.loadAnimation(getContext(),R.anim.slide_up);
+        rootView.startAnimation(slide_up);
         return this.rootView;
     }// end of onCreateView
 
@@ -101,6 +105,11 @@ public class HistoryMsgFragment extends MustLoginFragment {
         super.onPause();
         // 關閉歷史訊息列表:
         MainActivity.floatingBtnPressed = false;
+        Animation slide_down = AnimationUtils.loadAnimation(getContext(),R.anim.slide_down);
+        rootView.startAnimation(slide_down);
+//        Animation fadeout = AnimationUtils.loadAnimation(getContext(),R.anim.fadeout);
+//        rootView.startAnimation(fadeout);
+
     }
 
 
