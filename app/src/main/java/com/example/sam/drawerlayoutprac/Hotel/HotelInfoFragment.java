@@ -37,14 +37,14 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     private TextView tvStatus;
     private ImageView ivHotelBig;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvHotelIntro;
-    private HotelVO hotelVO;
+    private String hotelId;
     private float aFloat = (float) 0.6;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        hotelVO = (HotelVO) getArguments().getSerializable("hotelVO");
+        hotelId = getArguments().getString("hotelId");
         //get View
         View view = inflater.inflate(R.layout.fragment_hotelinfo, container, false);
 
@@ -85,9 +85,11 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     private void showHotelInfo() {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/hotel.do";
-            String id = hotelVO.getHotelId();
+            String id = hotelId;
+            HotelVO hotelVO = null;
             int imageSize = 250;
             try {
+                hotelVO = new HotelGetOneTask().execute(url, id).get();
                 new HotelGetImageTask(ivHotelBig).execute(url, id, imageSize);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
@@ -109,7 +111,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     private void showRoomInfo() {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/room.do";
-            String id = hotelVO.getHotelId();
+            String id = hotelId;
             List<RoomVO> room = null;
             try {
                 room = new RoomGetAllTask().execute(url, id).get();
@@ -160,7 +162,6 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
             final RoomVO myspot = list.get(position);
             final String RoomId = myspot.getRoomId();
-            final String hotelId = hotelVO.getHotelId();
             String url = Common.URL + "/android/room.do";
             int imageSize = 250;
             Bitmap bitmap = null;
