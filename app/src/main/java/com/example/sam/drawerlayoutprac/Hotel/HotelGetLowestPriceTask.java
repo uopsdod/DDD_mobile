@@ -34,17 +34,24 @@ public class HotelGetLowestPriceTask extends AsyncTask<Object, Integer, List<Hot
     protected List<HotelGetLowestPriceVO> doInBackground(Object... params) {
         List<HotelGetLowestPriceVO> dataList = new ArrayList<>();
         //String url = params[0].toString();
+        HotelSearchVO hotelSearchVO = (HotelSearchVO)params[0];
         String url = Common.URL + "/HotelRoomSearch";
         String jsonIn = null;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("fromMobile","fromMobile");
         jsonObject.addProperty("action","search");
 
-        jsonObject.addProperty("city","桃園市");
-        jsonObject.addProperty("zone","中壢區");
-        jsonObject.addProperty("hotelRatingResult","0");
-        jsonObject.addProperty("roomCapacity","2");
-        jsonObject.addProperty("Price","$1 - $10000");
+        jsonObject.addProperty("city",hotelSearchVO.getCity());
+        jsonObject.addProperty("zone",hotelSearchVO.getZone());
+        jsonObject.addProperty("hotelRatingResult",hotelSearchVO.getHotelRatingResult());
+        jsonObject.addProperty("roomCapacity",hotelSearchVO.getRoomCapacity());
+        jsonObject.addProperty("Price",hotelSearchVO.getPrice());
+
+//        jsonObject.addProperty("city","桃園市");
+//        jsonObject.addProperty("zone","中壢區");
+//        jsonObject.addProperty("hotelRatingResult","0");
+//        jsonObject.addProperty("roomCapacity","2");
+//        jsonObject.addProperty("Price","$1 - $10000");
 
 
 

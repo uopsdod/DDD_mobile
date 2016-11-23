@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
+import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerMapFragment;
 import com.example.sam.drawerlayoutprac.R;
@@ -28,6 +29,7 @@ import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -36,8 +38,26 @@ import java.util.concurrent.ExecutionException;
 public class HotelFragment extends CommonFragment {
     String TAG = "HotelFragment";
     RecyclerView myRvSpot;
+    List<HotelGetLowestPriceVO> myHotelGetLowestPriceVOList;
+    RecyclerView.Adapter<SpotAdapter.MyViewHolder> myAdapter;
+    HotelPriceWebsocket myHotelPriceWebsocket;
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        myHotelGetLowestPriceVOList = getLowestPriceEachHotel();
+        showAllHotel();
+        URI uri = null;
+        try {
+            uri = new URI(Common.URL_DYNAMICPRICE);
+        } catch (URISyntaxException e) {
+            Log.e(ChatFragment.TAG, e.toString());
+        }
+        myHotelPriceWebsocket = new HotelPriceWebsocket(uri,getActivity());
+        if (myHotelPriceWebsocket != null){
+            myHotelPriceWebsocket.connect();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
@@ -66,7 +86,8 @@ public class HotelFragment extends CommonFragment {
             if(hotel == null || hotel.isEmpty()){
                 Util.showToast(getActivity(), "No hotel fonnd");
             }else{
-                myRvSpot.setAdapter(new SpotAdapter(getActivity(), hotel));
+                myAdapter = new SpotAdapter(getActivity(), myHotelGetLowestPriceVOList);
+                myRvSpot.setAdapter(myAdapter);
             }
         }
     }
@@ -74,17 +95,17 @@ public class HotelFragment extends CommonFragment {
     @Override
     public void onStart() {
         super.onStart();
-        showAllHotel();
     }
 
     private class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.MyViewHolder> {
         private Context context;
-        private List<HotelVO> myListSpot;
+        //private List<HotelVO> myListSpot;
+        private List<HotelGetLowestPriceVO> myHotelListInAdapter;
         private LayoutInflater myLayoutInflater;
 
-        public SpotAdapter(Context context, List<HotelVO> myListSpot) {
+        public SpotAdapter(Context context, List<HotelGetLowestPriceVO> myHotelList) {
             this.context = context;
-            this.myListSpot = myListSpot;
+            this.myHotelListInAdapter = myHotelList;
             myLayoutInflater = LayoutInflater.from(context);
         }
 
@@ -127,17 +148,18 @@ public class HotelFragment extends CommonFragment {
 
         @Override
         public int getItemCount() {
-            return myListSpot.size();
+            return myHotelListInAdapter.size();
         }
 
         @Override
         public void onBindViewHolder(SpotAdapter.MyViewHolder holder, int position) {
-            final HotelVO hotelVO = myListSpot.get(position);
-            final String HotelId = hotelVO.getHotelId();
+            final HotelGetLowestPriceVO hotelListVO = myHotelListInAdapter.get(position);
+            final String HotelId = hotelListVO.getHotelId();
             String url = Common.URL + "/android/hotel.do";
             int imageSize = 250;
             new HotelGetImageTask(holder.ivImage).execute(url, HotelId, imageSize);
-            holder.tvHotel.setText(hotelVO.getHotelName());
+            holder.tvHotel.setText(hotelListVO.getHotelName());
+            holder.tvPrice.setText(hotelListVO.getHotelCheapestRoomPrice());
 //            holder.tvPrice.setText(Integer.toString(mySpot.getPrice()) + "$");
             holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -145,7 +167,8 @@ public class HotelFragment extends CommonFragment {
                 public void onClick(View view) {
                     Fragment fragment = new HotelInfoFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("hotelId", HotelId);
+                    bundle.putString("hotelId",hotelListVO.getHotelId());
+                    //bundle.putSerializable("hotelVO", hotelListVO);
                     fragment.setArguments(bundle);
                     Util.switchFragment(HotelFragment.this, fragment);
                 }
@@ -197,22 +220,16 @@ public class HotelFragment extends CommonFragment {
                             @Override
                             public void run() {
                                 Log.d("HotelPriceWebsocket - ", "run on Ui Thread");
-                                List<HotelGetLowestPriceVO> hotelLowestPriceList = null;
-                                try {
-                                    hotelLowestPriceList = new HotelGetLowestPriceTask().execute().get();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                } catch (ExecutionException e) {
-                                    e.printStackTrace();
+                                // 去抓取每間旅館的最低房價，並更新到原本的list上面
+                                List<HotelGetLowestPriceVO> tmpHotelList = getLowestPriceEachHotel();
+                                for (HotelGetLowestPriceVO myVO_changed: tmpHotelList) {
+                                    for (HotelGetLowestPriceVO myVO: HotelFragment.this.myHotelGetLowestPriceVOList) {
+                                        if (myVO.getHotelId().equals(myVO_changed.getHotelId())) {
+                                            myVO.setHotelCheapestRoomPrice(myVO_changed.getHotelCheapestRoomPrice());
+                                        }
+                                    }
                                 }
-                                for (HotelGetLowestPriceVO myVO: hotelLowestPriceList){
-
-
-
-                                }
-
-
-
+                                HotelFragment.this.myAdapter.notifyDataSetChanged();
 
                             }
                         });
@@ -237,8 +254,22 @@ public class HotelFragment extends CommonFragment {
         }
     }// end HotelPriceWebsocket
 
-    public void getLowestPriceEachHotel(){
-
+    public List<HotelGetLowestPriceVO> getLowestPriceEachHotel(){
+        List<HotelGetLowestPriceVO> hotelLowestPriceList = null;
+        try {
+            HotelSearchVO myVO = new HotelSearchVO();
+            myVO.setCity("桃園市");
+            myVO.setZone("中壢區");
+            myVO.setHotelRatingResult("0");
+            myVO.setPrice("$1 - $10000");
+            myVO.setRoomCapacity("2");
+            hotelLowestPriceList = new HotelGetLowestPriceTask().execute(myVO).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return hotelLowestPriceList;
     }
 
 }

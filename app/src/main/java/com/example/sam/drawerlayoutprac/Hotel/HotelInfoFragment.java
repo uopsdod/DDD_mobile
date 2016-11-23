@@ -35,6 +35,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class HotelInfoFragment extends CommonFragment implements Serializable {
     private static final String TAG = "HotelInfoFragment";
