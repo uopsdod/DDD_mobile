@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.HandlerThread;
+import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -56,6 +58,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Handler;
 
 /**
  * Created by cuser on 2016/11/21.
@@ -94,6 +97,7 @@ public class HotelMapFragment extends CommonFragment {
 
     // Thread:
     Thread myThread;
+    HandlerThread myHandlerThread;
     public static volatile boolean isRunning;
 
     // onMapReady是在myConnectionCallBacks呼叫的，成功連線後才註冊此物件
@@ -136,6 +140,8 @@ public class HotelMapFragment extends CommonFragment {
                     //.addOnConnectionFailedListener(onConnetionFailListener)
                     .build();
         }
+        myHandlerThread = new HandlerThread("longlifeThread", Process.THREAD_PRIORITY_BACKGROUND);
+        myHandlerThread.start();
 
     }
 
@@ -190,6 +196,7 @@ public class HotelMapFragment extends CommonFragment {
     public void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        myHandlerThread.quit();
     }
 
     @Override
@@ -372,65 +379,10 @@ public class HotelMapFragment extends CommonFragment {
             // 不知道為何，必須將websocket放在Fragment下面，才能夠抓到message
 
             //Log.d("hotelMapWebsocket - ", message);
-            myThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (HotelMapFragment.isRunning) {
-                                    //Log.d("hotelMapWebsocket - ", "run on Ui Thread");
-                                    // 清除全部的marker
-                                    HotelMapFragment.this.googleMap.clear();
-                                    //HotelMapFragment.this.hotelMapView.getOverlay().clear();
-
-                                    // 放上新的markers:
-                                    showHotelMarkers();
-                                    // 把原本自己現在位置marker放回去
-                                    LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
-                                    //Place current location marker
-                                    if (HotelMapFragment.this.CurrLocationMarker != null) {
-                                        HotelMapFragment.this.CurrLocationMarker.remove();
-                                    }
-                                    HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
-
-
-                                    // change price on Marker window:
-                                    //Log.d("hotelMapWebsocket - ","hotelId: "+ HotelMapFragment.this.currClickedMarkerHotelId);
-                                    if (HotelMapFragment.this.currClickedMarkerHotelId != null) {
-                                        Collection<HotelGetLowestPriceVO> collection = HotelMapFragment.this.markerMap.values();
-                                        Iterator<HotelGetLowestPriceVO> itr = collection.iterator();
-                                        while (itr.hasNext()) {
-                                            HotelGetLowestPriceVO myVO = itr.next();
-                                            //Log.d("hotelMapWebsocket - ","hotelId - to compare: "+ myVO.getHotelId());
-                                            if (HotelMapFragment.this.currClickedMarkerHotelId.equals(myVO.getHotelId())) {
-                                                HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
-                                            }
-                                        }
-//                                    Set<Marker> itr = HotelMapFragment.this.markerMap.keySet();
-//                                    for (Marker tmpMarker: itr){
-//                                        HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(tmpMarker);
-//                                        if (HotelMapFragment.this.currClickedMarkerHotelId.equals(myVO.getHotelId())){
-//                                            HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
-//                                        }
-//                                    }
-                                    }
-
-
-//                                MyMarkerListener myMarkerListener = new MyMarkerListener();
-//                                HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
-                                }
-                            }// end of isRuuning while
-
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            myThread.start();
-
+//            myThread = new Thread();
+//            myThread.start();
+            android.os.Handler handler = new android.os.Handler(myHandlerThread.getLooper());
+            handler.post(r1);
 
         }// end of onMessage
 
@@ -443,6 +395,59 @@ public class HotelMapFragment extends CommonFragment {
         public void onError(Exception ex) {
 
         }
+
+        Runnable r1 = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (HotelMapFragment.isRunning) {
+                                //Log.d("hotelMapWebsocket - ", "run on Ui Thread");
+                                // 清除全部的marker
+                                HotelMapFragment.this.googleMap.clear();
+                                //HotelMapFragment.this.hotelMapView.getOverlay().clear();
+
+                                // 放上新的markers:
+                                showHotelMarkers();
+                                // 把原本自己現在位置marker放回去
+                                LatLng latLng = new LatLng(HotelMapFragment.this.lastLocation.getLatitude(), HotelMapFragment.this.lastLocation.getLongitude());
+                                //Place current location marker
+                                if (HotelMapFragment.this.CurrLocationMarker != null) {
+                                    HotelMapFragment.this.CurrLocationMarker.remove();
+                                }
+                                HotelMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+
+
+                                // change price on Marker window:
+                                //Log.d("hotelMapWebsocket - ","hotelId: "+ HotelMapFragment.this.currClickedMarkerHotelId);
+                                if (HotelMapFragment.this.currClickedMarkerHotelId != null) {
+                                    Collection<HotelGetLowestPriceVO> collection = HotelMapFragment.this.markerMap.values();
+                                    Iterator<HotelGetLowestPriceVO> itr = collection.iterator();
+                                    while (itr.hasNext()) {
+                                        HotelGetLowestPriceVO myVO = itr.next();
+                                        //Log.d("hotelMapWebsocket - ","hotelId - to compare: "+ myVO.getHotelId());
+                                        if (HotelMapFragment.this.currClickedMarkerHotelId.equals(myVO.getHotelId())) {
+                                            HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
+                                        }
+                                    }
+                                }
+
+
+//                                MyMarkerListener myMarkerListener = new MyMarkerListener();
+//                                HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
+                            }
+                        }// end of isRuuning while
+
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+
     }// end of websocket
 
     private void uploadCurrentPosToServer() {
