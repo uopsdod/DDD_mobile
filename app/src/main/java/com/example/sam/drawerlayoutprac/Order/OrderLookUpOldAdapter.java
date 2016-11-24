@@ -104,6 +104,9 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         new HotelGetImageTask(holder.ord_hotel_img).execute(url, HotelId, imageSize);
         // 給予評價
         if (ordVO.getOrdRatingStarNo() == null) {
+            holder.ord_rating.setText("給予評價");
+            //holder.ord_rating.setPadding();
+            holder.ord_rating.setCompoundDrawablesWithIntrinsicBounds( R.drawable.star_golden_24dp, 0, 0, 0);
             holder.ord_rating.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
