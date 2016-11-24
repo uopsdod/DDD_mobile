@@ -86,27 +86,7 @@ public class OrderFragment extends CommonFragment {
             tvRoomPrice.setText(roomVO.getRoomPrice().toString());
         }
     }
-//
-//    public class webSocket extends HotelMapFragment.HotelMapWebsocket {
-//        public webSocket(URI aUri, Activity aActivity) {
-//            super(aUri, aActivity);
-//
-//        }
-//    }
 
-
-//    private void roomInfo(){
-//        if(Common.networkConnected(getActivity())){
-//            String url = Common.URL + "/android/room.do";
-//            try{
-//
-//            }catch (Exception e) {
-//                Util.showToast(getContext(), "Orderfragment" + e.toString());
-//            }
-//
-//        }
-//    }
-//
 //    private void makeOrder(){
 //
 //    }

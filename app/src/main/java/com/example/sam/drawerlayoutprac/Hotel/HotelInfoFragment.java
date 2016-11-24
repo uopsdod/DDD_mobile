@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac.Hotel;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,7 +28,18 @@ import com.example.sam.drawerlayoutprac.Room.RoomGetImageTask;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.example.sam.drawerlayoutprac.Util;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -39,7 +51,18 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     private ImageView ivHotelBig;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvHotelIntro;
     private String hotelId;
+    private SpotAdapter.HotelRoomPriceSocket hotelRoomPriceScoket;
     private float aFloat = (float) 0.6;
+    private List<RoomVO> room;
+    RecyclerView.Adapter<SpotAdapter.ViewHolder> myAdapter;
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showHotelInfo();
+        showRoomInfo();
+    }
 
     @Nullable
     @Override
@@ -79,8 +102,14 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     @Override
     public void onStart() {
         super.onStart();
-        showHotelInfo();
-        showRoomInfo();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(hotelRoomPriceScoket != null){
+            hotelRoomPriceScoket.close();
+        }
     }
 
     private void showHotelInfo() {
@@ -113,7 +142,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/room.do";
             String id = hotelId;
-            List<RoomVO> room = null;
+
             try {
                 room = new RoomGetAllTask().execute(url, id).get();
             } catch (Exception e) {
@@ -123,7 +152,8 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
                 tvStatus.setVisibility(View.VISIBLE);
                 Util.showToast(getActivity(), "No Room fonnd");
             } else {
-                rv_hotelInfo.setAdapter(new SpotAdapter(getActivity(), room));
+                myAdapter = new SpotAdapter(getActivity(), room);
+                rv_hotelInfo.setAdapter(myAdapter);
             }
         }
 
@@ -138,16 +168,17 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             this.context = context;
             this.list = list;
             inflater = LayoutInflater.from(context);
+            getDynamicPrice();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             ImageView ivImage;
-            TextView tvHotel, tvPrice;
+            TextView tvRoomName, tvPrice;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
-                tvHotel = (TextView) itemView.findViewById(R.id.tvHotel);
+                tvRoomName = (TextView) itemView.findViewById(R.id.tvHotel);
                 tvPrice = (TextView) itemView.findViewById(R.id.tvPrice);
                 ivImage.setAlpha(aFloat);
             }
@@ -161,13 +192,13 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
 
         @Override
         public void onBindViewHolder(SpotAdapter.ViewHolder holder, int position) {
-            final RoomVO myspot = list.get(position);
-            final String RoomId = myspot.getRoomId();
+            RoomVO myspot = list.get(position);
+            final String roomId = myspot.getRoomId();
             String url = Common.URL + "/android/room.do";
             int imageSize = 250;
             Bitmap bitmap = null;
             try {
-                bitmap = new RoomGetImageTask(null).execute(url, RoomId, imageSize).get();
+                bitmap = new RoomGetImageTask(null).execute(url, roomId, imageSize).get();
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
@@ -176,6 +207,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             } else {
                 holder.ivImage.setImageResource(R.drawable.search);
             }
+            holder.tvRoomName.setText(myspot.getRoomName());
             holder.tvPrice.setText("$" + Integer.toString(myspot.getRoomPrice()));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -183,10 +215,11 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
                 public void onClick(View view) {
                     Fragment fragment = new RoomFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("RoomId", RoomId);
+                    bundle.putSerializable("RoomId", roomId);
                     bundle.putSerializable("hotelId", hotelId);
                     fragment.setArguments(bundle);
                     Util.switchFragment(HotelInfoFragment.this, fragment);
+                    Util.showToast(getContext(), "RoomId" + roomId);
                 }
             });
         }
@@ -194,6 +227,90 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
         @Override
         public int getItemCount() {
             return list.size();
+        }
+
+        //取得動態的價格
+        private void getDynamicPrice() {
+            URI uri = null;
+            try {
+                uri = new URI(Common.URL_DYNAMICPRICE);
+            } catch (URISyntaxException e) {
+                Log.d(TAG, e.toString());
+            }
+            hotelRoomPriceScoket = new SpotAdapter.HotelRoomPriceSocket(uri, getActivity());
+            if (hotelRoomPriceScoket != null) {
+                hotelRoomPriceScoket.connect();
+            }
+        }
+
+        public class HotelRoomPriceSocket extends WebSocketClient {
+            URI uri;
+            Activity activity;
+
+            public HotelRoomPriceSocket(URI serverUri, Activity activity) {
+                super(serverUri, new Draft_17());
+                uri = serverUri;
+                this.activity = activity;
+            }
+
+            @Override
+            public void onOpen(ServerHandshake handshakedata) {
+                Log.d("hotelRoomPricesocket - ", " open websocket successfully ");
+            }
+
+            @Override
+            public void onMessage(final String message) {
+                Thread myThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.runOnUiThread(new Runnable() {
+                                                   @Override
+                                                   public void run() {
+                                                       //從websoclet取得動態價錢的資料
+                                                       try {
+                                                           JSONObject jsonObject = new JSONObject(message);
+                                                           //解開從websocket上拿到的JSONObject物件
+                                                           JSONArray jsonArray = jsonObject.getJSONArray("Bag");
+                                                           JSONArray jsonArrayRoom;
+                                                           RoomVO myVO = null;
+                                                           Log.d(TAG, jsonArray.toString());
+                                                           //把List<RoomVO> room 內的資料， 逐一取出來
+
+                                                               //再解開從JSONObject上拿到的JSONArray並逐一取出
+                                                               for (int i = 0; i < jsonArray.length(); i++) {
+                                                                   jsonArrayRoom = jsonArray.getJSONArray(i);
+                                                                   //比對RoomId是否相同，若相同就從解析出來的JSONArray動態價格資料，裝進 roomVO裡面
+                                                                   for (int j = 0; i<list.size(); j++) {
+                                                                       myVO = list.get(i);
+                                                                       if (jsonArrayRoom.getString(0).equals(myVO.getRoomId())) {
+                                                                           myVO.setRoomPrice((Integer) jsonArrayRoom.get(1));
+                                                                           myAdapter.notifyDataSetChanged();
+                                                                       }
+                                                                   }
+                                                               }
+                                                       } catch (JSONException e) {
+                                                           e.printStackTrace();
+                                                       }
+                                                   }
+                                               }
+                        );
+                    }
+                }
+
+                );
+                myThread.start();
+
+            }
+
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+            }
         }
 
     }

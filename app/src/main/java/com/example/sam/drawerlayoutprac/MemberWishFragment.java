@@ -1,5 +1,6 @@
 package com.example.sam.drawerlayoutprac;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,16 @@ import android.widget.TextView;
 import com.example.sam.drawerlayoutprac.Room.RoomFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 
@@ -29,7 +40,8 @@ public class MemberWishFragment extends MustLoginFragment {
     String TAG = "MemWishFragment";
     RecyclerView myRvWish;
     List<RoomVO> roomVOList = null;
-    private MemWishAdapter myAdapter;
+    private  MemWishAdapter myAdapter;
+    private MemWishAdapter.RoomPriceWebSocket roomPriceWebSocket;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +64,14 @@ public class MemberWishFragment extends MustLoginFragment {
     public void onStart() {
         super.onStart();
         showAllWish();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(roomPriceWebSocket != null){
+            roomPriceWebSocket.close();
+        }
     }
 
     private void showAllWish() {
@@ -78,7 +98,11 @@ public class MemberWishFragment extends MustLoginFragment {
         }
     }
 
-    private class MemWishAdapter extends RecyclerView.Adapter<MemWishAdapter.MyViewHolder> {
+
+
+
+
+    private  class MemWishAdapter extends RecyclerView.Adapter<MemWishAdapter.MyViewHolder> {
         private Context context;
         private List<RoomVO> myWishVO;
         private LayoutInflater layoutInflater;
@@ -87,6 +111,7 @@ public class MemberWishFragment extends MustLoginFragment {
             this.context = context;
             this.myWishVO = myWishVO;
             layoutInflater = LayoutInflater.from(context);
+            getDynamicPrice();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -153,7 +178,91 @@ public class MemberWishFragment extends MustLoginFragment {
                     }
                 });
             } else {
-                Util.showToast(getActivity(), "You need login mother fucker!");
+                Util.showToast(getContext(), "You need login mother fucker!");
+            }
+        }
+
+        private void getDynamicPrice() {
+            URI uri = null;
+            try {
+                uri = new URI(Common.URL_DYNAMICPRICE);
+            } catch (URISyntaxException e) {
+                Log.d(TAG, e.toString());
+            }
+            roomPriceWebSocket = new MemWishAdapter.RoomPriceWebSocket(uri, getActivity());
+            if(roomPriceWebSocket != null){
+                roomPriceWebSocket.connect();
+            }
+        }
+
+        private  class RoomPriceWebSocket extends WebSocketClient{
+            URI uri;
+            Activity activity;
+
+            public RoomPriceWebSocket(URI serverUri, Activity activity) {
+                super(serverUri, new Draft_17());
+                uri =serverUri;
+                this.activity = activity;
+            }
+
+            @Override
+            public void onOpen(ServerHandshake handshakedata) {
+                Log.d("MemberWishFragment - ", " open websocket successfully ");
+            }
+
+            @Override
+            public void onMessage(final String message) {
+                Thread myThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try{
+                                    JSONObject jsonObject = new JSONObject(message);
+                                    JSONArray jsonArray = jsonObject.getJSONArray("Bag");
+                                    JSONArray jsonArrayPrice;
+                                    String id = null;
+//                                for(int i = 0; i<roomVOList.size(); i++){
+//                                    RoomVO roomVO = roomVOList.get(i);
+//                                    for(int j = 0; j<jsonArray.length(); j++){
+//                                        jsonArrayPrice = jsonArray.getJSONArray(j);
+//                                        if(jsonArrayPrice.get(0).equals(roomVO.getRoomId())){
+//                                            roomVO.setRoomPrice((Integer) jsonArrayPrice.get(1));
+//                                        }
+//                                    }
+                                    for(int j = 0; j<jsonArray.length(); j++){
+                                        jsonArrayPrice = jsonArray.getJSONArray(j);
+                                        for(RoomVO roomVO : myWishVO){
+                                            id = roomVO.getRoomId();
+                                            if(jsonArrayPrice.get(0).equals(id) && !id.isEmpty()){
+                                                roomVO.setRoomPrice((Integer) jsonArrayPrice.get(1));
+                                                myAdapter.notifyDataSetChanged();
+                                                MyViewHolder holder = new MyViewHolder(getView());
+                                                holder.tvPrice.setText(roomVO.getRoomPrice().toString());
+                                            }
+                                        }
+                                    }
+
+                                }catch (JSONException e){
+                                    Util.showToast(getContext(), e.toString());
+                                }
+
+                            }
+                        });
+                    }
+                });
+                myThread.start();
+            }
+
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
             }
         }
 
