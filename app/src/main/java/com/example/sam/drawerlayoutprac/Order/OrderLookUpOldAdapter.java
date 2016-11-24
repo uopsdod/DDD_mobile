@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,6 +91,7 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         holder.ord_price.setText("$" + Integer.toString(ordVO.getOrdPrice()));
         String ordStatus = OrderLookUpFragment.ordStatusConverter.get(ordVO.getOrdStatus());
         holder.ord_status.setText(ordStatus);
+        giveStatusColor(holder.ord_status,ordStatus);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         holder.ord_checktime.setText(df.format(ordVO.getOrdLiveDate()));
         // 設定圖片
@@ -98,14 +100,28 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         int imageSize = 850;
         new HotelGetImageTask(holder.ord_hotel_img).execute(url, HotelId, imageSize);
 
-
-
-//        final String HotelId = hotelListVO.getHotelId();
-//        String url = Common.URL + "/android/hotel.do";
-//        int imageSize = 250;
-//        new XXXXGetAllTask(holder.ivImage).execute(url, HotelId, imageSize);
-//        holder.tvHotel.setText(hotelListVO.getHotelName());
-//        holder.tvPrice.setText(hotelListVO.getHotelCheapestRoomPrice());
     }
+
+    private void giveStatusColor(TextView aTextView,String aStatus){
+        switch (aStatus){
+            case "已下單":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.green));
+            break;
+            case "主動取消":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.red));
+            break;
+            case "已入住":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.sub1_color));
+            break;
+            case "已繳費":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.sub1_color));
+            break;
+            case "逾時取消":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.red));
+            break;
+        }
+    }
+
+
 
 }// end class SpotAdapter
