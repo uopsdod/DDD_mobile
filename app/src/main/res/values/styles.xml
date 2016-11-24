@@ -25,4 +25,9 @@
             <item name="colorControlActivated">#ffa705</item>
     </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#FF0000</item>
+        <item name="colorControlActivated">#00FF00</item>
+    </style>
+
 </resources>

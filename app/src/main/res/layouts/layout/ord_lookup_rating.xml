@@ -12,7 +12,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="330dp"
-        android:layout_height="270dp"
+        android:layout_height="wrap_content"
         android:background="#ffffffff">
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -20,20 +20,6 @@
             android:layout_margin="0dp"
             android:focusable="true"
             android:background="@color/sub1_color">
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="X"
-                android:id="@+id/text_close"
-                android:layout_gravity="right"
-                android:layout_alignParentRight="true"
-                android:background="#00ffffff"
-                android:textColor="@android:color/white"
-                android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:padding="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,15 +33,26 @@
                 android:layout_alignParentLeft="true"
                 android:layout_margin="5dp" />
         </RelativeLayout>
-
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="3dp"
+            android:stepSize="0.5"
+            android:numStars="5"
+            android:progressTint="#FFD700"
+            android:secondaryProgressTint="#aaaaaa"
+            android:progressBackgroundTint="#aaaaaa"
+            android:rating="0" />
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/text_content"
-            android:text="寫下你的評論!"
+            android:id="@+id/et_comment"
+            android:hint="寫下你的評論!"
             android:textColor="@android:color/black"
-            android:minHeight="100dp"
             android:padding="30dp"
             android:background="@android:color/white"
             android:gravity="center_vertical" />
@@ -63,21 +60,23 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:gravity="center_horizontal"
             android:weightSum="1">
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="提交"
+                android:textSize="22sp"
                 android:id="@+id/btn_confirm"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.5"
                 android:background="@drawable/btn_bg"/>
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="取消"
+                android:textSize="22sp"
                 android:id="@+id/btn_cancel"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.5"

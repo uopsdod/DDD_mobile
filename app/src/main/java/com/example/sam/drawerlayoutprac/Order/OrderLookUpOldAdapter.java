@@ -81,7 +81,7 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
     }
 
     @Override
-    public void onBindViewHolder(OrderLookUpOldAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final OrderLookUpOldAdapter.MyViewHolder holder, int position) {
         Log.d("OrderLookUpOldAdapter", "onBindViewHolder");
         final OrdVO ordVO = this.myOrdList.get(position);
 
@@ -108,6 +108,9 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context,OrdLookUpOldRatingActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ordId", ordVO.getOrdId());
+                    intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
             });
