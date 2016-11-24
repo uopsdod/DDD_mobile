@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac.Order;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetImageTask;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetLowestPriceVO;
 import com.example.sam.drawerlayoutprac.Hotel.HotelInfoFragment;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -89,6 +91,7 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         }
         holder.ord_hotel_name.setText(hotelName);
         holder.ord_price.setText("$" + Integer.toString(ordVO.getOrdPrice()));
+        // 訂單狀態
         String ordStatus = OrderLookUpFragment.ordStatusConverter.get(ordVO.getOrdStatus());
         holder.ord_status.setText(ordStatus);
         giveStatusColor(holder.ord_status,ordStatus);
@@ -99,6 +102,20 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         String url = Common.URL + "/android/hotel.do";
         int imageSize = 850;
         new HotelGetImageTask(holder.ord_hotel_img).execute(url, HotelId, imageSize);
+        // 給予評價
+        if (ordVO.getOrdRatingStarNo() == null) {
+            holder.ord_rating.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,OrdLookUpOldRatingActivity.class);
+                    context.startActivity(intent);
+                }
+            });
+        }else{
+            holder.ord_rating.setText("已評價");
+            holder.ord_rating.setPressed(true);
+            holder.ord_rating.setEnabled(false);
+        }
 
     }
 

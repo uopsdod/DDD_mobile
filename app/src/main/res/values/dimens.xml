@@ -11,4 +11,5 @@
 
     <!-- *height_profile_picture_with_toolbar* - half of *size_button_message* -->
     <dimen name="margin_top_button_message">240dp</dimen>
+    <dimen name="width_hotel_image">20dp</dimen>
 </resources>
