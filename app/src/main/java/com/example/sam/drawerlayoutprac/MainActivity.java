@@ -1,6 +1,5 @@
 package com.example.sam.drawerlayoutprac;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -22,6 +21,7 @@ import android.widget.Toast;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.Member.MemberFragment;
 import com.example.sam.drawerlayoutprac.Member.MemberInfoFragment;
+import com.example.sam.drawerlayoutprac.Order.OrderLookUpFragment;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
@@ -189,6 +189,11 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.info:
                         fragment = new OrdInfoFragment();
+                        Util.switchFragment(MainActivity.this, fragment);
+                        break;
+
+                    case R.id.my_order:
+                        fragment = new OrderLookUpFragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
 

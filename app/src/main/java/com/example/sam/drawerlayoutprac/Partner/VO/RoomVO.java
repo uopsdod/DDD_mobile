@@ -1,6 +1,9 @@
 package com.example.sam.drawerlayoutprac.Partner.VO;
 
+import java.sql.Date;
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class RoomVO implements java.io.Serializable{
 	private String roomId;
@@ -27,6 +30,7 @@ public class RoomVO implements java.io.Serializable{
 	private Integer roomOneBed;
 	private Integer roomTwoBed;
 	
+	@JsonIgnore
 	private Set<OrdVO> roomOrds = new HashSet<OrdVO>();
 	
 	public String getRoomId() {
@@ -167,7 +171,7 @@ public class RoomVO implements java.io.Serializable{
 	public void setRoomTwoBed(Integer aRoomTwoBed) {
 		this.roomTwoBed = aRoomTwoBed;
 	}
-	
+	@JsonIgnore
 	public Set<OrdVO> getRoomOrds(){
 		return this.roomOrds;
 	}

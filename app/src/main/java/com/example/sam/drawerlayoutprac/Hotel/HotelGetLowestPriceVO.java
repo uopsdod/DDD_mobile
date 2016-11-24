@@ -32,6 +32,7 @@ public class HotelGetLowestPriceVO {
     private String hotelLon;
     private String hotelCheapestRoomId;
     private String hotelCheapestRoomPrice;
+    private String hotelRatingResult;
 
     public String getHotelId() {
         return hotelId;
@@ -79,5 +80,13 @@ public class HotelGetLowestPriceVO {
 
     public void setHotelName(String hotelName) {
         this.hotelName = hotelName;
+    }
+
+    public String getHotelRatingResult() {
+        return hotelRatingResult;
+    }
+
+    public void setHotelRatingResult(String hotelRatingResult) {
+        this.hotelRatingResult = hotelRatingResult;
     }
 }

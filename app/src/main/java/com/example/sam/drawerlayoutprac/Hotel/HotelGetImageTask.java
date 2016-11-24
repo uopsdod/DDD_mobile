@@ -23,7 +23,7 @@ public class HotelGetImageTask extends AsyncTask<Object /*傳進來的參數*/, 
     private WeakReference<ImageView> imageViewWeakReference;
     float aFloat;
 
-    HotelGetImageTask(ImageView imageView){
+    public HotelGetImageTask(ImageView imageView){
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
 

@@ -81,6 +81,7 @@ public class HotelGetLowestPriceTask extends AsyncTask<Object, Integer, List<Hot
                 myVO.setHotelLon(tmpJsonObject.getString("hotelLon"));
                 myVO.setHotelCheapestRoomId(tmpJsonObject.getString("roomBottomId"));
                 myVO.setHotelCheapestRoomPrice(tmpJsonObject.getString("bottomPrice"));
+                myVO.setHotelRatingResult(tmpJsonObject.getString("hotelRating"));
 
             } catch (JSONException e) {
                 e.printStackTrace();

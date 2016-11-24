@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.HandlerThread;
+import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -56,6 +58,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Handler;
 
 /**
  * Created by cuser on 2016/11/21.
@@ -91,6 +94,11 @@ public class HotelMapFragment extends CommonFragment {
     private TextView hotelName;
     private TextView hotelPrice;
     private RelativeLayout hotelBlock;
+
+    // Thread:
+    Thread myThread;
+    HandlerThread myHandlerThread;
+    public static volatile boolean isRunning;
 
     // onMapReady是在myConnectionCallBacks呼叫的，成功連線後才註冊此物件
     // mMapView.getMapAsync(HotelMapFragment.this.myOnMapReadyCallback);
@@ -132,6 +140,8 @@ public class HotelMapFragment extends CommonFragment {
                     //.addOnConnectionFailedListener(onConnetionFailListener)
                     .build();
         }
+        myHandlerThread = new HandlerThread("longlifeThread", Process.THREAD_PRIORITY_BACKGROUND);
+        myHandlerThread.start();
 
     }
 
@@ -175,13 +185,18 @@ public class HotelMapFragment extends CommonFragment {
             Log.i("PartnerMapFragment", "GoogleApiClient disconnected.");
         }
         MainActivity.floatingBtn.setY(HotelMapFragment.floatingBtnY);
-        hotelMapWebsocket.close();
+        if (hotelMapWebsocket != null){
+            hotelMapWebsocket.close();
+        }
+        HotelMapFragment.isRunning = false;
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        myHandlerThread.quit();
     }
 
     @Override
@@ -238,6 +253,7 @@ public class HotelMapFragment extends CommonFragment {
 
     private void getDynamicPrice() {
         //取得動態價格變動:
+        HotelMapFragment.isRunning = true;
         URI uri = null;
         try {
             uri = new URI(Common.URL_DYNAMICPRICE);
@@ -361,15 +377,29 @@ public class HotelMapFragment extends CommonFragment {
         @Override
         public void onMessage(String message) {
             // 不知道為何，必須將websocket放在Fragment下面，才能夠抓到message
+            android.os.Handler handler = new android.os.Handler(myHandlerThread.getLooper());
+            handler.post(r1);
 
-            //Log.d("hotelMapWebsocket - ", message);
-            Thread myThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+        }// end of onMessage
+
+        @Override
+        public void onClose(int code, String reason, boolean remote) {
+
+        }
+
+        @Override
+        public void onError(Exception ex) {
+
+        }
+
+        Runnable r1 = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (HotelMapFragment.isRunning) {
                                 //Log.d("hotelMapWebsocket - ", "run on Ui Thread");
                                 // 清除全部的marker
                                 HotelMapFragment.this.googleMap.clear();
@@ -398,39 +428,22 @@ public class HotelMapFragment extends CommonFragment {
                                             HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
                                         }
                                     }
-//                                    Set<Marker> itr = HotelMapFragment.this.markerMap.keySet();
-//                                    for (Marker tmpMarker: itr){
-//                                        HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(tmpMarker);
-//                                        if (HotelMapFragment.this.currClickedMarkerHotelId.equals(myVO.getHotelId())){
-//                                            HotelMapFragment.this.hotelPrice.setText(myVO.getHotelCheapestRoomPrice());
-//                                        }
-//                                    }
                                 }
 
 
 //                                MyMarkerListener myMarkerListener = new MyMarkerListener();
 //                                HotelMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
                             }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                        }// end of isRuuning while
+
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-            myThread.start();
+            }
+        };
 
 
-        }// end of onMessage
-
-        @Override
-        public void onClose(int code, String reason, boolean remote) {
-
-        }
-
-        @Override
-        public void onError(Exception ex) {
-
-        }
     }// end of websocket
 
     private void uploadCurrentPosToServer() {
