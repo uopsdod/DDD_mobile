@@ -14,82 +14,105 @@
         android:paddingRight="5dp"
         android:paddingBottom="3dp"
         android:background="@drawable/btn_bg">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/ord_hotel_name"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="XXXX飯店"
                 android:textSize="24sp"/>
             <TextView
+                android:id="@+id/ord_room_name"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="房間名稱"
                 android:textSize="24sp"/>
             <TextView
+                android:id="@+id/ord_price"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="$999"
                 android:textSize="24sp"/>
             <TextView
+                android:id="@+id/ord_status"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="已下訂"
                 android:textSize="24sp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="有效時間:"
-                android:textSize="24sp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.00"
-                android:textColor="#f00"
-                android:text="17:23"
-                android:textSize="32sp"/>
         </LinearLayout>
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <ImageView
+                android:id="@+id/ord_hotel_img"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 android:src="@drawable/pic_default"/>
-        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:elevation="10dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="有效時間:"
+                    android:textSize="24sp"/>
+                <TextView
+                    android:id="@+id/countdown_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#f00"
+                    android:text="17:23"
+                    android:textSize="32sp"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/btnOrdNow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/btn_bg"
-            android:text="查看QR "
-            android:textSize="24sp" />
+        android:orientation="horizontal"
+        android:elevation="2dp">
 
         <Button
-            android:id="@+id/btnOrdOld"
-            android:layout_width="wrap_content"
+            android:id="@+id/ord_check_qr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="33dp"
+            android:drawablePadding="-55dp"
+            android:background="@drawable/btn_bg"
+            android:drawableLeft="@drawable/star04_grey_24dp"
+            android:text="查看QR"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/ord_cancel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingLeft="33dp"
+            android:drawablePadding="-45dp"
             android:background="@drawable/btn_bg"
+            android:drawableLeft="@drawable/stop_grey_24dp"
             android:text="取消訂單"
-            android:textSize="24sp" />
-
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

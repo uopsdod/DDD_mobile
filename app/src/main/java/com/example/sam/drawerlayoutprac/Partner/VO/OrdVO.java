@@ -3,7 +3,7 @@ package com.example.sam.drawerlayoutprac.Partner.VO;
 
 import java.sql.Timestamp;
 
-public class OrdVO implements java.io.Serializable {
+public class OrdVO implements java.io.Serializable, Cloneable{
 	private String ordId;
 //	private String ordRoomId;
 	private RoomVO ordRoomVO;
@@ -109,5 +109,10 @@ public class OrdVO implements java.io.Serializable {
 	public String getOrdMemId(){
 		return this.ordMemVO.getMemId();
 	}
-	
+
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }
