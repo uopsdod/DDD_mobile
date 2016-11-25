@@ -145,12 +145,13 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
             holder.ord_report_badhotel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Util.showToast(context,"檢舉廠商 clicked");
-//                    Intent intent = new Intent(context,OrdLookUpOldRatingActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("ordId", ordVO.getOrdId());
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
+                    //Util.showToast(context,"檢舉廠商 clicked");
+
+                    Intent intent = new Intent(context,OrdLookUpOldReportActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ordId", ordVO.getOrdId());
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
                 }
             });
         }else{

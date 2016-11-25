@@ -75,6 +75,12 @@
             android:name=".Order.OrdLookUpOldRatingActivity"
             android:label="@string/title_activity_ord_look_up_old_rating"
             android:theme="@android:style/Theme.Dialog"></activity>
+
+
+        <activity
+            android:name=".Order.OrdLookUpOldReportActivity"
+            android:label="@string/title_activity_ord_look_up_old_report"
+            android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>
