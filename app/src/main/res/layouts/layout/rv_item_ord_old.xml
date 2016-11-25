@@ -98,8 +98,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingLeft="33dp"
+            android:drawablePadding="-55dp"
             android:background="@drawable/btn_bg"
-            android:text="檢舉廠商"
-            android:textSize="24sp" />
+            android:drawableLeft="@drawable/stop_grey_24dp"
+            android:text="已檢舉"
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

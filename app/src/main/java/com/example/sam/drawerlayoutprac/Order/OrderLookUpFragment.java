@@ -33,6 +33,8 @@ public class OrderLookUpFragment extends MustLoginFragment {
     RecyclerView.Adapter<OrderLookUpOldAdapter.MyViewHolder> myAdapter;
     static HashMap<String, String> ordStatusConverter = new HashMap<>();
 
+    public static boolean afterRatingCanceled = false;
+
     static {
         ordStatusConverter.put("0", "已下單");
         ordStatusConverter.put("1", "主動取消");
@@ -46,6 +48,9 @@ public class OrderLookUpFragment extends MustLoginFragment {
         super.onResume();
         if (ordNowPressed){
 
+        }else if(afterRatingCanceled){
+            afterRatingCanceled = false;
+            // do nothing
         }else if (ordOldPressed){
             getOrdOldList();
         }
