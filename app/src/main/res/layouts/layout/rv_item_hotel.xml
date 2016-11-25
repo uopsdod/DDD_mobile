@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/hotel_block"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,9 +14,9 @@
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginBottom="1dp"
         android:scaleType="fitXY"
-        android:src="@drawable/pic_default" />
+        android:src="@drawable/pic_default"
+        android:layout_marginBottom="1dp"/>
 
     <TextView
         android:id="@id/tvHotel"
@@ -24,7 +25,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="76dp"
-        android:elevation="4dp"
+        android:elevation="3dp"
         android:text="福華飯店 單人房"
         android:textColor="@color/white"
         android:textSize="24sp" />
@@ -35,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvHotel"
         android:layout_centerHorizontal="true"
-        android:elevation="4dp"
+        android:elevation="3dp"
         android:text="500$"
         android:textColor="@color/white"
         android:textSize="20sp" />

@@ -510,6 +510,11 @@ public class HotelMapFragment extends CommonFragment {
         public boolean onMarkerClick(Marker aMarker) {
             // 設定資料上Layout
             final HotelGetLowestPriceVO myVO = HotelMapFragment.this.markerMap.get(aMarker);
+            // 防止連點同一個marker時crash
+            if (myVO == null) {
+                Util.showToast(getContext(),"myVO is null");
+                return true;
+            }
             HotelMapFragment.this.currClickedMarkerHotelId = myVO.getHotelId(); // 紀錄下來，用來判斷是否window視窗已開啟，之後動態價格更新時拿用　- change price on Marker window:
             HotelMapFragment.this.hotelBlock.setVisibility(View.VISIBLE);
             HotelMapFragment.this.hotelName.setText(myVO.getHotelName());
