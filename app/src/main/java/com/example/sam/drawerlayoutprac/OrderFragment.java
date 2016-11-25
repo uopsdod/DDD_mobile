@@ -1,12 +1,17 @@
 package com.example.sam.drawerlayoutprac;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -24,11 +29,13 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class OrderFragment extends CommonFragment {
-    private Button btCash, btCriditCard;
-    private String roomId, hotelId;
+    private Button btQRDisplay, btSubmit;
+    private String roomId, hotelId, ordId;
     private HotelVO hotelVO;
     private RoomVO roomVO;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvRoomName, tvRoomPrice;
+    private String memId = MainActivity.pref.getString("memId", null);
+    private int price;
 
     @Nullable
     @Override
@@ -36,9 +43,8 @@ public class OrderFragment extends CommonFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         roomId = getArguments().getString("RoomId");
         hotelId = getArguments().getString("hotelId");
-        View view = inflater.inflate(R.layout.fragment_order, container, false);
-        btCash = (Button) view.findViewById(R.id.btCash);
-        btCriditCard = (Button) view.findViewById(R.id.btCrditCard);
+        View view = inflater.inflate(R.layout.fragment_order_cash, container, false);
+        btSubmit = (Button) view.findViewById(R.id.btSubmit);
         tvHotelName = (TextView) view.findViewById(R.id.tvHotelName);
         tvHotelCity = (TextView) view.findViewById(R.id.tvHotelCity);
         tvHotelCounty = (TextView) view.findViewById(R.id.tvHotelCounty);
@@ -47,18 +53,24 @@ public class OrderFragment extends CommonFragment {
         tvRoomName = (TextView) view.findViewById(R.id.tvRoomName);
         tvRoomPrice = (TextView) view.findViewById(R.id.tvRoomPrice);
 
-        btCash.setOnClickListener(new onClick());
-        btCriditCard.setOnClickListener(new onClick());
+        btSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Common.networkConnected(getActivity())){
+                    String urlOrder = Common.URL + "/android/ord/ord.do";
+                    try {
+                        ordId = new OrderAddOneTask().execute(urlOrder, hotelId, roomId, memId, price).get();
+                    } catch (Exception e) {
+                        Util.showToast(getContext(), "Orderfragment" + e.toString());
+                    }
+                }
+
+            }
+        });
         return view;
     }
 
-    private class onClick implements View.OnClickListener{
 
-        @Override
-        public void onClick(View view) {
-            Util.switchFragment(OrderFragment.this, new OrderPayFragment());
-        }
-    }
 
     @Override
     public void onStart() {
@@ -70,13 +82,17 @@ public class OrderFragment extends CommonFragment {
         if(Common.networkConnected(getActivity())){
             String urlHotel = Common.URL + "/android/hotel.do";
             String urlRoom = Common.URL + "/android/room.do";
-            String urlOrder = Common.URL + "/android/order.do";
             try{
                 hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
                 roomVO = new RoomGetOneTask().execute(urlRoom, roomId).get();
+                price = roomVO.getRoomPrice();
+                if(memId != null){
+
+                }
             }catch (Exception e) {
                 Util.showToast(getContext(), "Orderfragment" + e.toString());
             }
+
             tvHotelName.setText(hotelVO.getHotelName());
             tvHotelCity.setText(hotelVO.getHotelCity());
             tvHotelCounty.setText(hotelVO.getHotelCounty());

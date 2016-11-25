@@ -3,9 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    >
 
+    <RelativeLayout
+        android:id="@+id/rlHotelInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
+        >
     <TextView
         android:id="@+id/tvHotel"
         android:layout_width="wrap_content"
@@ -20,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tvHotel"
         android:layout_toRightOf="@+id/tvHotel"
-        android:text=" 中壢大飯店"
+        android:text="中壢大飯店"
         android:textColor="@color/colorAccent"
         android:textSize="30sp" />
 
@@ -83,25 +89,35 @@
         android:textColor="@color/colorAccent"
         android:textSize="30sp" />
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="50dp"
+        android:id="@+id/rlRoomInfo"
+        android:layout_below="@id/rlHotelInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
     <TextView
         android:id="@+id/tvRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvPhone"
         android:layout_marginTop="10dp"
         android:text="房間名稱 : "
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/tvRoomName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvPhone"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/tvRoom"
         android:text="豪華客房"
         android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/tvPrice"
@@ -110,18 +126,22 @@
         android:layout_below="@id/tvRoom"
         android:layout_marginTop="10dp"
         android:text="房間價錢 : "
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/tvRoomPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvRoom"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/tvPrice"
         android:text="6000"
         android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@color/white"/>
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btCash"

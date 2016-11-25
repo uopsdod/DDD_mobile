@@ -5,6 +5,11 @@
     android:orientation="vertical"
     android:padding="5dp">
 
+    <RelativeLayout
+        android:id="@+id/rlHotelInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ccc">
     <TextView
         android:id="@+id/tvHotel"
         android:layout_width="wrap_content"
@@ -82,32 +87,43 @@
         android:textColor="@color/colorAccent"
         android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/tvRoom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvPhone"
-        android:layout_marginTop="10dp"
-        android:text="房間名稱 : "
-        android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/tvRoomName"
-        android:layout_width="wrap_content"
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:layout_below="@id/rlHotelInfo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvPhone"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/tvRoom"
-        android:text="豪華客房"
-        android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
+        android:orientation="vertical"
+        android:id="@+id/rlRoomInfo"
+        >
+
+        <TextView
+            android:id="@+id/tvRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="房間名稱 : "
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvRoomName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/tvRoom"
+            android:text="豪華客房"
+            android:textColor="@color/colorAccent"
+            android:textSize="30sp" />
 
     <TextView
         android:id="@+id/tvPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvRoom"
         android:layout_marginTop="10dp"
+        android:layout_below="@id/tvRoom"
         android:text="房間價錢 : "
         android:textSize="30sp" />
 
@@ -115,10 +131,10 @@
         android:id="@+id/tvRoomPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvRoom"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/tvPrice"
-        android:text="6000"
+        android:layout_below="@id/tvRoomName"
+        android:layout_toRightOf="@id/tvPrice"
+        android:text=" 6000"
         android:textColor="@color/colorAccent"
         android:textSize="30sp" />
 
@@ -135,10 +151,10 @@
         android:id="@+id/tvMemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvRoomPrice"
         android:layout_marginTop="10dp"
+        android:layout_below="@id/tvRoomPrice"
         android:layout_toRightOf="@+id/tvMem"
-        android:text="譚芝穎"
+        android:text=" 譚芝穎"
         android:textColor="@color/colorAccent"
         android:textSize="30sp" />
 
@@ -157,20 +173,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvMemName"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/tvMem"
-        android:text="2016-11-12"
+        android:layout_toRightOf="@+id/tvOrd"
+        android:text=" 2016-11-12"
         android:textColor="@color/colorAccent"
         android:textSize="30sp" />
 
-    <Button
-        android:id="@+id/btQRDisplay"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvOrd"
-        android:layout_centerHorizontal="true"
-        android:text="QR顯示"
-        android:textSize="30sp"/>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btSubmit"
