@@ -13,7 +13,7 @@
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="1dp"
         android:scaleType="fitXY"
         android:src="@drawable/pic_default" />
 
@@ -24,6 +24,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="76dp"
+        android:elevation="4dp"
         android:text="福華飯店 單人房"
         android:textColor="@color/white"
         android:textSize="24sp" />
@@ -34,18 +35,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvHotel"
         android:layout_centerHorizontal="true"
+        android:elevation="4dp"
         android:text="500$"
         android:textColor="@color/white"
         android:textSize="20sp" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp">
+        android:orientation="horizontal"
+        android:elevation="2dp">
 
         <ImageView
             android:layout_width="@dimen/width_hotel_image"
@@ -72,52 +76,53 @@
             android:layout_height="wrap_content"
             android:src="@drawable/star03_empty_32dp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp">
+        android:orientation="horizontal"
+        android:elevation="2dp">
 
         <ImageView
             android:id="@+id/star1"
             android:layout_width="@dimen/width_hotel_image"
             android:layout_height="wrap_content"
             android:src="@drawable/star03_32dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/star2"
             android:layout_width="@dimen/width_hotel_image"
             android:layout_height="wrap_content"
             android:src="@drawable/star03_32dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/star3"
             android:layout_width="@dimen/width_hotel_image"
             android:layout_height="wrap_content"
             android:src="@drawable/star03_32dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/star4"
             android:layout_width="@dimen/width_hotel_image"
             android:layout_height="wrap_content"
             android:src="@drawable/star03_32dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/star5"
             android:layout_width="@dimen/width_hotel_image"
             android:layout_height="wrap_content"
             android:src="@drawable/star03_32dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
     </LinearLayout>
-
 
 
 </RelativeLayout>
