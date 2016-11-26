@@ -22,6 +22,7 @@ import com.example.sam.drawerlayoutprac.Hotel.HotelGetImageTask;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetLowestPriceVO;
 import com.example.sam.drawerlayoutprac.Hotel.HotelInfoFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemRepVO;
 import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -30,6 +31,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.zip.Inflater;
 
 /**
@@ -104,6 +106,9 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         new HotelGetImageTask(holder.ord_hotel_img).execute(url, HotelId, imageSize);
         // 給予評價
         if (ordVO.getOrdRatingStarNo() == null) {
+            holder.ord_rating.setText("給予評價");
+            //holder.ord_rating.setPadding();
+            holder.ord_rating.setCompoundDrawablesWithIntrinsicBounds( R.drawable.star_golden_24dp, 0, 0, 0);
             holder.ord_rating.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -119,6 +124,41 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
             holder.ord_rating.setPressed(true);
             holder.ord_rating.setEnabled(false);
         }
+
+        // 檢舉：
+        MemRepVO memRepVO = null;
+        //String ordId = "2016111003";
+        String ordId = ordVO.getOrdId();
+        //Log.d("OrderLookUpOldAdapter", "ordId - " + ordId);
+        try {
+            memRepVO = new MemRepGetOneTextViaOrdIdTask(this.context).execute(ordId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        if (memRepVO == null) {
+            holder.ord_report_badhotel.setText("檢舉廠商");
+            //holder.ord_rating.setPadding();
+            holder.ord_report_badhotel.setCompoundDrawablesWithIntrinsicBounds( R.drawable.stop_red_24dp, 0, 0, 0);
+            holder.ord_report_badhotel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Util.showToast(context,"檢舉廠商 clicked");
+//                    Intent intent = new Intent(context,OrdLookUpOldRatingActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("ordId", ordVO.getOrdId());
+//                    intent.putExtras(bundle);
+//                    context.startActivity(intent);
+                }
+            });
+        }else{
+            holder.ord_report_badhotel.setText("已檢舉");
+            holder.ord_report_badhotel.setPressed(true);
+            holder.ord_report_badhotel.setEnabled(false);
+        }
+
 
     }
 

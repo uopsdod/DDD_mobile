@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                android:elevation="4dp"
+                android:elevation="6dp"
                 app:theme="@style/ToolbarColoredBackArrow"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -40,6 +40,8 @@
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="15dp"
             android:layout_marginRight="15dp"
+            android:elevation="10dp"
+            app:pressedTranslationZ="14dp"
             android:src="@drawable/map_white" />
 
     </android.support.design.widget.CoordinatorLayout>
@@ -48,6 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:elevation="12dp"
         app:headerLayout="@layout/navigation_header"
         app:menu="@menu/navigation_menu"
         />

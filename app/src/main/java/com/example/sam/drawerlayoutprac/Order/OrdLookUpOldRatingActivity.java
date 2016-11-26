@@ -61,14 +61,24 @@ public class OrdLookUpOldRatingActivity extends Activity {
                 comment = editText.getText().toString();
                 Log.d("OrdLookUpOldRating: ", ordId + " - " + ratingStarNo + " - " + comment);
                 uploadDataToServer(ordId,ratingStarNo,comment);
+                finish();
             }
         });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OrderLookUpFragment.afterRatingCanceled = true;
+                finish();
+            }
+        });
+
 
 
     }
 
     private void uploadDataToServer(final String aOrdId, final String aRatingStarNo, final String aOrdRatingContent){
-        new Thread(new Runnable() {
+        Thread myThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 JsonObject jsonObject = new JsonObject();
@@ -124,7 +134,14 @@ public class OrdLookUpOldRatingActivity extends Activity {
 
                 connection.disconnect();
             }
-        }).start();
+        });
+        myThread.start();
+        try {
+            // 重要: 要交上去，才能保證資料已經存入資料庫，之後讀取時才能保障是最新的
+            myThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

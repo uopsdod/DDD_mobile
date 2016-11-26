@@ -14,6 +14,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:stateListAnimator="@null"
+            android:elevation="4dp"
+            android:translationZ="8dp"
             android:background="@drawable/btn_bg"
             android:text="排序"
             android:textSize="24sp" />
@@ -23,6 +26,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:stateListAnimator="@null"
+            android:elevation="4dp"
+            android:translationZ="8dp"
             android:background="@drawable/btn_bg"
             android:text="篩選"
             android:textSize="24sp" />
@@ -32,6 +38,6 @@
         android:id="@+id/rv_hotel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         />
 </LinearLayout>
