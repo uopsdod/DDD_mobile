@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MustLoginFragment;
@@ -17,6 +18,8 @@ import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -87,7 +90,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
         btnOrdNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.showToast(getContext(),"now ord clicked");
+                Util.showToast(getContext(), "now ord clicked");
                 updateOrdNowList();
             }
         });
@@ -107,32 +110,6 @@ public class OrderLookUpFragment extends MustLoginFragment {
         return rootView;
     }
 
-    private void updateOrdNowList() {
-        ordOldPressed = false;
-        ordNowPressed = true;
-        btnOrdOld.setTextColor(ContextCompat.getColor(getContext(), R.color.grey01));
-        btnOrdNow.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-
-        List<OrdVO> tmpOrdVOList = new ArrayList<>(myOrdList.size());
-        for (OrdVO item : myOrdList)
-            try {
-                tmpOrdVOList.add((OrdVO) item.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-        Iterator<OrdVO> itr = tmpOrdVOList.iterator();
-        while (itr.hasNext()) {
-            OrdVO myVO = itr.next();
-            // 0.已下單 1.主動取消 2.已入住 3.已繳費 4.逾時取消
-            if (myVO.getOrdStatus().equals("1") || myVO.getOrdStatus().equals("2")|| myVO.getOrdStatus().equals("4")) {
-                itr.remove();
-            }
-        }
-        myAdapter_now = new OrderLookUpNowAdapter(getContext(), tmpOrdVOList);
-        myRvOrd.setAdapter(myAdapter_now);
-
-
-    }
 
     @Override
     public void onPause() {
@@ -163,6 +140,33 @@ public class OrderLookUpFragment extends MustLoginFragment {
         return myOrdList;
     }
 
+    private void updateOrdNowList() {
+        ordOldPressed = false;
+        ordNowPressed = true;
+        btnOrdOld.setTextColor(ContextCompat.getColor(getContext(), R.color.grey01));
+        btnOrdNow.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+
+        List<OrdVO> tmpOrdVOList = new ArrayList<>(myOrdList.size());
+        for (OrdVO item : myOrdList)
+            try {
+                tmpOrdVOList.add((OrdVO) item.clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        Iterator<OrdVO> itr = tmpOrdVOList.iterator();
+        while (itr.hasNext()) {
+            OrdVO myVO = itr.next();
+            // 0.已下單 1.主動取消 2.已入住 3.已繳費 4.逾時取消
+            if (myVO.getOrdStatus().equals("1") || myVO.getOrdStatus().equals("2") || myVO.getOrdStatus().equals("4")) {
+                itr.remove();
+            }
+        }
+        myAdapter_now = new OrderLookUpNowAdapter(getContext(), tmpOrdVOList);
+        myRvOrd.setAdapter(myAdapter_now);
+
+
+    }
+
     private void updateOrdOldList() {
         ordOldPressed = true;
         ordNowPressed = false;
@@ -178,7 +182,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
         Iterator<OrdVO> itr = tmpOrdVOList.iterator();
         while (itr.hasNext()) {
             OrdVO myVO = itr.next();
-            Log.d("OrderLookUpFragment","myVO.getOrdStatus() - " + myVO.getOrdStatus()  );
+            Log.d("OrderLookUpFragment", "myVO.getOrdStatus() - " + myVO.getOrdStatus());
             // 0.已下單 1.主動取消 2.已入住 3.已繳費 4.逾時取消
             if (myVO.getOrdStatus().equals("0") || myVO.getOrdStatus().equals("3")) {
                 itr.remove();
@@ -189,21 +193,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
 
     }
 
-//    private void getOrdNowList() {
-//        List<OrdVO> myOrdList = null;
-//        try {
-//            String url = Common.URL + "/android/ord/ord.do";
-//            String action = OrdGetAllOldTask.GETALL_NOW;
-//            SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE, getActivity().MODE_PRIVATE);
-//            String memId = preferences_r.getString("memId", null);
-//            myOrdList = new OrdGetAllOldTask().execute(url, action, memId).get();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//        Log.d("OrderLookUpFragment ", " Now size - " + myOrdList.size());
-//        //myAdapter = new OrderLookUpNowAdapter(getContext(), myOrdList);
-//        //myRvOrd.setAdapter(myAdapter);
-//    }
+
+
+
 }

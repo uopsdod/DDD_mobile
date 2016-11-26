@@ -21,6 +21,7 @@ import com.example.sam.drawerlayoutprac.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -102,6 +103,9 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
 
         DateFormat df = new SimpleDateFormat("HH:mm:ss"); // HH 24小時
         holder.countdown_time.setText(df.format(remainedTime));
+        Thread myThread = new Thread(new myRunnable(remainedTime,holder.countdown_time));
+        myThread.start();
+
 
         String hotelName = ordVO.getOrdHotelVO().getHotelName();
         if (hotelName.length() > 6) {
@@ -203,5 +207,47 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         }
     }
 
+    private class myRunnable implements Runnable {
+        Long remainedTime;
+        TextView remainedTimeView;
+//        private boolean isContinue = true;
+//
+//        public void terminate() {
+//            isContinue = false;
+//        }
+
+        public myRunnable(Long aRemainedTime, TextView aRemainedTimeView) {
+            remainedTime = aRemainedTime;
+            remainedTimeView = aRemainedTimeView;
+        }
+        @Override
+        public void run() {
+            final DateFormat df = new SimpleDateFormat("HH:mm:ss"); // HH 24小時
+            while(remainedTime > 1000){
+                Log.d("OrderLookUpNowAdapter","remainedTime - " + remainedTime);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.e("OrderLookUpNowAdapter", e.toString());
+                }
+                remainedTimeView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        remainedTimeView.setText(df.format(remainedTime));
+                    }
+                });
+
+                remainedTime -= 1000L;
+            }// end of while
+            remainedTimeView.post(new Runnable() {
+                @Override
+                public void run() {
+                    remainedTimeView.setText(df.format(0L));
+                }
+            });
+
+
+        }
+    }
 
 }// end class SpotAdapter
