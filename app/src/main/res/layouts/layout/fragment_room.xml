@@ -6,140 +6,143 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/pic_default" />
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_RoomImage"
-        android:layout_width="match_parent"
-        android:layout_height="70dp" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-
-        >
-
-        <TextView
-            android:id="@+id/tvRoomName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="豪華雙人間"
-            android:textColor="#243757"
-            android:textSize="28sp" />
-
-        <TextView
-            android:id="@+id/tvPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@id/tvRoomName"
-            android:text="$2680"
-            android:textColor="#DD71B4"
-            android:textSize="24dp" />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/ivBed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/single_bed" />
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/pic_default" />
 
-        <ImageView
-            android:id="@+id/ivUnLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ivBed"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/like_notyet" />
 
-        <ImageView
-            android:id="@+id/ivLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ivBed"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/like"
-            android:visibility="invisible"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_RoomImage"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
 
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ivBed"
-            android:text="今日尚未上架本房間"
-            android:layout_centerInParent="true"
-            android:textColor="#FF0000"
-            android:textSize="24sp"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/tvCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ivBed"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@id/ivBed"
-            android:text="X2"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tvRmFacilities"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvCount"
-            android:layout_marginTop="15dp"
-            android:text="客房設施"
-            android:textColor="#243757"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvRmFacilities">
+            >
 
             <TextView
-                android:id="@+id/tvFacilitiesDetail"
-                android:layout_width="match_parent"
+                android:id="@+id/tvRoomName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="豪華雙人間"
+                android:textColor="#243757"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/tvRoomName"
+                android:text="$2680"
+                android:textColor="#DD71B4"
+                android:textSize="24dp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivBed"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="景觀, 電話, 衛星頻道, 有線頻道, 平面電視, 保險箱, 空調, 熨斗, 書桌, 燙衣設備, 休息區, 地毯, 衣櫃/衣櫥, 淋浴, 浴缸, 吹風機, 免費盥洗用品, 洗手間, 浴室, 拖鞋, 冰箱, 電熱水壺, 喚醒服務"
-                android:textSize="16sp" />
-        </ScrollView>
+                android:src="@drawable/single_bed" />
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/ivUnLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ivBed"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/like_notyet" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:gravity="center">
+            <ImageView
+                android:id="@+id/ivLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ivBed"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/like"
+                android:visibility="invisible" />
 
-        <Button
-            android:id="@+id/btOrder"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ivBed"
+                android:layout_centerInParent="true"
+                android:text="今日尚未上架本房間"
+                android:textColor="#FF0000"
+                android:textSize="24sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ivBed"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/ivBed"
+                android:text="X2"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvRmFacilities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvCount"
+                android:layout_marginTop="15dp"
+                android:text="客房設施"
+                android:textColor="#243757"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvRmFacilities">
+
+                <TextView
+                    android:id="@+id/tvFacilitiesDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="景觀, 電話, 衛星頻道, 有線頻道, 平面電視, 保險箱, 空調, 熨斗, 書桌, 燙衣設備, 休息區, 地毯, 衣櫃/衣櫥, 淋浴, 浴缸, 吹風機, 免費盥洗用品, 洗手間, 浴室, 拖鞋, 冰箱, 電熱水壺, 喚醒服務"
+                    android:textSize="16sp" />
+            </ScrollView>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="下訂" />
+            android:layout_marginTop="15dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="下訂" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
-
-</LinearLayout>

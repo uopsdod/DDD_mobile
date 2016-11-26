@@ -168,7 +168,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             this.context = context;
             this.list = list;
             inflater = LayoutInflater.from(context);
-            getDynamicPrice();
+            //getDynamicPrice();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -178,7 +178,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             public ViewHolder(View itemView) {
                 super(itemView);
                 ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
-                tvRoomName = (TextView) itemView.findViewById(R.id.tvHotel);
+                tvRoomName = (TextView) itemView.findViewById(R.id.tvRoomName);
                 tvPrice = (TextView) itemView.findViewById(R.id.tvPrice);
                 ivImage.setAlpha(aFloat);
             }
@@ -186,7 +186,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
 
         @Override
         public SpotAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = inflater.inflate(R.layout.rv_item_hotel, parent, false);
+            View itemView = inflater.inflate(R.layout.rv_item_room, parent, false);
             return new ViewHolder(itemView);
         }
 
