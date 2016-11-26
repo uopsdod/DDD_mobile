@@ -34,8 +34,9 @@ public class OrderFragment extends CommonFragment {
     private HotelVO hotelVO;
     private RoomVO roomVO;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvRoomName, tvRoomPrice;
-    private  String memId = MainActivity.pref.getString("memId", null);
-    int price;
+    private String memId = MainActivity.pref.getString("memId", null);
+    private int price;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,7 +44,6 @@ public class OrderFragment extends CommonFragment {
         roomId = getArguments().getString("RoomId");
         hotelId = getArguments().getString("hotelId");
         View view = inflater.inflate(R.layout.fragment_order_cash, container, false);
-        btQRDisplay = (Button) view.findViewById(R.id.btQRDisplay);
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
         tvHotelName = (TextView) view.findViewById(R.id.tvHotelName);
         tvHotelCity = (TextView) view.findViewById(R.id.tvHotelCity);
@@ -52,17 +52,6 @@ public class OrderFragment extends CommonFragment {
         tvHotelPhone = (TextView) view.findViewById(R.id.tvHotelPhone);
         tvRoomName = (TextView) view.findViewById(R.id.tvRoomName);
         tvRoomPrice = (TextView) view.findViewById(R.id.tvRoomPrice);
-
-        btQRDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new ORImageFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("ordId", ordId);
-                fragment.setArguments(bundle);
-                Util.switchFragment(OrderFragment.this, fragment);
-            }
-        });
 
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,11 +86,12 @@ public class OrderFragment extends CommonFragment {
                 hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
                 roomVO = new RoomGetOneTask().execute(urlRoom, roomId).get();
                 price = roomVO.getRoomPrice();
+                if(memId != null){
 
+                }
             }catch (Exception e) {
                 Util.showToast(getContext(), "Orderfragment" + e.toString());
             }
-            Log.d("Ord1125","OrderFragment" +ordId);
 
             tvHotelName.setText(hotelVO.getHotelName());
             tvHotelCity.setText(hotelVO.getHotelCity());
@@ -113,4 +103,7 @@ public class OrderFragment extends CommonFragment {
         }
     }
 
+//    private void makeOrder(){
+//
+//    }
 }

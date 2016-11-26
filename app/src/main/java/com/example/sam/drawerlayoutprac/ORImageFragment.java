@@ -41,16 +41,15 @@ public class ORImageFragment extends CommonFragment {
             String url = Common.URL + "/android/ord/ord.do";
             String id = MainActivity.pref.getString("memId", null);
 
-//            WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-//            Display display = windowManager.getDefaultDisplay();
-//            Point point = new Point();
-//            display.getSize(point);
-//            int width = point.x;
-//            int height = point.y;
-//            int imageSide = width < height ? width : height;
-            int imageSize = 250;
+            WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+            Display display = windowManager.getDefaultDisplay();
+            Point point = new Point();
+            display.getSize(point);
+            int width = point.x;
+            int height = point.y;
+            int imageSide = width < height ? width : height;
             if(id != null){
-               new OrderGetImageTask(ivQRCode).execute(url, id, imageSize, ordId);
+               new OrderGetImageTask(ivQRCode).execute(url, id, imageSide, ordId);
             }
         }
     }
