@@ -21,7 +21,9 @@ import com.example.sam.drawerlayoutprac.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -31,8 +33,9 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
     private Context context;
     private LayoutInflater myLayoutInflater;
     private List<OrdVO> myOrdList;
+    private static final long ordDuration = 60000; // millesecond
 
-    public OrderLookUpNowAdapter(Context aContext, List<OrdVO> aOrdList ) {
+    public OrderLookUpNowAdapter(Context aContext, List<OrdVO> aOrdList) {
         this.context = aContext;
         this.myLayoutInflater = LayoutInflater.from(aContext);
         this.myOrdList = aOrdList;
@@ -79,18 +82,41 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         Log.d("OrderLookUpNowAdapter", "onBindViewHolder");
         final OrdVO ordVO = this.myOrdList.get(position);
 
+        // 計算剩餘時間：
+        Long finalTime = ordVO.getOrdDate().getTime() + OrderLookUpNowAdapter.ordDuration;
+            // 拿現在時間:
+        Calendar cSchedStartCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        long gmtTime = cSchedStartCal.getTime().getTime();
+        long timezoneAlteredTime = gmtTime + TimeZone.getTimeZone("Asia/Taipei").getRawOffset();
+        Calendar cSchedStartCal1 = Calendar.getInstance(TimeZone.getTimeZone("Asia/Taipei"));
+        cSchedStartCal1.setTimeInMillis(timezoneAlteredTime);
+        long currTime = cSchedStartCal1.getTime().getTime();
+            // end of 拿現在時間
+        Long remainedTime = null;
+        if (finalTime > currTime) {
+            remainedTime = finalTime - currTime;
+        }else{
+            remainedTime = 0L;
+        }
+        //Log.d("OrderLookUpNowAdapter","remainedTime: " + remainedTime);
+
+        DateFormat df = new SimpleDateFormat("HH:mm:ss"); // HH 24小時
+        holder.countdown_time.setText(df.format(remainedTime));
+
         String hotelName = ordVO.getOrdHotelVO().getHotelName();
-        if (hotelName.length() > 6){
-            hotelName = hotelName.substring(0,5) + "..";
+        if (hotelName.length() > 6) {
+            hotelName = hotelName.substring(0, 5) + "..";
         }
         holder.ord_hotel_name.setText(hotelName);
-        Log.d("OrderLookUpNowAdapter","ordVO.getOrdRoomVO().getRoomName() - " + ordVO.getOrdRoomVO().getRoomName());
+        Log.d("OrderLookUpNowAdapter", "ordVO.getOrdRoomVO().getRoomName() - " + ordVO.getOrdRoomVO().getRoomName());
         holder.ord_room_name.setText(ordVO.getOrdRoomVO().getRoomName());
         holder.ord_price.setText("$" + Integer.toString(ordVO.getOrdPrice()));
         // 訂單狀態
         String ordStatus = OrderLookUpFragment.ordStatusConverter.get(ordVO.getOrdStatus());
         holder.ord_status.setText(ordStatus);
-        giveStatusColor(holder.ord_status,ordStatus);
+        giveStatusColor(holder.ord_status, ordStatus);
+
+
 //        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        holder.ord_checktime.setText(df.format(ordVO.getOrdLiveDate()));
         // 設定圖片
@@ -157,26 +183,25 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
 
     }
 
-    private void giveStatusColor(TextView aTextView,String aStatus){
-        switch (aStatus){
+    private void giveStatusColor(TextView aTextView, String aStatus) {
+        switch (aStatus) {
             case "已下單":
                 aTextView.setTextColor(ContextCompat.getColor(context, R.color.green));
-            break;
+                break;
             case "主動取消":
                 aTextView.setTextColor(ContextCompat.getColor(context, R.color.red));
-            break;
+                break;
             case "已入住":
                 aTextView.setTextColor(ContextCompat.getColor(context, R.color.sub1_color));
-            break;
+                break;
             case "已繳費":
                 aTextView.setTextColor(ContextCompat.getColor(context, R.color.sub1_color));
-            break;
+                break;
             case "逾時取消":
                 aTextView.setTextColor(ContextCompat.getColor(context, R.color.red));
-            break;
+                break;
         }
     }
-
 
 
 }// end class SpotAdapter

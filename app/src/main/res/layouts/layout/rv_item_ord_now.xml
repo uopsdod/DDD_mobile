@@ -55,11 +55,16 @@
             android:layout_weight="2"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#aaaaaa" />
             <ImageView
                 android:id="@+id/ord_hotel_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
+                android:alpha="0.7"
                 android:src="@drawable/pic_default"/>
 
             <LinearLayout
