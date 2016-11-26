@@ -1,10 +1,12 @@
 package com.example.sam.drawerlayoutprac.Order;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetImageTask;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetLowestPriceVO;
 import com.example.sam.drawerlayoutprac.Hotel.HotelInfoFragment;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
@@ -78,7 +81,7 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
     }
 
     @Override
-    public void onBindViewHolder(OrderLookUpOldAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final OrderLookUpOldAdapter.MyViewHolder holder, int position) {
         Log.d("OrderLookUpOldAdapter", "onBindViewHolder");
         final OrdVO ordVO = this.myOrdList.get(position);
 
@@ -88,8 +91,10 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         }
         holder.ord_hotel_name.setText(hotelName);
         holder.ord_price.setText("$" + Integer.toString(ordVO.getOrdPrice()));
+        // 訂單狀態
         String ordStatus = OrderLookUpFragment.ordStatusConverter.get(ordVO.getOrdStatus());
         holder.ord_status.setText(ordStatus);
+        giveStatusColor(holder.ord_status,ordStatus);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         holder.ord_checktime.setText(df.format(ordVO.getOrdLiveDate()));
         // 設定圖片
@@ -97,15 +102,46 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         String url = Common.URL + "/android/hotel.do";
         int imageSize = 850;
         new HotelGetImageTask(holder.ord_hotel_img).execute(url, HotelId, imageSize);
+        // 給予評價
+        if (ordVO.getOrdRatingStarNo() == null) {
+            holder.ord_rating.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,OrdLookUpOldRatingActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ordId", ordVO.getOrdId());
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
+        }else{
+            holder.ord_rating.setText("已評價");
+            holder.ord_rating.setPressed(true);
+            holder.ord_rating.setEnabled(false);
+        }
 
-
-
-//        final String HotelId = hotelListVO.getHotelId();
-//        String url = Common.URL + "/android/hotel.do";
-//        int imageSize = 250;
-//        new XXXXGetAllTask(holder.ivImage).execute(url, HotelId, imageSize);
-//        holder.tvHotel.setText(hotelListVO.getHotelName());
-//        holder.tvPrice.setText(hotelListVO.getHotelCheapestRoomPrice());
     }
+
+    private void giveStatusColor(TextView aTextView,String aStatus){
+        switch (aStatus){
+            case "已下單":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.green));
+            break;
+            case "主動取消":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.red));
+            break;
+            case "已入住":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.sub1_color));
+            break;
+            case "已繳費":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.sub1_color));
+            break;
+            case "逾時取消":
+                aTextView.setTextColor(ContextCompat.getColor(context, R.color.red));
+            break;
+        }
+    }
+
+
 
 }// end class SpotAdapter
