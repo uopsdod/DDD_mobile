@@ -84,6 +84,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
             hotelName = hotelName.substring(0,5) + "..";
         }
         holder.ord_hotel_name.setText(hotelName);
+        Log.d("OrderLookUpNowAdapter","ordVO.getOrdRoomVO().getRoomName() - " + ordVO.getOrdRoomVO().getRoomName());
         holder.ord_room_name.setText(ordVO.getOrdRoomVO().getRoomName());
         holder.ord_price.setText("$" + Integer.toString(ordVO.getOrdPrice()));
         // 訂單狀態

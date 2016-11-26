@@ -76,9 +76,6 @@ public class OrderLookUpFragment extends MustLoginFragment {
         myRvOrd = (RecyclerView) rootView.findViewById(R.id.rv_ord);
         btnOrdNow = (Button) rootView.findViewById(R.id.btnOrdNow);
         btnOrdOld = (Button) rootView.findViewById(R.id.btnOrdOld);
-        // 預設: 開啟現有訂單
-        btnOrdOld.setTextColor(ContextCompat.getColor(getContext(), R.color.grey01));
-        btnOrdNow.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
         // 設定recycler view
         myRvOrd.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -101,6 +98,11 @@ public class OrderLookUpFragment extends MustLoginFragment {
             }
         });
 
+        // 預設: 開啟現有訂單
+        btnOrdOld.setTextColor(ContextCompat.getColor(getContext(), R.color.grey01));
+        btnOrdNow.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+        updateOrdNowList();
+
 
         return rootView;
     }
@@ -121,7 +123,8 @@ public class OrderLookUpFragment extends MustLoginFragment {
         Iterator<OrdVO> itr = tmpOrdVOList.iterator();
         while (itr.hasNext()) {
             OrdVO myVO = itr.next();
-            if (!(myVO.getOrdStatus().equals("0") || myVO.getOrdStatus().equals("3"))) {
+            // 0.已下單 1.主動取消 2.已入住 3.已繳費 4.逾時取消
+            if (myVO.getOrdStatus().equals("1") || myVO.getOrdStatus().equals("2")|| myVO.getOrdStatus().equals("4")) {
                 itr.remove();
             }
         }
@@ -175,6 +178,8 @@ public class OrderLookUpFragment extends MustLoginFragment {
         Iterator<OrdVO> itr = tmpOrdVOList.iterator();
         while (itr.hasNext()) {
             OrdVO myVO = itr.next();
+            Log.d("OrderLookUpFragment","myVO.getOrdStatus() - " + myVO.getOrdStatus()  );
+            // 0.已下單 1.主動取消 2.已入住 3.已繳費 4.逾時取消
             if (myVO.getOrdStatus().equals("0") || myVO.getOrdStatus().equals("3")) {
                 itr.remove();
             }

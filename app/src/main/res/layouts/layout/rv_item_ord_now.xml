@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="5dp">
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,28 +26,28 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="XXXX飯店"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
             <TextView
                 android:id="@+id/ord_room_name"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="房間名稱"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
             <TextView
                 android:id="@+id/ord_price"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="$999"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
             <TextView
                 android:id="@+id/ord_status"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="已下訂"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <RelativeLayout
@@ -73,7 +73,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="有效時間:"
-                    android:textSize="24sp"/>
+                    android:textSize="24sp"
+                    android:textColor="@color/white"/>
                 <TextView
                     android:id="@+id/countdown_time"
                     android:layout_width="match_parent"

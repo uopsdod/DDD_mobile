@@ -38,7 +38,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="$999"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/ord_status"
@@ -46,14 +46,15 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="已入住"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/ord_checktime_title"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="入住時間:"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/ord_checktime"
