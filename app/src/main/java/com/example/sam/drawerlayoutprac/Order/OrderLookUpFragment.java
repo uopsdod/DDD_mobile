@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MustLoginFragment;
@@ -18,10 +17,7 @@ import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +39,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
     RecyclerView.Adapter<OrderLookUpOldAdapter.MyViewHolder> myAdapter_old;
     static HashMap<String, String> ordStatusConverter = new HashMap<>();
 
-    public static boolean afterRatingOrReportCanceled = false;
+    public static boolean skipOnResume = false;
 
     static {
         ordStatusConverter.put("0", "已下單");
@@ -57,13 +53,24 @@ public class OrderLookUpFragment extends MustLoginFragment {
     public void onResume() {
         super.onResume();
         Log.d("OrderLookUpFragment", "onResuemd() called");
-        if (ordNowPressed) {
+        // 驗證登入-防止crash
+        SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE, getActivity().MODE_PRIVATE);
+        String memId = null;
+        if (preferences_r != null) {
+            memId = preferences_r.getString("memId", null);
+        }
+        if (memId == null) {
+            return;
+        }
+        // end of 驗證登入-防止crash
 
-        } else if (afterRatingOrReportCanceled) {
-            afterRatingOrReportCanceled = false;
-            // do nothing
+        if (skipOnResume) {
+            skipOnResume = false; // do nothing
+        } else if (ordNowPressed) {
+            OrderLookUpFragment.this.myOrdList = getOrdList();
+            updateOrdNowList();
         } else if (ordOldPressed) {
-            OrderLookUpFragment.this.myOrdList = getOrdOldList();
+            OrderLookUpFragment.this.myOrdList = getOrdList();
             updateOrdOldList();
         }
 
@@ -84,7 +91,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
         myRvOrd.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // 拿此會員的所有訂單:
-        OrderLookUpFragment.this.myOrdList = getOrdOldList();
+        // OrderLookUpFragment.this.myOrdList = getOrdOldList();
 
         // setOnclickListener
         btnOrdNow.setOnClickListener(new View.OnClickListener() {
@@ -102,9 +109,8 @@ public class OrderLookUpFragment extends MustLoginFragment {
         });
 
         // 預設: 開啟現有訂單
-        btnOrdOld.setTextColor(ContextCompat.getColor(getContext(), R.color.grey01));
-        btnOrdNow.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-        updateOrdNowList();
+        ordOldPressed = false;
+        ordNowPressed = true;
 
 
         return rootView;
@@ -123,11 +129,11 @@ public class OrderLookUpFragment extends MustLoginFragment {
         ordNowPressed = true;
     }
 
-    private List<OrdVO> getOrdOldList() {
+    private List<OrdVO> getOrdList() {
         List<OrdVO> myOrdList = null;
         try {
             String url = Common.URL + "/android/ord/ord.do";
-            String action = OrdGetAllOldTask.GETALL_OLD;
+            String action = OrdGetAllOldTask.GETALL;
             SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE, getActivity().MODE_PRIVATE);
             String memId = preferences_r.getString("memId", null);
             myOrdList = new OrdGetAllOldTask().execute(url, action, memId).get();
@@ -192,8 +198,6 @@ public class OrderLookUpFragment extends MustLoginFragment {
         myRvOrd.setAdapter(myAdapter_old);
 
     }
-
-
 
 
 }

@@ -50,7 +50,7 @@ public class OrdLookUpOldReportActivity extends Activity {
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OrderLookUpFragment.afterRatingOrReportCanceled = true;
+                OrderLookUpFragment.skipOnResume = true;
                 finish();
             }
         });

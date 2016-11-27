@@ -3,4 +3,5 @@
     <string name="text_ShouldGrant">Permission to read from external storage should be granted</string>
     <string name="title_activity_ord_look_up_old_rating">OrdLookUpOldRatingActivity</string>
     <string name="title_activity_ord_look_up_old_report">OrdLookUpOldRatingActivity</string>
+    <string name="title_activity_ord_look_up_now_checkqr">OrdLookUpNowCheckQRActivity</string>
 </resources>

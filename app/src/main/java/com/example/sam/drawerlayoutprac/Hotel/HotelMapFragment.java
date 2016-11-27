@@ -485,9 +485,18 @@ public class HotelMapFragment extends CommonFragment {
                     LocationListener locationListener = new LocationListener() {
                         @Override
                         public void onLocationChanged(Location aLocation) {
+                            // 如果是第一次安裝app，且為第一次開啟googla map，防止沒有自動定位的情況
+                            if (HotelMapFragment.this.lastLocation == null){
+                                HotelMapFragment.this.lastLocation = aLocation;
+                                mMapView.getMapAsync(HotelMapFragment.this.myOnMapReadyCallback);
+                                Log.d("PartnerMapFragment", "init lastLocation onLocationChanged callback");
+                                uploadCurrentPosToServer();
+                                return;
+                            }
+
                             HotelMapFragment.this.lastLocation = aLocation;
                             uploadCurrentPosToServer();
-                            Log.d("PartnerMapFragment", "changed lastLacation: " + HotelMapFragment.this.lastLocation);
+                            Log.d("PartnerMapFragment", "changed lastLocation: " + HotelMapFragment.this.lastLocation);
 
                         }
                     };

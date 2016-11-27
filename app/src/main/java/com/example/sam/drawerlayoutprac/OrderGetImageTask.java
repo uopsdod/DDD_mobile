@@ -20,12 +20,12 @@ public class OrderGetImageTask extends AsyncTask<Object /*傳進來的參數*/, 
     private String ACTION = "getImage";
     private WeakReference<ImageView> imageViewWeakReference;
 
-    OrderGetImageTask(ImageView imageView){
+    public OrderGetImageTask(ImageView imageView){
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
 
     @Override
-    protected Bitmap doInBackground(Object... params) {
+    public Bitmap doInBackground(Object... params) {
         String url = params[0].toString();
         String id = params[1].toString();
         int imageSize = Integer.parseInt(params[2].toString());

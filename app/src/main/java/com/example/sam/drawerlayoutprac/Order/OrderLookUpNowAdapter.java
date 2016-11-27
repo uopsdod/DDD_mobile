@@ -18,6 +18,7 @@ import com.example.sam.drawerlayoutprac.Hotel.HotelGetImageTask;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemRepVO;
 import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
+import com.example.sam.drawerlayoutprac.Util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -129,27 +130,30 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         int imageSize = 850;
         new HotelGetImageTask(holder.ord_hotel_img).execute(url, HotelId, imageSize);
         // 查看QR Code:
-//        if (ordVO.getOrdRatingStarNo() == null) {
-//            holder.ord_rating.setText("給予評價");
-//            //holder.ord_rating.setPadding();
-//            holder.ord_rating.setCompoundDrawablesWithIntrinsicBounds( R.drawable.star_golden_24dp, 0, 0, 0);
-//            holder.ord_rating.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(context,OrdLookUpOldRatingActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("ordId", ordVO.getOrdId());
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
-//                }
-//            });
-//        }else{
-//            holder.ord_rating.setText("已評價");
-//            holder.ord_rating.setPressed(true);
-//            holder.ord_rating.setEnabled(false);
-//        }
+        holder.ord_check_qr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.showToast(context,"qr_check clicked");
+                Intent intent = new Intent(context,OrdLookUpNowCheckQRActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ordId", ordVO.getOrdId());
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
 
         // 取消訂單
+        holder.ord_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.showToast(context,"ord_cancel clicked");
+                Intent intent = new Intent(context,OrdLookUpNowCancelActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ordId", ordVO.getOrdId());
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
 //        MemRepVO memRepVO = null;
 //        //String ordId = "2016111003";
 //        String ordId = ordVO.getOrdId();
