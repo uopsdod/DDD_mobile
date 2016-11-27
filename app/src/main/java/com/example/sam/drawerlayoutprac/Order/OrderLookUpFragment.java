@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MustLoginFragment;
@@ -18,10 +17,7 @@ import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +39,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
     RecyclerView.Adapter<OrderLookUpOldAdapter.MyViewHolder> myAdapter_old;
     static HashMap<String, String> ordStatusConverter = new HashMap<>();
 
-    public static boolean afterRatingOrReportCanceled = false;
+    public static boolean skipOnResume = false;
 
     static {
         ordStatusConverter.put("0", "已下單");
@@ -68,8 +64,8 @@ public class OrderLookUpFragment extends MustLoginFragment {
         }
         // end of 驗證登入-防止crash
 
-        if (afterRatingOrReportCanceled) {
-            afterRatingOrReportCanceled = false; // do nothing
+        if (skipOnResume) {
+            skipOnResume = false; // do nothing
         } else if (ordNowPressed) {
             OrderLookUpFragment.this.myOrdList = getOrdList();
             updateOrdNowList();

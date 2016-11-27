@@ -1,9 +1,12 @@
 package com.example.sam.drawerlayoutprac.Partner.VO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.sql.Timestamp;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-public class OrdVO implements java.io.Serializable, Cloneable{
+public class OrdVO implements java.io.Serializable, Cloneable {
 	private String ordId;
 //	private String ordRoomId;
 	private RoomVO ordRoomVO;
@@ -23,6 +26,9 @@ public class OrdVO implements java.io.Serializable, Cloneable{
 	private byte[] ordQrPic;
 	private String ordMsgNo;
 	
+	@JsonIgnore
+	private Set<HotelRepVO> ordHotelReps = new LinkedHashSet<HotelRepVO>();
+		
 	public String getOrdId() {
 		return this.ordId;
 	}
@@ -95,6 +101,14 @@ public class OrdVO implements java.io.Serializable, Cloneable{
 	}
 	public void setOrdMsgNo(String aOrdMsgNo) {
 		this.ordMsgNo = aOrdMsgNo;
+	}
+	
+	public Set<HotelRepVO> getOrdHotelReps() {
+		return this.ordHotelReps;
+	}
+	
+	public void setOrdHotelReps(Set<HotelRepVO> aOrdHotelReps) {
+		this.ordHotelReps = aOrdHotelReps;
 	}
 	
 	/* 過渡方法  */

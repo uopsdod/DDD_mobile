@@ -17,11 +17,11 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class OrderAddOneTask extends AsyncTask<Object, Integer, OrdVO>{
-    private final static String TAG = "HotelGetAllTask";
+public class OrderAddOneTask extends AsyncTask<Object, Integer, String>{
+    private final static String TAG = "OrderAddOneTask";
     private final static String ACTION = "Insert";
     @Override
-    protected OrdVO doInBackground(Object... params) {
+    protected String doInBackground(Object... params) {
         String url = params[0].toString();
         String hotelId = params[1].toString();
         String roomId = params[2].toString();
@@ -41,8 +41,8 @@ public class OrderAddOneTask extends AsyncTask<Object, Integer, OrdVO>{
             Log.e(TAG, e.toString());
             return null;
         }
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
-        return gson.fromJson(jsonIn, OrdVO.class);
+
+        return jsonIn.substring(1, jsonIn.length()-1);
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {
