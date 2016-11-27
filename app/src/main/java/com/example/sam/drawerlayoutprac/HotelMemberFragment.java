@@ -129,7 +129,7 @@ public class HotelMemberFragment extends Fragment {
         SharedPreferences pref = getContext().getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
         boolean login = pref.getBoolean("login", false);
         if(login){
-           pref.getString("user", "");
+           pref.getString("userName", "");
            pref.getString("password", "");
         }else{
             Util.showToast(getActivity() ,"User Name or Password invalid");

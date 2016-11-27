@@ -66,6 +66,7 @@ dependencies {
     compile project(':jackson-annotations-2.8.5')
     compile project(':jackson-core-2.8.5')
     compile project(':jackson-databind-2.8.5')
+    compile 'com.github.SilenceDut:ExpandableLayout:1.2.0'
 }
 
 repositories {

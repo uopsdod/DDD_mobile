@@ -93,7 +93,7 @@ public class MemberWishFragment extends MustLoginFragment {
                     myRvWish.setAdapter(myAdapter);
                 }
             } else {
-                Util.showToast(getActivity(), "You need login mother fucker!");
+                Util.showToast(getActivity(), "You need login!");
             }
         }
     }

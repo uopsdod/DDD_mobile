@@ -4,7 +4,6 @@ package com.example.sam.drawerlayoutprac;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.sam.drawerlayoutprac.Hotel.HotelVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -17,32 +16,34 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class OrderAddOneTask extends AsyncTask<Object, Integer, OrdVO>{
-    private final static String TAG = "HotelGetAllTask";
-    private final static String ACTION = "Insert";
+public class OrderCheckedTask extends AsyncTask<Object, Integer, Boolean>{
+    private final static String TAG = "OrderCheckedTask";
+    private final static String ACTION = "checked";
     @Override
-    protected OrdVO doInBackground(Object... params) {
+    protected Boolean doInBackground(Object... params) {
         String url = params[0].toString();
-        String hotelId = params[1].toString();
-        String roomId = params[2].toString();
-        String memId = params[3].toString();
-        String price = params[4].toString();
+        String ordId = params[1].toString();
+        String key = params[2].toString();
         String jsonIn;
+        boolean check;
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.addProperty("action",ACTION);
-        jsonObject.addProperty("hotelId", hotelId);
-        jsonObject.addProperty("roomId", roomId);
-        jsonObject.addProperty("memId", memId);
-        jsonObject.addProperty("price", price);
+        jsonObject.addProperty("ordId", ordId);
+        jsonObject.addProperty("key", key);
         try{
             jsonIn = getRemoteData(url, jsonObject.toString());
+            if(jsonIn.equals("true")){
+                check = true;
+            }else{
+                check = false;
+            }
         }catch (IOException e){
             Log.e(TAG, e.toString());
             return null;
         }
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
-        return gson.fromJson(jsonIn, OrdVO.class);
+
+        return check;
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {
