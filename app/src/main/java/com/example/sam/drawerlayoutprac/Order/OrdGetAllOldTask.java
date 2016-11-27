@@ -23,8 +23,7 @@ import java.util.List;
 
 public class OrdGetAllOldTask extends AsyncTask<Object, Integer, List<OrdVO>>{
     private final static String TAG = "OrdGetAllOldTask";
-    public final static String GETALL_OLD = "getAllOld";
-    public final static String GETALL_NOW = "getAllNow";
+    public final static String GETALL = "getAll";
 
     @Override
     protected List<OrdVO> doInBackground(Object... params) {

@@ -69,13 +69,13 @@ public class OrderLookUpFragment extends MustLoginFragment {
         // end of 驗證登入-防止crash
 
         if (ordNowPressed) {
-            OrderLookUpFragment.this.myOrdList = getOrdOldList();
+            OrderLookUpFragment.this.myOrdList = getOrdList();
             updateOrdNowList();
         } else if (afterRatingOrReportCanceled) {
             afterRatingOrReportCanceled = false;
             // do nothing
         } else if (ordOldPressed) {
-            OrderLookUpFragment.this.myOrdList = getOrdOldList();
+            OrderLookUpFragment.this.myOrdList = getOrdList();
             updateOrdOldList();
         }
 
@@ -135,11 +135,11 @@ public class OrderLookUpFragment extends MustLoginFragment {
         ordNowPressed = true;
     }
 
-    private List<OrdVO> getOrdOldList() {
+    private List<OrdVO> getOrdList() {
         List<OrdVO> myOrdList = null;
         try {
             String url = Common.URL + "/android/ord/ord.do";
-            String action = OrdGetAllOldTask.GETALL_OLD;
+            String action = OrdGetAllOldTask.GETALL;
             SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE, getActivity().MODE_PRIVATE);
             String memId = preferences_r.getString("memId", null);
             myOrdList = new OrdGetAllOldTask().execute(url, action, memId).get();
