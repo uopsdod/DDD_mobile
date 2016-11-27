@@ -54,6 +54,7 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         TextView ord_hotel_name;
         TextView ord_price;
         TextView ord_status;
+        TextView ord_checktime_title;
         TextView ord_checktime;
         ImageView ord_hotel_img;
         Button ord_rating;
@@ -64,6 +65,7 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
             this.ord_hotel_name = (TextView) itemView.findViewById(R.id.ord_hotel_name);
             this.ord_price = (TextView) itemView.findViewById(R.id.ord_price);
             this.ord_status = (TextView) itemView.findViewById(R.id.ord_status);
+            this.ord_checktime_title = (TextView) itemView.findViewById(R.id.ord_checktime_title);
             this.ord_checktime = (TextView) itemView.findViewById(R.id.ord_checktime);
             this.ord_hotel_img = (ImageView) itemView.findViewById(R.id.ord_hotel_img);
             this.ord_rating = (Button) itemView.findViewById(R.id.ord_rating);
@@ -97,15 +99,21 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         String ordStatus = OrderLookUpFragment.ordStatusConverter.get(ordVO.getOrdStatus());
         holder.ord_status.setText(ordStatus);
         giveStatusColor(holder.ord_status,ordStatus);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        holder.ord_checktime.setText(df.format(ordVO.getOrdLiveDate()));
+        if ("已入住".equals(ordStatus)){
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            holder.ord_checktime.setText(df.format(ordVO.getOrdLiveDate()));
+        }else{
+            holder.ord_checktime_title.setVisibility(View.INVISIBLE);
+            holder.ord_checktime.setVisibility(View.INVISIBLE);
+        }
         // 設定圖片
         final String HotelId = ordVO.getOrdHotelVO().getHotelId();
         String url = Common.URL + "/android/hotel.do";
         int imageSize = 850;
         new HotelGetImageTask(holder.ord_hotel_img).execute(url, HotelId, imageSize);
         // 給予評價
-        if (ordVO.getOrdRatingStarNo() == null) {
+        Log.d("OrderLookUpOldAdapter", "ordVO.getOrdRatingStarNo() - " + ordVO.getOrdRatingStarNo());
+        if ("已入住".equals(ordStatus) && ordVO.getOrdRatingStarNo() == null) {
             holder.ord_rating.setText("給予評價");
             //holder.ord_rating.setPadding();
             holder.ord_rating.setCompoundDrawablesWithIntrinsicBounds( R.drawable.star_golden_24dp, 0, 0, 0);
@@ -119,8 +127,12 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
                     context.startActivity(intent);
                 }
             });
-        }else{
+        }else if("已入住".equals(ordStatus) && ordVO.getOrdRatingStarNo() != null){
             holder.ord_rating.setText("已評價");
+            holder.ord_rating.setPressed(true);
+            holder.ord_rating.setEnabled(false);
+        }else{
+            holder.ord_rating.setText("訂單取消");
             holder.ord_rating.setPressed(true);
             holder.ord_rating.setEnabled(false);
         }
@@ -138,23 +150,28 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
             e.printStackTrace();
         }
 
-        if (memRepVO == null) {
+        if ("已入住".equals(ordStatus) && memRepVO == null) {
             holder.ord_report_badhotel.setText("檢舉廠商");
             //holder.ord_rating.setPadding();
             holder.ord_report_badhotel.setCompoundDrawablesWithIntrinsicBounds( R.drawable.stop_red_24dp, 0, 0, 0);
             holder.ord_report_badhotel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Util.showToast(context,"檢舉廠商 clicked");
-//                    Intent intent = new Intent(context,OrdLookUpOldRatingActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("ordId", ordVO.getOrdId());
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
+                    //Util.showToast(context,"檢舉廠商 clicked");
+
+                    Intent intent = new Intent(context,OrdLookUpOldReportActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ordId", ordVO.getOrdId());
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
                 }
             });
-        }else{
+        }else if ("已入住".equals(ordStatus)){
             holder.ord_report_badhotel.setText("已檢舉");
+            holder.ord_report_badhotel.setPressed(true);
+            holder.ord_report_badhotel.setEnabled(false);
+        }else{
+            holder.ord_report_badhotel.setText("訂單取消");
             holder.ord_report_badhotel.setPressed(true);
             holder.ord_report_badhotel.setEnabled(false);
         }

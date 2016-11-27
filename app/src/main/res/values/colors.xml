@@ -12,6 +12,7 @@
 
     <color name="red">#FF0000</color>
     <color name="green">#3cb371</color>
+    <color name="grey01">#bbb</color>
 
 
 </resources>

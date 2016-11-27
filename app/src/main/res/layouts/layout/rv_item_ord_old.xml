@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="2.5dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="5dp"
+    android:elevation="1dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -11,10 +13,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/btn_bg"
         android:orientation="horizontal"
-        android:paddingBottom="3dp"
+        android:paddingBottom="2dp"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="3dp">
+        android:paddingRight="2dp"
+        android:paddingTop="2dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -36,7 +38,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="$999"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/ord_status"
@@ -44,14 +46,15 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="已入住"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/ord_checktime_title"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="入住時間:"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/ord_checktime"
@@ -79,7 +82,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:elevation="2dp">
 
         <Button
             android:id="@+id/ord_rating"

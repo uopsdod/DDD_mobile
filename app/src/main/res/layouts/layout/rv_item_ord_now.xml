@@ -3,93 +3,132 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="5dp">
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/btn_bg"
         android:orientation="horizontal"
-        android:paddingLeft="5dp"
-        android:paddingTop="3dp"
-        android:paddingRight="5dp"
         android:paddingBottom="3dp"
-        android:background="@drawable/btn_bg">
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="3dp">
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
+
             <TextView
+                android:id="@+id/ord_hotel_name"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="XXXX飯店"
-                android:textSize="24sp"/>
+                android:textSize="20sp" />
+
             <TextView
+                android:id="@+id/ord_room_name"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="房間名稱"
-                android:textSize="24sp"/>
+                android:textSize="20sp" />
+
             <TextView
+                android:id="@+id/ord_price"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="$999"
-                android:textSize="24sp"/>
+                android:textSize="20sp" />
+
             <TextView
+                android:id="@+id/ord_status"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="已下訂"
-                android:textSize="24sp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="有效時間:"
-                android:textSize="24sp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.00"
-                android:textColor="#f00"
-                android:text="17:23"
-                android:textSize="32sp"/>
+                android:textSize="20sp" />
         </LinearLayout>
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
-            android:layout_height="wrap_content"
             android:orientation="vertical">
-            <ImageView
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:background="#aaaaaa" />
+
+            <ImageView
+                android:id="@+id/ord_hotel_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.7"
                 android:scaleType="fitXY"
-                android:src="@drawable/pic_default"/>
-        </LinearLayout>
+                android:src="@drawable/pic_default" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:elevation="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="有效時間:"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/countdown_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:text="17:23"
+                    android:textColor="#f00"
+                    android:textSize="32sp" />
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="2dp"
         android:orientation="horizontal">
-        <Button
-            android:id="@+id/btnOrdNow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/btn_bg"
-            android:text="查看QR "
-            android:textSize="24sp" />
 
         <Button
-            android:id="@+id/btnOrdOld"
-            android:layout_width="wrap_content"
+            android:id="@+id/ord_check_qr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/btn_bg"
+            android:drawableLeft="@drawable/star04_grey_24dp"
+            android:drawablePadding="-55dp"
+            android:paddingLeft="33dp"
+            android:text="查看QR"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/ord_cancel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_bg"
+            android:drawableLeft="@drawable/stop_grey_24dp"
+            android:drawablePadding="-45dp"
+            android:paddingLeft="33dp"
             android:text="取消訂單"
-            android:textSize="24sp" />
-
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

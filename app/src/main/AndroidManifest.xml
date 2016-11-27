@@ -45,13 +45,21 @@
             android:resource="@color/colorAccent" />
         <!-- [END fcm_default_icon] -->
         <!-- firebase cloud messaging -->
-
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".MainActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".Partner.EuclidTest"
@@ -74,6 +82,12 @@
         <activity
             android:name=".Order.OrdLookUpOldRatingActivity"
             android:label="@string/title_activity_ord_look_up_old_rating"
+            android:theme="@android:style/Theme.Dialog"></activity>
+
+
+        <activity
+            android:name=".Order.OrdLookUpOldReportActivity"
+            android:label="@string/title_activity_ord_look_up_old_report"
             android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
