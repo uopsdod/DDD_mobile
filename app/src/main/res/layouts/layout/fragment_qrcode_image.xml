@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="20dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialogBackground"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical|center_horizontal"
+    android:nestedScrollingEnabled="false"
+    android:orientation="vertical"
+    android:transitionGroup="false"
+    android:background="#888888"
+    tools:context="com.example.sam.drawerlayoutprac.MainActivity">
 
-    <ImageView
-        android:id="@+id/ivQRCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvOrd"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@mipmap/ic_launcher" />
-
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="#eeeeeeee"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/ivQRCode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:src="@drawable/pic_default" />
+    </LinearLayout>
+</LinearLayout>
