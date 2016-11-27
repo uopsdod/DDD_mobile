@@ -143,6 +143,17 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         });
 
         // 取消訂單
+        holder.ord_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.showToast(context,"ord_cancel clicked");
+                Intent intent = new Intent(context,OrdLookUpNowCancelActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ordId", ordVO.getOrdId());
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
 //        MemRepVO memRepVO = null;
 //        //String ordId = "2016111003";
 //        String ordId = ordVO.getOrdId();

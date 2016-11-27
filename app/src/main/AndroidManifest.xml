@@ -95,6 +95,11 @@
             android:label="@string/title_activity_ord_look_up_now_checkqr"
             android:theme="@android:style/Theme.Dialog"></activity>
 
+        <activity
+            android:name=".Order.OrdLookUpNowCancelActivity"
+            android:label="@string/title_activity_ord_look_up_now_checkqr"
+            android:theme="@android:style/Theme.Dialog"></activity>
+
 
     </application>
 

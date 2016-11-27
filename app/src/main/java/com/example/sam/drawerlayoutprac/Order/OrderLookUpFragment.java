@@ -60,20 +60,19 @@ public class OrderLookUpFragment extends MustLoginFragment {
         // 驗證登入-防止crash
         SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE, getActivity().MODE_PRIVATE);
         String memId = null;
-        if (preferences_r != null){
+        if (preferences_r != null) {
             memId = preferences_r.getString("memId", null);
         }
-        if (memId == null){
+        if (memId == null) {
             return;
         }
         // end of 驗證登入-防止crash
 
-        if (ordNowPressed) {
+        if (afterRatingOrReportCanceled) {
+            afterRatingOrReportCanceled = false; // do nothing
+        } else if (ordNowPressed) {
             OrderLookUpFragment.this.myOrdList = getOrdList();
             updateOrdNowList();
-        } else if (afterRatingOrReportCanceled) {
-            afterRatingOrReportCanceled = false;
-            // do nothing
         } else if (ordOldPressed) {
             OrderLookUpFragment.this.myOrdList = getOrdList();
             updateOrdOldList();
@@ -116,7 +115,6 @@ public class OrderLookUpFragment extends MustLoginFragment {
         // 預設: 開啟現有訂單
         ordOldPressed = false;
         ordNowPressed = true;
-
 
 
         return rootView;
@@ -204,8 +202,6 @@ public class OrderLookUpFragment extends MustLoginFragment {
         myRvOrd.setAdapter(myAdapter_old);
 
     }
-
-
 
 
 }
