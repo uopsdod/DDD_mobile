@@ -13,7 +13,7 @@ import com.example.sam.drawerlayoutprac.Member.MemberFragment;
  */
 
 public class MustLoginFragment extends CommonFragment {
-    // BUG - 不知道為什麼其他頁面也會被影響!
+
 
     @Override
     public void onResume() {
@@ -57,11 +57,11 @@ public class MustLoginFragment extends CommonFragment {
                     })
                     .show();
             // 如果使用者點旁邊，則也跳回到我們的首頁-HotelFragment
+        }// end if
 
 
 
 
-        }
     }
 
 

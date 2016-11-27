@@ -57,8 +57,20 @@ public class OrderLookUpFragment extends MustLoginFragment {
     public void onResume() {
         super.onResume();
         Log.d("OrderLookUpFragment", "onResuemd() called");
-        if (ordNowPressed) {
+        // 驗證登入-防止crash
+        SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE, getActivity().MODE_PRIVATE);
+        String memId = null;
+        if (preferences_r != null){
+            memId = preferences_r.getString("memId", null);
+        }
+        if (memId == null){
+            return;
+        }
+        // end of 驗證登入-防止crash
 
+        if (ordNowPressed) {
+            OrderLookUpFragment.this.myOrdList = getOrdOldList();
+            updateOrdNowList();
         } else if (afterRatingOrReportCanceled) {
             afterRatingOrReportCanceled = false;
             // do nothing
@@ -84,7 +96,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
         myRvOrd.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // 拿此會員的所有訂單:
-        OrderLookUpFragment.this.myOrdList = getOrdOldList();
+        // OrderLookUpFragment.this.myOrdList = getOrdOldList();
 
         // setOnclickListener
         btnOrdNow.setOnClickListener(new View.OnClickListener() {
@@ -102,9 +114,9 @@ public class OrderLookUpFragment extends MustLoginFragment {
         });
 
         // 預設: 開啟現有訂單
-        btnOrdOld.setTextColor(ContextCompat.getColor(getContext(), R.color.grey01));
-        btnOrdNow.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-        updateOrdNowList();
+        ordOldPressed = false;
+        ordNowPressed = true;
+
 
 
         return rootView;
