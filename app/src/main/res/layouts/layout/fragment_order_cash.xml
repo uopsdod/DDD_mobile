@@ -9,7 +9,7 @@
         android:id="@+id/rlHotelInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ccc">
+        >
     <TextView
         android:id="@+id/tvHotel"
         android:layout_width="wrap_content"
@@ -158,25 +158,6 @@
         android:textColor="@color/colorAccent"
         android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/tvOrd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvMem"
-        android:layout_marginTop="10dp"
-        android:text="下訂日期 : "
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/tvOrdDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvMemName"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/tvOrd"
-        android:text=" 2016-11-12"
-        android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
 
     </RelativeLayout>
 

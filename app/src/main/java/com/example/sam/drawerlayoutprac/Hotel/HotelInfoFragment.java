@@ -57,6 +57,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     RecyclerView.Adapter<SpotAdapter.ViewHolder> myAdapter;
 
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -168,7 +169,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             this.context = context;
             this.list = list;
             inflater = LayoutInflater.from(context);
-            //getDynamicPrice();
+            getDynamicPrice();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

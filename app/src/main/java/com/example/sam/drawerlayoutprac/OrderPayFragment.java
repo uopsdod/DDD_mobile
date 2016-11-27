@@ -21,7 +21,6 @@ public class OrderPayFragment extends CommonFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_order_cash, container, false);
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
-        btQRDisplay = (Button) view.findViewById(R.id.btQRDisplay);
         return view;
     }
 

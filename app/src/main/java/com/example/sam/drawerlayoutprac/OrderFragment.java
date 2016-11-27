@@ -16,12 +16,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelMapFragment;
+import com.example.sam.drawerlayoutprac.Member.MemGetOneTask;
+import com.example.sam.drawerlayoutprac.Member.MemVO;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetOneTask;
 import com.example.sam.drawerlayoutprac.Hotel.HotelVO;
 import com.example.sam.drawerlayoutprac.Room.RoomGetOneTask;
 
 import java.net.URI;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -29,11 +34,11 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class OrderFragment extends CommonFragment {
-    private Button btQRDisplay, btSubmit;
-    private String roomId, hotelId, ordId;
+    private Button btSubmit;
+    private String roomId, hotelId;
     private HotelVO hotelVO;
     private RoomVO roomVO;
-    private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvRoomName, tvRoomPrice;
+    private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvRoomName, tvRoomPrice, tvMemName;
     private String memId = MainActivity.pref.getString("memId", null);
     private int price;
 
@@ -52,6 +57,7 @@ public class OrderFragment extends CommonFragment {
         tvHotelPhone = (TextView) view.findViewById(R.id.tvHotelPhone);
         tvRoomName = (TextView) view.findViewById(R.id.tvRoomName);
         tvRoomPrice = (TextView) view.findViewById(R.id.tvRoomPrice);
+        tvMemName = (TextView) view.findViewById(R.id.tvMemName);
 
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +65,7 @@ public class OrderFragment extends CommonFragment {
                 if(Common.networkConnected(getActivity())){
                     String urlOrder = Common.URL + "/android/ord/ord.do";
                     try {
-                        ordId = new OrderAddOneTask().execute(urlOrder, hotelId, roomId, memId, price).get();
+                        new OrderAddOneTask().execute(urlOrder, hotelId, roomId, memId, price).get();
                     } catch (Exception e) {
                         Util.showToast(getContext(), "Orderfragment" + e.toString());
                     }
@@ -82,13 +88,13 @@ public class OrderFragment extends CommonFragment {
         if(Common.networkConnected(getActivity())){
             String urlHotel = Common.URL + "/android/hotel.do";
             String urlRoom = Common.URL + "/android/room.do";
+            String urlMem = Common.URL + "/android/mem.do";
+            MemVO memVO = null;
             try{
                 hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
                 roomVO = new RoomGetOneTask().execute(urlRoom, roomId).get();
+                memVO = new MemGetOneTask().execute(urlMem, memId).get();
                 price = roomVO.getRoomPrice();
-                if(memId != null){
-
-                }
             }catch (Exception e) {
                 Util.showToast(getContext(), "Orderfragment" + e.toString());
             }
@@ -100,6 +106,7 @@ public class OrderFragment extends CommonFragment {
             tvHotelPhone.setText(hotelVO.getHotelPhone());
             tvRoomName.setText(roomVO.getRoomName());
             tvRoomPrice.setText(roomVO.getRoomPrice().toString());
+            tvMemName.setText(memVO.getMemName().toString());
         }
     }
 

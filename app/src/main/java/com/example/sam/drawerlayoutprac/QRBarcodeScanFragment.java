@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
@@ -24,18 +27,21 @@ import static android.app.Activity.RESULT_OK;
 public class QRBarcodeScanFragment extends CommonFragment {
     private static final String PACKAGE = "com.google.zxing.client.android";
     private static final int REQUEST_BARCODE_SCAN = 0;
-    private TextView tvMessage;
+    private TextView tvMessage, tvResult;
     private Button btScan;
+    private String[] str;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_qrcode, container, false);
         tvMessage = (TextView) view.findViewById(R.id.tvMessage);
+        tvResult = (TextView) view.findViewById(R.id.tvResult);
         btScan = (Button) view.findViewById(R.id.btScan);
         btScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("QRQRQRQR", "btScan clicked");
                 Intent intent = new Intent("com.google.zxing.client.android.SCAN");
                 try{
                     startActivityForResult(intent, REQUEST_BARCODE_SCAN);
@@ -48,15 +54,55 @@ public class QRBarcodeScanFragment extends CommonFragment {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
+        Log.d("QRQRQRQR", "onActivityResult");
         if(requestCode == REQUEST_BARCODE_SCAN){
             String message = "";
             if(resultCode == RESULT_OK){
                 String contents = intent.getStringExtra("SCAN_RESULT");
-                message = ("顯示內容:" + contents);
+                String url = Common.URL + "/android/ord/ord.do";
+                str = contents.split(",");
+                String ordId = str[11];
+                String key = str[15];
+                HashMap<String, String> checkdStatus = new HashMap<>();
+                boolean check;
+                checkdStatus.put("0", "訂單確認失敗");
+                checkdStatus.put("1", "訂單確認成功，未付款");
+                Log.d("QRQRQRQR", str[0]);
+                Log.d("QRQRQRQR", str[1]);
+                Log.d("QRQRQRQR", str[2]);
+                Log.d("QRQRQRQR", str[3]);
+                Log.d("QRQRQRQR", str[4]);
+                Log.d("QRQRQRQR", str[5]);
+                Log.d("QRQRQRQR", str[6]);
+                Log.d("QRQRQRQR", str[7]);
+                Log.d("QRQRQRQR", str[8]);
+                Log.d("QRQRQRQR", str[9]);
+                Log.d("QRQRQRQR", str[10]);
+                Log.d("QRQRQRQR", str[11]);
+                Log.d("QRQRQRQR", str[12]);
+                Log.d("QRQRQRQR", str[13]);
+                Log.d("QRQRQRQR", str[14]);
+                Log.d("QRQRQRQR", str[15]);
+                if(Common.networkConnected(getActivity())){
+                    try {
+                        check = new OrderCheckedTask().execute(url, ordId, key).get();
+                        Log.d("RRRRRR", "check" + check);
+                        if(check == true){
+                            tvResult.setText(checkdStatus.get("1"));
+                        }else{
+                            tvResult.setText(checkdStatus.get("0"));
+                        }
+                    } catch (Exception e) {
+                        Util.showToast(getContext(), "Orderfragment" + e.toString());
+                    }
+                }
             }else if(resultCode == RESULT_CANCELED){
-                message = "Scan was Cancelled";
+                tvMessage.setText("Scan was Cancelled");
             }
-            tvMessage.setText(message);
+
+            tvMessage.setText(str[0] + "\n" + str[1] + "\n" + str[2] + str[3] + "\n" + str[4] + str[5] + "\n" + str[6] + str[7] + "\n" + str[8] + str[9]);
+
+
         }
     }
 
