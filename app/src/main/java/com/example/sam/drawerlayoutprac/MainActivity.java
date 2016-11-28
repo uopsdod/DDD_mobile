@@ -287,27 +287,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // 以下為測試
-    public void testFragmentClicked(View view) {
-
-        // 從preferences_yo讀取假memId
-        SharedPreferences preferences_r = getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
-        String memid_test = null;
-        if (preferences_r != null){
-            memid_test = preferences_r.getString("memId", null);
-        }
-        if (memid_test != null){
-            // 下面這一行，之後要放在實際登出的頁面:
-            new TokenIdWebSocket(getApplicationContext()).removeTokenIdFromServer();
-            preferences_r.edit().remove("memId")
-                                .putBoolean("login",false)
-                                .apply();
-        }
-        if (preferences_r.getString("memId", null) == null){
-            Util.showToast(getApplicationContext(), "log out:  " + memid_test);
-
-        }
-
-    }
-
 }
