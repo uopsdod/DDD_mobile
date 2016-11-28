@@ -51,11 +51,10 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     private ImageView ivHotelBig;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvHotelIntro;
     private String hotelId;
-    private SpotAdapter.HotelRoomPriceSocket hotelRoomPriceScoket;
+    private HotelRoomPriceSocket hotelRoomPriceScoket;
     private float aFloat = (float) 0.6;
     private List<RoomVO> room;
     RecyclerView.Adapter<SpotAdapter.ViewHolder> myAdapter;
-
 
 
     @Override
@@ -63,6 +62,13 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
         super.onResume();
         showHotelInfo();
         showRoomInfo();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // 取得動態價格
+        getDynamicPrice();
     }
 
     @Nullable
@@ -96,6 +102,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
 
         rv_hotelInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+
         //warp up
         return view;
     }
@@ -108,8 +115,15 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     @Override
     public void onPause() {
         super.onPause();
-        if(hotelRoomPriceScoket != null){
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (hotelRoomPriceScoket != null) {
             hotelRoomPriceScoket.close();
+            Log.d("hotelRoomPricesocket "," close websocket");
         }
     }
 
@@ -169,7 +183,6 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             this.context = context;
             this.list = list;
             inflater = LayoutInflater.from(context);
-//            getDynamicPrice();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -230,90 +243,101 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             return list.size();
         }
 
-        //取得動態的價格
-        private void getDynamicPrice() {
-            URI uri = null;
-            try {
-                uri = new URI(Common.URL_DYNAMICPRICE);
-            } catch (URISyntaxException e) {
-                Log.d(TAG, e.toString());
-            }
-            hotelRoomPriceScoket = new SpotAdapter.HotelRoomPriceSocket(uri, getActivity());
-            if (hotelRoomPriceScoket != null) {
-                hotelRoomPriceScoket.connect();
-            }
+
+    }
+
+    //取得動態的價格
+    private void getDynamicPrice() {
+        URI uri = null;
+        try {
+            uri = new URI(Common.URL_DYNAMICPRICE);
+        } catch (URISyntaxException e) {
+            Log.d(TAG, e.toString());
+        }
+        hotelRoomPriceScoket = new HotelRoomPriceSocket(uri, getActivity());
+        if (hotelRoomPriceScoket != null) {
+            hotelRoomPriceScoket.connect();
+        }
+    }
+
+    public class HotelRoomPriceSocket extends WebSocketClient {
+        URI uri;
+        Activity activity;
+
+        public HotelRoomPriceSocket(URI serverUri, Activity activity) {
+            super(serverUri, new Draft_17());
+            uri = serverUri;
+            this.activity = activity;
         }
 
-        public class HotelRoomPriceSocket extends WebSocketClient {
-            URI uri;
-            Activity activity;
+        @Override
+        public void onOpen(ServerHandshake handshakedata) {
+            Log.d("hotelRoomPricesocket - ", " open websocket successfully ");
+        }
 
-            public HotelRoomPriceSocket(URI serverUri, Activity activity) {
-                super(serverUri, new Draft_17());
-                uri = serverUri;
-                this.activity = activity;
-            }
+        @Override
+        public void onMessage(final String message) {
+            Thread myThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.runOnUiThread(new Runnable() {
+                                               @Override
+                                               public void run() {
+                                                   //從websoclet取得動態價錢的資料
+                                                   try {
+                                                       JSONObject jsonObject = new JSONObject(message);
+                                                       //解開從websocket上拿到的JSONObject物件
+                                                       JSONArray jsonArray = jsonObject.getJSONArray("Bag");
+                                                       JSONArray jsonArrayRoom = null;
+                                                       Log.d(TAG, jsonArray.toString());
+                                                       //把List<RoomVO> room 內的資料， 逐一取出來
 
-            @Override
-            public void onOpen(ServerHandshake handshakedata) {
-                Log.d("hotelRoomPricesocket - ", " open websocket successfully ");
-            }
-
-            @Override
-            public void onMessage(final String message) {
-                Thread myThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        activity.runOnUiThread(new Runnable() {
-                                                   @Override
-                                                   public void run() {
-                                                       //從websoclet取得動態價錢的資料
-                                                       try {
-                                                           JSONObject jsonObject = new JSONObject(message);
-                                                           //解開從websocket上拿到的JSONObject物件
-                                                           JSONArray jsonArray = jsonObject.getJSONArray("Bag");
-                                                           JSONArray jsonArrayRoom;
-                                                           RoomVO myVO = null;
-                                                           Log.d(TAG, jsonArray.toString());
-                                                           //把List<RoomVO> room 內的資料， 逐一取出來
-
-                                                               //再解開從JSONObject上拿到的JSONArray並逐一取出
-                                                               for (int i = 0; i < jsonArray.length(); i++) {
-                                                                   jsonArrayRoom = jsonArray.getJSONArray(i);
-                                                                   //比對RoomId是否相同，若相同就從解析出來的JSONArray動態價格資料，裝進 roomVO裡面
-                                                                   for (int j = 0; i<list.size(); j++) {
-                                                                       myVO = list.get(i);
-                                                                       if (jsonArrayRoom.getString(0).equals(myVO.getRoomId())) {
-                                                                           myVO.setRoomPrice((Integer) jsonArrayRoom.get(1));
-                                                                           myAdapter.notifyDataSetChanged();
-                                                                       }
-                                                                   }
+                                                       //再解開從JSONObject上拿到的JSONArray並逐一取出
+                                                       for (int i = 0; i < jsonArray.length(); i++) {
+                                                           jsonArrayRoom = jsonArray.getJSONArray(i);
+                                                           //比對RoomId是否相同，若相同就從解析出來的JSONArray動態價格資料，裝進 roomVO裡面
+                                                           Log.d("hotelRoomPricesocket - ",jsonArrayRoom.get(0) + "," + jsonArrayRoom.get(1));
+                                                           for (RoomVO roomVO: HotelInfoFragment.this.room){
+                                                               if (jsonArrayRoom.getString(0).equals(roomVO.getRoomId())) {
+                                                                   roomVO.setRoomPrice((Integer) jsonArrayRoom.get(1));
                                                                }
-                                                       } catch (JSONException e) {
-                                                           e.printStackTrace();
+                                                           }
+
+//                                                           for (int j = 0; i<HotelInfoFragment.this.room.size(); j++) {
+//                                                               myVO = HotelInfoFragment.this.room.get(i);
+//                                                               if (jsonArrayRoom.getString(0).equals(myVO.getRoomId())) {
+//                                                                   Log.d("hotelRoomPricesocket - ", ""+jsonArrayRoom.get(0));
+//                                                                   //myVO.setRoomPrice((Integer) jsonArrayRoom.get(1));
+//                                                                   //myAdapter.notifyDataSetChanged();
+//                                                               }
+//                                                           }
                                                        }
+                                                   } catch (JSONException e) {
+                                                       e.printStackTrace();
                                                    }
-                                               }
-                        );
-                    }
-                }
 
-                );
-                myThread.start();
+                                                   //等資料更新完後，再更新UI
+                                                   myAdapter.notifyDataSetChanged();
+                                               } // end of run method
+                                           }// end of Runnable
+                    );// end of activity.runOnUiThread
+                } // end of run method
+            } // end of Runnable
 
-            }
+            ); // end of myThread
+            myThread.start();
 
-            @Override
-            public void onClose(int code, String reason, boolean remote) {
-
-            }
-
-            @Override
-            public void onError(Exception ex) {
-
-            }
         }
 
+        @Override
+        public void onClose(int code, String reason, boolean remote) {
+
+        }
+
+        @Override
+        public void onError(Exception ex) {
+
+        }
     }
 
 }
