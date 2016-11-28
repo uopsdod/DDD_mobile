@@ -47,8 +47,11 @@ public class HotelFragment extends CommonFragment {
     @Override
     public void onResume() {
         super.onResume();
-        myHotelGetLowestPriceVOList = getLowestPriceEachHotel();
-        showAllHotel();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         URI uri = null;
         try {
             uri = new URI(Common.URL_DYNAMICPRICE);
@@ -69,12 +72,23 @@ public class HotelFragment extends CommonFragment {
         myRvSpot = (RecyclerView) myLayout.findViewById(R.id.rv_hotel);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.VISIBLE);
 
+        // 每次開啟view，先抓一次資訊，並啟動第一次adapter
+        myHotelGetLowestPriceVOList = getLowestPriceEachHotel();
         myRvSpot.setLayoutManager(new LinearLayoutManager(getActivity()));
+        showAllHotel();
 
         setFloatingBtnClickListener();
         return myLayout;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (myHotelPriceWebsocket != null){
+            myHotelPriceWebsocket.close();
+            Log.d("HotelFragment"," close websocket");
+        }
+    }
 
     private void  showAllHotel(){
         if(Common.networkConnected(getActivity())){
@@ -94,10 +108,6 @@ public class HotelFragment extends CommonFragment {
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     private class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.MyViewHolder> {
         private Context context;
@@ -216,14 +226,14 @@ public class HotelFragment extends CommonFragment {
 
         @Override
         public void onOpen(ServerHandshake handshakedata) {
-            Log.d("HotelPriceWebsocket - ", " open websocket successfully ");
+            Log.d("HotelFragment - ", " open websocket successfully ");
         }
 
         @Override
         public void onMessage(String message) {
             // 不知道為何，必須將websocket放在Fragment下面，才能夠抓到message
 
-            Log.d("HotelPriceWebsocket - ", message);
+            Log.d("HotelFragment - ", message);
             Thread myThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -231,7 +241,7 @@ public class HotelFragment extends CommonFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d("HotelPriceWebsocket - ", "run on Ui Thread");
+                                Log.d("HotelFragment - ", "run on Ui Thread");
                                 // 去抓取每間旅館的最低房價，並更新到原本的list上面
                                 List<HotelGetLowestPriceVO> tmpHotelList = getLowestPriceEachHotel();
                                 for (HotelGetLowestPriceVO myVO_changed: tmpHotelList) {

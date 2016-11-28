@@ -1,16 +1,22 @@
 package com.example.sam.drawerlayoutprac.Partner.VO;
 
-import com.example.sam.drawerlayoutprac.Partner.VO.MemChatVO;
+import org.apache.commons.beanutils.BeanUtils;
+
+
+import java.lang.reflect.InvocationTargetException;
+import java.security.Timestamp;
 
 /**
  * Created by cuser on 2016/11/11.
  */
 // 這個類別現在被兩個.java使用:
 // 1. TokenIdWebSocket.java
-// 2. ChatFragment.java
-public class PartnerMsg extends MemChatVO {
+// 2. PartnerChatFragment.java
+public class PartnerMsg extends MemChatVO{
     String action;
     String tokenId;
+    String fromMobile;
+    String resend;
     // MemChatVO
 //    private String memChatChatId; // NOT NULL
 //    private String memChatMemId; // NOT NULL
@@ -47,4 +53,22 @@ public class PartnerMsg extends MemChatVO {
     public void setTokenId(String tokenId) {
         this.tokenId = tokenId;
     }
+
+	public String getFromMobile() {
+		return fromMobile;
+	}
+
+	public void setFromMobile(String fromMobile) {
+		this.fromMobile = fromMobile;
+	}
+
+	public String getResend() {
+		return resend;
+	}
+
+	public void setResend(String resend) {
+		this.resend = resend;
+	}
+    
+	
 }

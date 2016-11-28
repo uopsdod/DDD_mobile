@@ -21,6 +21,7 @@ public class HotelGetOneTask extends AsyncTask<Object, Integer, HotelVO>{
     @Override
     protected HotelVO doInBackground(Object... params) {
         String url = params[0].toString();
+        // OrderFragment line.94
         String id = params[1].toString();
         String jsonIn;
         JsonObject jsonObject = new JsonObject();
