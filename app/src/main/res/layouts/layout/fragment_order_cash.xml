@@ -3,49 +3,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:background="#FFFFF4"
+    >
 
     <RelativeLayout
         android:id="@+id/rlHotelInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:layout_marginTop="20dp"
         >
     <TextView
         android:id="@+id/tvHotel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="1dp"
         android:text="旅館名稱 : "
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="#709acf"
+        android:textColor="@color/white"
+        />
+
+
 
     <TextView
         android:id="@id/tvHotelName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tvHotel"
         android:layout_toRightOf="@+id/tvHotel"
         android:text=" 中壢大飯店"
         android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@color/white"/>
+
 
     <TextView
         android:id="@id/tvAddress"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHotel"
-        android:layout_marginTop="10dp"
+        android:layout_below="@id/tvHotel"
+        android:layout_marginTop="1dp"
         android:text="旅館地址 : "
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="#709acf"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@id/tvHotelCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvAddress"
-        android:layout_marginTop="10dp"
         android:text="桃園市"
         android:textColor="@color/colorAccent"
-        android:textSize="28sp" />
+        android:textSize="28sp"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@id/tvHotelCounty"
@@ -55,108 +68,128 @@
         android:layout_toRightOf="@id/tvHotelCity"
         android:text="中壢區"
         android:textColor="@color/colorAccent"
-        android:textSize="28sp" />
+        android:textSize="28sp"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@id/tvHotelRoad"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/tvHotelCity"
         android:layout_toRightOf="@id/tvHotelCounty"
         android:text="延平路645號4樓"
         android:textColor="@color/colorAccent"
-        android:textSize="28sp" />
+        android:textSize="28sp"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/tvPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvHotelCity"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="1dp"
         android:text="旅館電話 : "
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="#709acf"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tvHotelPhone"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvHotelCity"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="1dp"
         android:layout_toRightOf="@id/tvPhone"
         android:text="0925990128"
         android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@color/white"
+        android:layout_marginBottom="1dp"/>
 
 
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_below="@id/rlHotelInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/rlRoomInfo"
+        android:background="@color/black"
         >
 
         <TextView
             android:id="@+id/tvRoom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
             android:text="房間名稱 : "
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:background="#709acf"
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/tvRoomName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
             android:layout_toRightOf="@id/tvRoom"
             android:text="豪華客房"
             android:textColor="@color/colorAccent"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:background="@color/white"/>
 
     <TextView
         android:id="@+id/tvPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="1dp"
         android:layout_below="@id/tvRoom"
         android:text="房間價錢 : "
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="#709acf"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tvRoomPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="1dp"
         android:layout_below="@id/tvRoomName"
         android:layout_toRightOf="@id/tvPrice"
         android:text=" 6000"
         android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@color/white"
+        />
 
     <TextView
         android:id="@+id/tvMem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvPrice"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="1dp"
         android:text="訂購會員 : "
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="#709acf"
+        android:layout_marginBottom="1dp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tvMemName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="1dp"
         android:layout_below="@id/tvRoomPrice"
         android:layout_toRightOf="@+id/tvMem"
         android:text=" 譚芝穎"
         android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@color/white"/>
+
+
 
 
     </RelativeLayout>
@@ -165,10 +198,20 @@
         android:id="@+id/btSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
+        android:layout_above="@+id/btCancel"
         android:background="#709ACF"
-        android:text="確認"
+        android:text="確認下訂"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/btCancel"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#709ACF"
+        android:text="取消下訂"
         android:textColor="@color/white"
         android:textSize="30sp" />
 </RelativeLayout>

@@ -147,7 +147,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="下訂" />
+                    android:text="下訂"
+                    android:background="#709acf"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"/>
 
             </LinearLayout>
         </LinearLayout>

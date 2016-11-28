@@ -49,9 +49,13 @@ public class RoomFragment extends CommonFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_room, container, false);
-        getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
+        getActivity().findViewById(R.id.floatingBtn).setVisibility(View.GONE);
         RoomId = getArguments().getString("RoomId");
-        hotelId = getArguments().getString("hotelId");
+        if(getArguments().getString("hotelId") == null){
+            hotelId = null;
+        }else{
+            hotelId = getArguments().getString("hotelId");
+        }
         tvRoomName = (TextView) view.findViewById(R.id.tvRoomName);
         tvPrice = (TextView) view.findViewById(R.id.tvPrice);
         tvFacilitiesDetail = (TextView) view.findViewById(R.id.tvFacilitiesDetail);
@@ -128,12 +132,20 @@ public class RoomFragment extends CommonFragment {
             public void onClick(View view) {
                 boolean login = MainActivity.pref.getBoolean("login", false);
                 if(login){
-                    Fragment fragment = new OrderFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("RoomId", RoomId);
-                    bundle.putString("hotelId", hotelId);
-                    fragment.setArguments(bundle);
-                    Util.switchFragment(RoomFragment.this, fragment);
+                    if(hotelId == null){
+                        Fragment fragment = new OrderFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("RoomId", RoomId);
+                        fragment.setArguments(bundle);
+                        Util.switchFragment(RoomFragment.this, fragment);
+                    }else{
+                        Fragment fragment = new OrderFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("RoomId", RoomId);
+                        bundle.putString("hotelId", hotelId);
+                        fragment.setArguments(bundle);
+                        Util.switchFragment(RoomFragment.this, fragment);
+                    }
                 }else{
                     Util.showToast(getContext(),"You must login to proceed");
                     //new AlertDialog.Builder(getActivity()).setCancelable()
@@ -224,6 +236,7 @@ public class RoomFragment extends CommonFragment {
                 if(roomVO.getRoomPrice() == null || roomVO.getRoomPrice().equals(0)){
                     tvStatus.setVisibility(View.VISIBLE);
                     tvPrice.setVisibility(View.GONE);
+                    btOrder.setVisibility(View.INVISIBLE);
                 }else{
                     tvPrice.setText(roomVO.getRoomPrice().toString());
                 }
