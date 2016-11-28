@@ -87,7 +87,7 @@ public class QRBarcodeScanFragment extends CommonFragment {
                     try {
                         check = new OrderCheckedTask().execute(url, ordId, key).get();
                         Log.d("RRRRRR", "check" + check);
-                        if(check == true){
+                        if(check){
                             tvResult.setText(checkdStatus.get("1"));
                         }else{
                             tvResult.setText(checkdStatus.get("0"));

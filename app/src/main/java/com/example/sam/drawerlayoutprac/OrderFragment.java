@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.sam.drawerlayoutprac.Hotel.HotelMapFragment;
 import com.example.sam.drawerlayoutprac.Member.MemGetOneTask;
 import com.example.sam.drawerlayoutprac.Member.MemVO;
+import com.example.sam.drawerlayoutprac.Order.OrderLookUpFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetOneTask;
 import com.example.sam.drawerlayoutprac.Hotel.HotelVO;
@@ -47,7 +48,11 @@ public class OrderFragment extends CommonFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         roomId = getArguments().getString("RoomId");
-        hotelId = getArguments().getString("hotelId");
+        if(getArguments().getString("hotelId") == null){
+            hotelId = null;
+        }else {
+            hotelId = getArguments().getString("hotelId");
+        }
         View view = inflater.inflate(R.layout.fragment_order_cash, container, false);
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
         tvHotelName = (TextView) view.findViewById(R.id.tvHotelName);
@@ -70,6 +75,7 @@ public class OrderFragment extends CommonFragment {
                         Util.showToast(getContext(), "Orderfragment" + e.toString());
                     }
                 }
+                Util.switchFragment(OrderFragment.this, new OrderLookUpFragment());
 
             }
         });
@@ -91,10 +97,18 @@ public class OrderFragment extends CommonFragment {
             String urlMem = Common.URL + "/android/mem.do";
             MemVO memVO = null;
             try{
-                hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
-                roomVO = new RoomGetOneTask().execute(urlRoom, roomId).get();
-                memVO = new MemGetOneTask().execute(urlMem, memId).get();
-                price = roomVO.getRoomPrice();
+                if(hotelId != null){
+                    hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
+                    roomVO = new RoomGetOneTask().execute(urlRoom, roomId).get();
+                    memVO = new MemGetOneTask().execute(urlMem, memId).get();
+                    price = roomVO.getRoomPrice();
+                }else{
+                    roomVO = new RoomGetOneTask().execute(urlRoom, roomId).get();
+                    memVO = new MemGetOneTask().execute(urlMem, memId).get();
+                    price = roomVO.getRoomPrice();
+                    hotelId = roomVO.getRoomHotelId();
+                    hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
+                }
             }catch (Exception e) {
                 Util.showToast(getContext(), "Orderfragment" + e.toString());
             }
