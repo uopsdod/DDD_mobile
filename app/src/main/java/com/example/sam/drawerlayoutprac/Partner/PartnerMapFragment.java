@@ -5,6 +5,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +23,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +43,7 @@ import com.example.sam.drawerlayoutprac.Partner.VO.MemCoordVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.data.BitmapTeleporter;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -43,6 +55,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -76,7 +90,7 @@ public class PartnerMapFragment extends MustLoginFragment {
     private Marker CurrLocationMarker;
 
     private String memId; // onCreate
-    
+
     private void uploadCurrentPosToServer() {
     }
 
@@ -99,7 +113,7 @@ public class PartnerMapFragment extends MustLoginFragment {
                     .build();
         }
         // 取得memId:
-        SharedPreferences preference_r = getActivity().getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
+        SharedPreferences preference_r = getActivity().getSharedPreferences(Common.PREF_FILE, Context.MODE_PRIVATE);
         PartnerMapFragment.this.memId = preference_r.getString("memId", null);
 
     }
@@ -210,7 +224,7 @@ public class PartnerMapFragment extends MustLoginFragment {
                         @Override
                         public void onLocationChanged(Location aLocation) {
                             // 如果是第一次安裝app，且為第一次開啟googla map，防止沒有自動定位的情況
-                            if (PartnerMapFragment.this.lastLocation == null){
+                            if (PartnerMapFragment.this.lastLocation == null) {
                                 PartnerMapFragment.this.lastLocation = aLocation;
                                 mMapView.getMapAsync(PartnerMapFragment.this.myOnMapReadyCallback);
                                 Log.d("PartnerMapFragment", "init lastLocation onLocationChanged callback");
@@ -252,24 +266,162 @@ public class PartnerMapFragment extends MustLoginFragment {
             }
         });
     }
-    
+
     private void goToCurrPosition() {
         LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
         //Place current location marker
         if (PartnerMapFragment.this.CurrLocationMarker != null) {
             PartnerMapFragment.this.CurrLocationMarker.remove();
         }
-        PartnerMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+        PartnerMapFragment.this.CurrLocationMarker = placeMemSelfMarkerAt(latLng);
+
+        //Bitmap bitemap =  BitmapFactory.decodeStream(connection.getInputStream());
+        //PartnerMapFragment.this.CurrLocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitemap));
+        //PartnerMapFragment.this.CurrLocationMarker.setIcon(BitmapDescriptorFactory.HUE_MAGENTA);
         // For zooming automatically to the location of the marker
-        moveToLocation(latLng, 15);
+        moveToLocation(latLng, 16);
     }
 
-    private Marker placeMemMarkerAt(LatLng aLatLng) {
+    private Marker placeMemMarkerAt(LatLng aLatLng, String aMemId) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(aLatLng);
         markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        Bitmap bitmap = getMemProfileBitmap(aMemId);
+        bitmap = getCircleBitmap05(bitmap);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
         return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
+    }
+
+    private Marker placeMemSelfMarkerAt(LatLng aLatLng) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(aLatLng);
+        markerOptions.title("Your Position");
+        Bitmap bitmap = getMemProfileBitmap(PartnerMapFragment.this.memId);
+        bitmap = getCircleBitmap05(bitmap);
+
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
+    }
+
+    private Bitmap getCircleBitmap05(Bitmap bitmap) {
+        // Calculate the circular bitmap width with border
+        int squareBitmapWidth = Math.min(bitmap.getWidth(), bitmap.getHeight());
+
+        // Initialize a new instance of Bitmap
+        Bitmap dstBitmap = Bitmap.createBitmap(
+                squareBitmapWidth, // Width
+                squareBitmapWidth, // Height
+                Bitmap.Config.ARGB_8888 // Config
+        );
+
+        /*
+            Canvas
+                The Canvas class holds the "draw" calls. To draw something, you need 4 basic
+                components: A Bitmap to hold the pixels, a Canvas to host the draw calls (writing
+                into the bitmap), a drawing primitive (e.g. Rect, Path, text, Bitmap), and a paint
+                (to describe the colors and styles for the drawing).
+        */
+        // Initialize a new Canvas to draw circular bitmap
+        Canvas canvas = new Canvas(dstBitmap);
+
+        // Initialize a new Paint instance
+        Paint paint = new Paint();
+        // 设置是否使用抗锯齿功能，会消耗较大资源，绘制图形速度会变慢。
+        paint.setAntiAlias(true);
+
+        /*
+            Rect
+                Rect holds four integer coordinates for a rectangle. The rectangle is represented by
+                the coordinates of its 4 edges (left, top, right bottom). These fields can be accessed
+                directly. Use width() and height() to retrieve the rectangle's width and height.
+                Note: most methods do not check to see that the coordinates are sorted correctly
+                (i.e. left <= right and top <= bottom).
+        */
+        /*
+            Rect(int left, int top, int right, int bottom)
+                Create a new rectangle with the specified coordinates.
+        */
+        // Initialize a new Rect instance
+        Rect rect = new Rect(0, 0, squareBitmapWidth, squareBitmapWidth);
+
+        /*
+            RectF
+                RectF holds four float coordinates for a rectangle. The rectangle is represented by
+                the coordinates of its 4 edges (left, top, right bottom). These fields can be
+                accessed directly. Use width() and height() to retrieve the rectangle's width and
+                height. Note: most methods do not check to see that the coordinates are sorted
+                correctly (i.e. left <= right and top <= bottom).
+        */
+        // Initialize a new RectF instance
+        RectF rectF = new RectF(rect);
+
+        /*
+            public void drawOval (RectF oval, Paint paint)
+                Draw the specified oval using the specified paint. The oval will be filled or
+                framed based on the Style in the paint.
+
+            Parameters
+                oval : The rectangle bounds of the oval to be drawn
+
+        */
+        // Draw an oval shape on Canvas
+        canvas.drawOval(rectF, paint);
+
+        /*
+            public Xfermode setXfermode (Xfermode xfermode)
+                Set or clear the xfermode object.
+                Pass null to clear any previous xfermode. As a convenience, the parameter passed
+                is also returned.
+
+            Parameters
+                xfermode : May be null. The xfermode to be installed in the paint
+            Returns
+                xfermode
+        */
+        /*
+            public PorterDuffXfermode (PorterDuff.Mode mode)
+                Create an xfermode that uses the specified porter-duff mode.
+
+            Parameters
+                mode : The porter-duff mode that is applied
+
+        */
+        // PorterDuff.Mode有16種設定
+        // 請參照-http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2014/1105/1907.html
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+        // Calculate the left and top of copied bitmap
+        float left = (squareBitmapWidth - bitmap.getWidth()) / 2;
+        float top = (squareBitmapWidth - bitmap.getHeight()) / 2;
+
+        /*
+            public void drawBitmap (Bitmap bitmap, float left, float top, Paint paint)
+                Draw the specified bitmap, with its top/left corner at (x,y), using the specified
+                paint, transformed by the current matrix.
+
+                Note: if the paint contains a maskfilter that generates a mask which extends beyond
+                the bitmap's original width/height (e.g. BlurMaskFilter), then the bitmap will be
+                drawn as if it were in a Shader with CLAMP mode. Thus the color outside of the
+
+                original width/height will be the edge color replicated.
+
+                If the bitmap and canvas have different densities, this function will take care of
+                automatically scaling the bitmap to draw at the same density as the canvas.
+
+            Parameters
+                bitmap : The bitmap to be drawn
+                left : The position of the left side of the bitmap being drawn
+                top : The position of the top side of the bitmap being drawn
+                paint : The paint used to draw the bitmap (may be null)
+        */
+        // Make a rounded image by copying at the exact center position of source image
+        canvas.drawBitmap(bitmap, left, top, paint);
+
+        // Free the native object associated with this bitmap.
+        bitmap.recycle();
+
+        // Return the circular bitmap
+        return dstBitmap;
     }
 
     private void showGoToCurrPositionBtn() {
@@ -291,7 +443,7 @@ public class PartnerMapFragment extends MustLoginFragment {
                     PartnerMapFragment.this.CurrLocationMarker.remove();
                 }
                 ;
-                PartnerMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+                PartnerMapFragment.this.CurrLocationMarker = placeMemSelfMarkerAt(latLng);
                 // For zooming automatically to the location of the marker
                 moveToLocation(latLng, 15);
                 return false;
@@ -320,7 +472,7 @@ public class PartnerMapFragment extends MustLoginFragment {
 
         for (MemCoordVO myVO : memCoordVOList) {
             LatLng latlng = new LatLng(myVO.getMemLat(), myVO.getMemLng());
-            Marker tmpMarker = placeMemMarkerAt(latlng);
+            Marker tmpMarker = placeMemMarkerAt(latlng,myVO.getMemId());
             PartnerMapFragment.this.markerMap.put(tmpMarker, myVO);
         }
 
@@ -328,6 +480,22 @@ public class PartnerMapFragment extends MustLoginFragment {
 //        PartnerMapFragment.MyMarkerListener myMarkerListener = new PartnerMapFragment.MyMarkerListener();
 //        PartnerMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
     }
+
+
+    private Bitmap getMemProfileBitmap(String aMemId) {
+        String url = Common.URL_Partner;
+        int imageSize = 200;
+        Bitmap bitmap = null;
+        try {
+            bitmap = new PartnerGetOneImageTask().execute(url, aMemId, imageSize).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
 
     // onMapReady是在myConnectionCallBacks呼叫的，成功連線後才註冊此物件
     // mMapView.getMapAsync(HotelMapFragment.this.myOnMapReadyCallback);
