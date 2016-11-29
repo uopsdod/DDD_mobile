@@ -135,12 +135,11 @@ public class OrderFragment extends CommonFragment {
         }
     }
 
-    //
+
     public void switchFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.remove(OrderFragment.this);
+        //釋放最上面的Stack
         fragmentManager.popBackStack();
         fragmentTransaction.commit();
     }

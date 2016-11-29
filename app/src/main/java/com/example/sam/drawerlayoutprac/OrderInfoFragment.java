@@ -35,6 +35,7 @@ public class OrderInfoFragment extends CommonFragment {
         expListView = (ExpandableListView) view.findViewById(R.id.laptop_list);
         final ExpandableListAdapter expListAdapter = new ExpandableListAdapter(getActivity(), groupList, laptopCollection);
         expListView.setAdapter(expListAdapter);
+        getActivity().findViewById(R.id.floatingBtn).setVisibility(View.INVISIBLE);
 
         //按下內容，會跳出含有內容的Toast
 //        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
