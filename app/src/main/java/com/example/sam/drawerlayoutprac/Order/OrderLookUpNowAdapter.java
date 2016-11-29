@@ -1,8 +1,10 @@
 package com.example.sam.drawerlayoutprac.Order;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,13 +14,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.sam.drawerlayoutprac.BuildConfig;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetImageTask;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemRepVO;
 import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,17 +43,24 @@ import java.util.concurrent.TimeUnit;
  * Created by cuser on 2016/11/23.
  */
 public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAdapter.MyViewHolder> {
+    private static final String TAG = "OrderLookUpNowAdapter";
     private static final int serverTimeZoneHour = 8;
+    private Activity activity;
     private Context context;
     private LayoutInflater myLayoutInflater;
     private List<OrdVO> myOrdList;
-    private static final long ordDuration = 60000; // millesecond
+    //private static long ordDuration; // millesecond
 
-    public OrderLookUpNowAdapter(Context aContext, List<OrdVO> aOrdList) {
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+
+    public OrderLookUpNowAdapter(Context aContext, List<OrdVO> aOrdList, Activity aActivity) {
         this.context = aContext;
         this.myLayoutInflater = LayoutInflater.from(aContext);
         this.myOrdList = aOrdList;
+        this.activity = aActivity;
+        //getOrdDuration();
     }
+
 
     // customed ViewHolder - 裝容器用
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -170,7 +186,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         Log.d("timeTest-server"," Timezone " + OrderLookUpNowAdapter.serverTimeZoneHour);
 
         // 取得終止時間：
-        Long finalTime = aOrdVO.getOrdDate().getTime() + OrderLookUpNowAdapter.ordDuration;
+        Long finalTime = aOrdVO.getOrdDate().getTime() + OrderLookUpFragment.ordDuration;
         //Log.d("timeTest-finalTime",""+aOrdVO.getOrdDate().getTime());
         Log.d("timeTest-finalTime" , ""+TimeUnit.HOURS.convert(aOrdVO.getOrdDate().getTime(), TimeUnit.MILLISECONDS) + " hours)");
         // end of 取得終止時間
@@ -298,4 +314,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         long millisecondToAlter = hourToAlter * 3600000;
         return millisecondToAlter;
     }// end of getMillisecondsToAlter() method
+
+
+
 }// end class SpotAdapter
