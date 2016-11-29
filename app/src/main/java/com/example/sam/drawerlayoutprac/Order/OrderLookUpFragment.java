@@ -2,6 +2,7 @@ package com.example.sam.drawerlayoutprac.Order;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.sam.drawerlayoutprac.BuildConfig;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MustLoginFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +35,7 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class OrderLookUpFragment extends MustLoginFragment {
-
+    private static final String TAG = "OrderLookUpFragment";
     public static boolean ordNowPressed = true;
     public static boolean ordOldPressed = false;
     List<OrdVO> myOrdList;
@@ -40,6 +47,9 @@ public class OrderLookUpFragment extends MustLoginFragment {
     static HashMap<String, String> ordStatusConverter = new HashMap<>();
 
     public static boolean skipOnResume = false;
+    // 使用firebase remote config - 01
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    public static long ordDuration; // millesecond
 
     static {
         ordStatusConverter.put("0", "已下單");
@@ -167,8 +177,10 @@ public class OrderLookUpFragment extends MustLoginFragment {
                 itr.remove();
             }
         }
-        myAdapter_now = new OrderLookUpNowAdapter(getContext(), tmpOrdVOList);
-        myRvOrd.setAdapter(myAdapter_now);
+        myAdapter_now = new OrderLookUpNowAdapter(getContext(), tmpOrdVOList, getActivity());
+        // 使用firebase remote config 02
+        getOrdDuration(myRvOrd,myAdapter_now);
+
 
 
     }
@@ -198,6 +210,54 @@ public class OrderLookUpFragment extends MustLoginFragment {
         myRvOrd.setAdapter(myAdapter_old);
 
     }
+
+    // firebase remote config - 02
+    private void getOrdDuration(final RecyclerView myRvOrd,final RecyclerView.Adapter<OrderLookUpNowAdapter.MyViewHolder> myAdapter_now) {
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+        OrderLookUpFragment.ordDuration = mFirebaseRemoteConfig.getLong("ord_duration");
+        Log.d(TAG, "duration local: " + OrderLookUpFragment.ordDuration+"");
+        //Log.d(TAG, "duration local: " +  mFirebaseRemoteConfig.getLong("ord_duration")+"");
+
+
+
+        long cacheExpiration = 3600; // 1 hour in seconds.
+        // If in developer mode cacheExpiration is set to 0 so each fetch will retrieve values from
+        // the server.
+        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+            cacheExpiration = 0;
+        }
+
+        mFirebaseRemoteConfig.fetch(cacheExpiration)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Fetch Succeeded",
+                                    Toast.LENGTH_SHORT).show();
+
+                            // Once the config is successfully fetched it must be activated before newly fetched
+                            // values are returned.
+                            mFirebaseRemoteConfig.activateFetched();
+                        } else {
+                            Toast.makeText(getActivity(), "Fetch Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        // 在進入adapter前先拿到最新的ordDuration
+                        OrderLookUpFragment.ordDuration = mFirebaseRemoteConfig.getLong("ord_duration");
+                        Log.d(TAG, "duration after fetch: " + OrderLookUpFragment.ordDuration+"");
+                        //Log.d(TAG, "duration fater fetch: " +  mFirebaseRemoteConfig.getLong("ord_duration")+"");
+
+                        // 最後設定:
+                        myRvOrd.setAdapter(myAdapter_now);
+
+                    }
+                });
+    }// end of getOrdDuration
 
 
 }

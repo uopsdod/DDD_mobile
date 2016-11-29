@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +23,15 @@ import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.Member.MemberFragment;
 import com.example.sam.drawerlayoutprac.Member.MemberInfoFragment;
 import com.example.sam.drawerlayoutprac.Order.OrderLookUpFragment;
+import com.example.sam.drawerlayoutprac.Order.OrderLookUpNowAdapter;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import org.java_websocket.client.WebSocketClient;
 
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // 登入登出用:
         this.pref = this.getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
         //廠商會員登入登出用
@@ -91,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
         // 使用設定預設首頁 - HotelFragment.java
         inigDrawerBody();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -286,5 +298,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
 
 }

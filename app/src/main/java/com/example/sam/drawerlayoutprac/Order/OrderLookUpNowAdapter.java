@@ -1,8 +1,10 @@
 package com.example.sam.drawerlayoutprac.Order;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,36 +14,53 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.sam.drawerlayoutprac.BuildConfig;
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetImageTask;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemRepVO;
 import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by cuser on 2016/11/23.
  */
 public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAdapter.MyViewHolder> {
+    private static final String TAG = "OrderLookUpNowAdapter";
+    private static final int serverTimeZoneHour = 8;
+    private Activity activity;
     private Context context;
     private LayoutInflater myLayoutInflater;
     private List<OrdVO> myOrdList;
-    private static final long ordDuration = 60000; // millesecond
+    //private static long ordDuration; // millesecond
 
-    public OrderLookUpNowAdapter(Context aContext, List<OrdVO> aOrdList) {
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+
+    public OrderLookUpNowAdapter(Context aContext, List<OrdVO> aOrdList, Activity aActivity) {
         this.context = aContext;
         this.myLayoutInflater = LayoutInflater.from(aContext);
         this.myOrdList = aOrdList;
+        this.activity = aActivity;
+        //getOrdDuration();
     }
+
 
     // customed ViewHolder - 裝容器用
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -84,30 +103,10 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         Log.d("OrderLookUpNowAdapter", "onBindViewHolder");
         final OrdVO ordVO = this.myOrdList.get(position);
 
-        // 計算剩餘時間：
-        Long finalTime = ordVO.getOrdDate().getTime() + OrderLookUpNowAdapter.ordDuration;
-            // 拿現在時間:
-        Calendar cSchedStartCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        long gmtTime = cSchedStartCal.getTime().getTime();
-        long timezoneAlteredTime = gmtTime + TimeZone.getTimeZone("Asia/Taipei").getRawOffset();
-        Calendar cSchedStartCal1 = Calendar.getInstance(TimeZone.getTimeZone("Asia/Taipei"));
-        cSchedStartCal1.setTimeInMillis(timezoneAlteredTime);
-        long currTime = cSchedStartCal1.getTime().getTime();
-            // end of 拿現在時間
-        Long remainedTime = null;
-        if (finalTime > currTime) {
-            remainedTime = finalTime - currTime;
-        }else{
-            remainedTime = 0L;
-        }
-        //Log.d("OrderLookUpNowAdapter","remainedTime: " + remainedTime);
+        //啟動倒數:
+        activateCountDown(ordVO,holder.countdown_time);
 
-        DateFormat df = new SimpleDateFormat("HH:mm:ss"); // HH 24小時
-        holder.countdown_time.setText(df.format(remainedTime));
-        Thread myThread = new Thread(new myRunnable(remainedTime,holder.countdown_time));
-        myThread.start();
-
-
+        // 開始將data bind 到 view 上面:
         String hotelName = ordVO.getOrdHotelVO().getHotelName();
         if (hotelName.length() > 6) {
             hotelName = hotelName.substring(0, 5) + "..";
@@ -116,11 +115,11 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         Log.d("OrderLookUpNowAdapter", "ordVO.getOrdRoomVO().getRoomName() - " + ordVO.getOrdRoomVO().getRoomName());
         holder.ord_room_name.setText(ordVO.getOrdRoomVO().getRoomName());
         holder.ord_price.setText("$" + Integer.toString(ordVO.getOrdPrice()));
+
         // 訂單狀態
         String ordStatus = OrderLookUpFragment.ordStatusConverter.get(ordVO.getOrdStatus());
         holder.ord_status.setText(ordStatus);
         giveStatusColor(holder.ord_status, ordStatus);
-
 
 //        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        holder.ord_checktime.setText(df.format(ordVO.getOrdLiveDate()));
@@ -154,42 +153,8 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
                 context.startActivity(intent);
             }
         });
-//        MemRepVO memRepVO = null;
-//        //String ordId = "2016111003";
-//        String ordId = ordVO.getOrdId();
-//        //Log.d("OrderLookUpNowAdapter", "ordId - " + ordId);
-//        try {
-//            memRepVO = new MemRepGetOneTextViaOrdIdTask(this.context).execute(ordId).get();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//
-//        if (memRepVO == null) {
-//            holder.ord_report_badhotel.setText("檢舉廠商");
-//            //holder.ord_rating.setPadding();
-//            holder.ord_report_badhotel.setCompoundDrawablesWithIntrinsicBounds( R.drawable.stop_red_24dp, 0, 0, 0);
-//            holder.ord_report_badhotel.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    //Util.showToast(context,"檢舉廠商 clicked");
-//
-//                    Intent intent = new Intent(context,OrdLookUpOldReportActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("ordId", ordVO.getOrdId());
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
-//                }
-//            });
-//        }else{
-//            holder.ord_report_badhotel.setText("已檢舉");
-//            holder.ord_report_badhotel.setPressed(true);
-//            holder.ord_report_badhotel.setEnabled(false);
-//        }
-
-
     }
+
 
     private void giveStatusColor(TextView aTextView, String aStatus) {
         switch (aStatus) {
@@ -211,24 +176,98 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         }
     }
 
+
+    private void activateCountDown(OrdVO aOrdVO, TextView countdown_time) {
+        // 完成項目: 可動態依據客戶端timezone，進行倒數
+        // 完成一半項目: 尚且無法確切得知server是否有使用DST，目前只是暫時先用土法方法解決
+        // 未完成項目: 尚且無法動態抓取server的 timezone hours
+
+        // 注意 - 記得調整 private static final int serverTimeZoneHour = ?; 要對到Server的timezone
+        Log.d("timeTest-server"," Timezone " + OrderLookUpNowAdapter.serverTimeZoneHour);
+
+        // 取得終止時間：
+        Long finalTime = aOrdVO.getOrdDate().getTime() + OrderLookUpFragment.ordDuration;
+        //Log.d("timeTest-finalTime",""+aOrdVO.getOrdDate().getTime());
+        Log.d("timeTest-finalTime" , ""+TimeUnit.HOURS.convert(aOrdVO.getOrdDate().getTime(), TimeUnit.MILLISECONDS) + " hours)");
+        // end of 取得終止時間
+
+        // 取得currTime - 此時間會是UTC+客戶端timezone時間
+        long currTime = new java.util.Date().getTime();
+        //Log.d("timeTest-currTimeZone" , ""+currTime+" milliseconds");
+        Log.d("timeTest-currTimeZone" , ""+TimeUnit.HOURS.convert(currTime, TimeUnit.MILLISECONDS) + " hours)");
+        // end of 取得currTime
+
+        // 取得timeToAlter時間 - 此時間為客戶端timezone hours和server端timezone hours的差距:
+        long timeToAlter = getMillisecondsToAlter();
+        //Log.d("timeTest-timeToAlter" , ""+timeToAlter+" milliseconds");
+        Log.d("timeTest-timeToAlter" , ""+TimeUnit.HOURS.convert(timeToAlter, TimeUnit.MILLISECONDS) + " hours)");
+        // end of 取得timeToAlter時間
+
+        // 修改currTime - 為了要讓本地時間能取的跟server端同一個時區中的毫秒數，且還保留著當下時間的精確毫秒數
+        currTime += timeToAlter; // 減之前要加上去的
+        // end of 修改currTime
+
+        // 取得offset - 用在最後要在holder.countdown_time.setText(df.format(remainedTime-totalOffset));
+        // 因為在使用者的機器上，就算最後給6000毫秒，系統還是會自動加上他的timezone hours
+        // 為了要避免此情況發生，所以要在最後顯示時扣掉客戶端設備的timezone hours:
+        Calendar myCalendar = new GregorianCalendar();
+        int gmtZoneOffset = myCalendar.get(Calendar.ZONE_OFFSET);
+        int gmtDSTOffset = myCalendar.get(Calendar.DST_OFFSET);
+        long totalOffset = gmtZoneOffset + gmtDSTOffset;
+        //Log.d("timeTest-offSet" , ""+totalOffset+" milliseconds");
+        Log.d("timeTest-offSet" , ""+TimeUnit.HOURS.convert(totalOffset, TimeUnit.MILLISECONDS) + " hours)");
+        // end of 取得offset
+
+        // 計算剩餘時間
+        Long remainedTime = Math.abs(finalTime - currTime);
+        // end of 計算剩餘時間
+
+        // deal with DST(日光節省時間):
+        if (remainedTime > 3600000){
+            remainedTime -= 3600000;
+            Log.d("timeTest-DST" , ""+"因為DST，減掉一個小時");
+        }
+        //Log.d("timeTest-remainedTime" , ""+remainedTime+" milliseconds");
+        Log.d("timeTest-remainedTime" , ""+TimeUnit.HOURS.convert(remainedTime, TimeUnit.MILLISECONDS) + " hours)");
+        // end of deal with DST(日光節省時間)
+
+        // 第一次秀出倒數時間
+        DateFormat df = new SimpleDateFormat("HH:mm:ss"); // HH 24小時
+        countdown_time.setText(df.format(remainedTime-totalOffset));
+        // end of 第一次秀出倒數時間
+
+        // 啟動倒數Thread
+        Thread myThread = new Thread(new myRunnable(remainedTime,countdown_time,totalOffset));
+        myThread.start();
+        // end of 啟動倒數Thread
+
+        // 拿現在時間:
+//        String currTimeZone = getCurrTimeZone();
+//        Calendar cSchedStartCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+//        long gmtTime = cSchedStartCal.getTime().getTime();
+//        long timezoneAlteredTime = gmtTime + TimeZone.getTimeZone(currTimeZone).getRawOffset();
+//        Calendar cSchedStartCal1 = Calendar.getInstance(TimeZone.getTimeZone(currTimeZone));
+//        cSchedStartCal1.setTimeInMillis(timezoneAlteredTime);
+//        long currTime = cSchedStartCal1.getTime().getTime();
+
+    }// end of activateCountDown() method
+
     private class myRunnable implements Runnable {
         Long remainedTime;
         TextView remainedTimeView;
-//        private boolean isContinue = true;
-//
-//        public void terminate() {
-//            isContinue = false;
-//        }
+        long totalOffset;
 
-        public myRunnable(Long aRemainedTime, TextView aRemainedTimeView) {
+        public myRunnable(Long aRemainedTime, TextView aRemainedTimeView, long aTotalOffset) {
             remainedTime = aRemainedTime;
             remainedTimeView = aRemainedTimeView;
+            totalOffset = aTotalOffset;
         }
         @Override
         public void run() {
             final DateFormat df = new SimpleDateFormat("HH:mm:ss"); // HH 24小時
             while(remainedTime > 1000){
-                Log.d("OrderLookUpNowAdapter","remainedTime - " + remainedTime);
+                Log.d("timeTest-remainedTime", ""+remainedTime);
+                Log.d("timeTest-remainedTime" , ""+TimeUnit.HOURS.convert(remainedTime, TimeUnit.MILLISECONDS) + " hours)");
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -237,7 +276,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
                 remainedTimeView.post(new Runnable() {
                     @Override
                     public void run() {
-                        remainedTimeView.setText(df.format(remainedTime));
+                        remainedTimeView.setText(df.format(remainedTime-totalOffset));
                     }
                 });
 
@@ -246,12 +285,36 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
             remainedTimeView.post(new Runnable() {
                 @Override
                 public void run() {
-                    remainedTimeView.setText(df.format(0L));
+                    remainedTimeView.setText(df.format(0L-totalOffset));
                 }
             });
 
 
         }
-    }
+    }// end of Runnable
+
+    private long getMillisecondsToAlter(){
+        Calendar cal = Calendar.getInstance();
+        long milliDiff = cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET);
+        int houdDiff = (int)TimeUnit.HOURS.convert(milliDiff, TimeUnit.MILLISECONDS);
+        Log.d("timeTest","houdDiff - " + houdDiff);
+        // Got local offset, now loop through available timezone id(s).
+        long hourToAlter = OrderLookUpNowAdapter.serverTimeZoneHour - houdDiff;
+//        switch (houdDiff){
+//            case 3:
+//                hourToAlter = 5;
+//                break;
+//            case 4:
+//                hourToAlter = 4;
+//                break;
+//            case 8:
+//                hourToAlter = 0;
+//                break;
+//        }
+        long millisecondToAlter = hourToAlter * 3600000;
+        return millisecondToAlter;
+    }// end of getMillisecondsToAlter() method
+
+
 
 }// end class SpotAdapter

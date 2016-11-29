@@ -6,6 +6,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/loadpng03_250dp"/>
+            android:src="@drawable/logo02_250dp"/>
     </item>
 </layer-list>
