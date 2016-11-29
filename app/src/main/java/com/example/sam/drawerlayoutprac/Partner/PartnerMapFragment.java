@@ -300,6 +300,7 @@ public class PartnerMapFragment extends MustLoginFragment {
         bitmap = getCircleBitmap05(bitmap);
 
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        markerOptions.anchor(0.5f,0.5f);
         return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
     }
 
@@ -495,6 +496,9 @@ public class PartnerMapFragment extends MustLoginFragment {
         }
         return bitmap;
     }
+
+
+
 
 
     // onMapReady是在myConnectionCallBacks呼叫的，成功連線後才註冊此物件
