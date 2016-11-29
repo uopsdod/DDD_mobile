@@ -35,6 +35,9 @@ public class MemVO implements java.io.Serializable{
 	@JsonIgnore
 	private Set<OrdVO> memOrds = new LinkedHashSet<OrdVO>();
 	
+	@JsonIgnore
+	private Set<HotelRepVO> memHotelReps = new LinkedHashSet<HotelRepVO>();
+		
 	public String getMemId() {
 		return this.memId;
 	}
@@ -131,6 +134,15 @@ public class MemVO implements java.io.Serializable{
 	
 	public void setMemOrds(Set<OrdVO> aMemOrds){
 		this.memOrds = aMemOrds;
+	}
+	
+	/* 韓哥練習用 */
+	public Set<HotelRepVO> getMemHotelReps() {
+		return this.memHotelReps;
+	}
+	
+	public void setMemHotelReps(Set<HotelRepVO> aMemHotelReps) {
+		this.memHotelReps = aMemHotelReps;
 	}
 	
 }

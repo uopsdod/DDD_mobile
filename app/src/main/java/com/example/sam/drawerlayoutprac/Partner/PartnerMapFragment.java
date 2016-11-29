@@ -2,6 +2,7 @@ package com.example.sam.drawerlayoutprac.Partner;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -21,8 +22,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Hotel.HotelGetLowestPriceTask;
+import com.example.sam.drawerlayoutprac.Hotel.HotelGetLowestPriceVO;
+import com.example.sam.drawerlayoutprac.Hotel.HotelSearchVO;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.MustLoginFragment;
+import com.example.sam.drawerlayoutprac.Partner.VO.MemCoordVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,9 +48,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.MapsInitializer;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by cuser on 2016/10/31.
@@ -52,80 +60,23 @@ import java.util.Set;
 
 public class PartnerMapFragment extends MustLoginFragment {
 
+    // 版面配置
+    private static int map_bottom_padding = 150;
+    private static int map_right_padding = 32;
+    private static float floatingBtnY = MainActivity.floatingBtn.getY();
+
+    // googleMap:
     MapView mMapView;
     private GoogleMap googleMap;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
+
+    // Markers:
+    private HashMap<Marker, MemCoordVO> markerMap = new HashMap<>();
     private Marker CurrLocationMarker;
-    private GoogleApiClient.ConnectionCallbacks myConnectionCallBacks =
-            new GoogleApiClient.ConnectionCallbacks() {
 
-                @Override
-                public void onConnected(@Nullable Bundle bundle) {
-                    Log.i("PartnerMapFragment", "GoogleApiClient connected.");
-                    // 第一次: 取得最新位置
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    PartnerMapFragment.this.lastLocation = LocationServices.FusedLocationApi.getLastLocation(PartnerMapFragment.this.googleApiClient);
-                    Log.d("PartnerMapFragment", "init lastLacation: " + PartnerMapFragment.this.lastLocation);
-                    // end of 第一次: 取得最新位置
-
-                    // 自動移到自己位置 (特別注意: 一定要在確認拿到lastLocation之後，才用mMapView.getMapAsync，不然會crush)
-                    if (lastLocation != null) {
-                        mMapView.getMapAsync(PartnerMapFragment.this.myOnMapReadyCallback);// end of getMapAsync
-                    }else{
-                        Log.d("PartnerMapFragment","can't get lastLocation");
-                    }// end of if
-
-                    // 設定定位請求參數
-                    LocationRequest locationRequest = LocationRequest.create()
-                            // 設定使用GPS定位
-                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                            // 設定多久查詢一次定位，單位為毫秒
-                            .setInterval(1000)
-                            // 設定離上次定位達多少公尺後，才到表更新位置
-                            .setSmallestDisplacement(1000);
-                    // end of 設定定位請求參數
-
-                    // 設定locationListener監聽器物件
-                    LocationListener locationListener = new LocationListener() {
-                        @Override
-                        public void onLocationChanged(Location aLocation) {
-                            PartnerMapFragment.this.lastLocation = aLocation;
-                            uploadCurrentPosToServer();
-                            Log.d("PartnerMapFragment", "changed lastLacation: " + PartnerMapFragment.this.lastLocation);
-
-                        }
-                    };
-                    // end of 設定locationListener監聽器物件
-
-                    // 總totla註冊-設定監聽位置是否改變監聽器:
-                    LocationServices.FusedLocationApi.requestLocationUpdates(PartnerMapFragment.this.googleApiClient,
-                            locationRequest,
-                            locationListener);
-
-
-//                    //移動到現在位置
-//                    LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
-//                    //Place current location marker
-//                    PartnerMapFragment.this.CurrLocationMarker = placeMarkerAt(latLng);
-//                    // For zooming automatically to the location of the marker
-//                    moveToLocation(latLng,12);
-//
-//                    // 將初始位置資訊傳給server:
-//                    uploadCurrentPosToServer();
-
-
-                }// end of onConnected()
-
-                @Override
-                public void onConnectionSuspended(int i) {
-                    Util.showToast(getContext(), "GoogleApiClient connection suspended");
-                }
-            };
-
+    private String memId; // onCreate
+    
     private void uploadCurrentPosToServer() {
     }
 
@@ -147,6 +98,9 @@ public class PartnerMapFragment extends MustLoginFragment {
                     //.addOnConnectionFailedListener(onConnetionFailListener)
                     .build();
         }
+        // 取得memId:
+        SharedPreferences preference_r = getActivity().getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
+        PartnerMapFragment.this.memId = preference_r.getString("memId", null);
 
     }
 
@@ -172,16 +126,7 @@ public class PartnerMapFragment extends MustLoginFragment {
             e.printStackTrace();
         }
 
-
         return rootView;
-    }
-
-    private Marker placeMarkerAt(LatLng aLatLng) {
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(aLatLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
     }
 
     private void moveToLocation(LatLng aLatLng, int aZoomSize) {
@@ -227,50 +172,179 @@ public class PartnerMapFragment extends MustLoginFragment {
         mMapView.onLowMemory();
     }
 
+
+    private GoogleApiClient.ConnectionCallbacks myConnectionCallBacks =
+            new GoogleApiClient.ConnectionCallbacks() {
+
+                @Override
+                public void onConnected(@Nullable Bundle bundle) {
+                    Log.i("PartnerMapFragment", "GoogleApiClient connected.");
+                    // 第一次: 取得最新位置
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    PartnerMapFragment.this.lastLocation = LocationServices.FusedLocationApi.getLastLocation(PartnerMapFragment.this.googleApiClient);
+                    Log.d("HotelMapFragment", "init lastLacation: " + PartnerMapFragment.this.lastLocation);
+                    // end of 第一次: 取得最新位置
+
+                    // 自動移到自己位置 (特別注意: 一定要在確認拿到lastLocation之後，才用mMapView.getMapAsync，不然會crush)
+                    if (lastLocation != null) {
+                        mMapView.getMapAsync(PartnerMapFragment.this.myOnMapReadyCallback);// end of getMapAsync
+                    } else {
+                        Log.d("HotelMapFragment", "can't get lastLocation");
+                    }// end of if
+
+                    // 設定定位請求參數
+                    LocationRequest locationRequest = LocationRequest.create()
+                            // 設定使用GPS定位
+                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                            // 設定多久查詢一次定位，單位為毫秒
+                            .setInterval(1000)
+                            // 設定離上次定位達多少公尺後，才到表更新位置
+                            .setSmallestDisplacement(1000);
+                    // end of 設定定位請求參數
+
+                    // 設定locationListener監聽器物件
+                    LocationListener locationListener = new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location aLocation) {
+                            // 如果是第一次安裝app，且為第一次開啟googla map，防止沒有自動定位的情況
+                            if (PartnerMapFragment.this.lastLocation == null){
+                                PartnerMapFragment.this.lastLocation = aLocation;
+                                mMapView.getMapAsync(PartnerMapFragment.this.myOnMapReadyCallback);
+                                Log.d("PartnerMapFragment", "init lastLocation onLocationChanged callback");
+                                uploadCurrentPosToServer();
+                                return;
+                            }
+
+                            PartnerMapFragment.this.lastLocation = aLocation;
+                            uploadCurrentPosToServer();
+                            Log.d("PartnerMapFragment", "changed lastLocation: " + PartnerMapFragment.this.lastLocation);
+
+                        }
+                    };
+                    // end of 設定locationListener監聽器物件
+
+                    // 總totla註冊-設定監聽位置是否改變監聽器:
+                    LocationServices.FusedLocationApi.requestLocationUpdates(PartnerMapFragment.this.googleApiClient,
+                            locationRequest,
+                            locationListener);
+                }// end of onConnected()
+
+                @Override
+                public void onConnectionSuspended(int i) {
+                    Util.showToast(getContext(), "GoogleApiClient connection suspended");
+                }
+            };
+
+    private void initMap() {
+        PartnerMapFragment.this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        // public final void setPadding (int left, int top, int right, int bottom)
+        PartnerMapFragment.this.googleMap.setPadding(0, 0, PartnerMapFragment.map_right_padding, PartnerMapFragment.map_bottom_padding);
+        PartnerMapFragment.this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                //PartnerMapFragment.this.currClickedMarkerHotelId = null;
+                //PartnerMapFragment.this.hotelBlock.setVisibility(View.INVISIBLE);
+                PartnerMapFragment.this.googleMap.setPadding(0, 0, PartnerMapFragment.map_right_padding, PartnerMapFragment.this.map_bottom_padding);
+                MainActivity.floatingBtn.setY(PartnerMapFragment.floatingBtnY);
+            }
+        });
+    }
+    
+    private void goToCurrPosition() {
+        LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
+        //Place current location marker
+        if (PartnerMapFragment.this.CurrLocationMarker != null) {
+            PartnerMapFragment.this.CurrLocationMarker.remove();
+        }
+        PartnerMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+        // For zooming automatically to the location of the marker
+        moveToLocation(latLng, 15);
+    }
+
+    private Marker placeMemMarkerAt(LatLng aLatLng) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(aLatLng);
+        markerOptions.title("Current Position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
+    }
+
+    private void showGoToCurrPositionBtn() {
+        if (ActivityCompat.checkSelfPermission(
+                getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+        // 設定點擊觸發事件
+        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                Log.d("PartnerMapFragment", "onMyLocationButtonClick");
+                LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
+                //Place current location marker
+                if (PartnerMapFragment.this.CurrLocationMarker != null) {
+                    PartnerMapFragment.this.CurrLocationMarker.remove();
+                }
+                ;
+                PartnerMapFragment.this.CurrLocationMarker = placeMemMarkerAt(latLng);
+                // For zooming automatically to the location of the marker
+                moveToLocation(latLng, 15);
+                return false;
+            }
+        });
+    }
+
+    private void showMemMarkers() {
+        PartnerMapFragment.this.markerMap.clear();
+        //放上hotel Marker 並且 取得第一次各旅館的最低房價:
+        List<MemCoordVO> memCoordVOList = null;
+        try {
+            MemCoordVO myVO = new MemCoordVO();
+            myVO.setMemId(PartnerMapFragment.this.memId);
+            myVO.setMemLat(PartnerMapFragment.this.lastLocation.getLatitude());
+            myVO.setMemLng(PartnerMapFragment.this.lastLocation.getLongitude());
+
+            // server端已將自己排除在此list外:
+            memCoordVOList = new MemCoordGetAllTextTask().execute(myVO).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+//            Log.d("HotelMapFragment", hotelLowestPriceList.get(0).getHotelCheapestRoomPrice());
+
+        for (MemCoordVO myVO : memCoordVOList) {
+            LatLng latlng = new LatLng(myVO.getMemLat(), myVO.getMemLng());
+            Marker tmpMarker = placeMemMarkerAt(latlng);
+            PartnerMapFragment.this.markerMap.put(tmpMarker, myVO);
+        }
+
+        // 設定Marker點擊事件
+//        PartnerMapFragment.MyMarkerListener myMarkerListener = new PartnerMapFragment.MyMarkerListener();
+//        PartnerMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
+    }
+
+    // onMapReady是在myConnectionCallBacks呼叫的，成功連線後才註冊此物件
+    // mMapView.getMapAsync(HotelMapFragment.this.myOnMapReadyCallback);
     private OnMapReadyCallback myOnMapReadyCallback = new OnMapReadyCallback() {
 
         @Override
         public void onMapReady(GoogleMap mMap) {
             PartnerMapFragment.this.googleMap = mMap;
-            // set up floatingBtn click Listener
-
+            // init Map
+            initMap();
             // 回到自己現在位置
-            LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
-            //Place current location marker
-            if (PartnerMapFragment.this.CurrLocationMarker != null) {
-                PartnerMapFragment.this.CurrLocationMarker.remove();
-            }
-            PartnerMapFragment.this.CurrLocationMarker = placeMarkerAt(latLng);
-            // For zooming automatically to the location of the marker
-            moveToLocation(latLng, 12);
-
-
+            goToCurrPosition();
             // 顯示馬上到現在位置的按鈕
-            if (ActivityCompat.checkSelfPermission(
-                    getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            googleMap.setMyLocationEnabled(true);
-            // 設定點擊觸發事件
-            googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-                @Override
-                public boolean onMyLocationButtonClick() {
-                    Log.d("PartnerMapFragment", "onMyLocationButtonClick");
-                    LatLng latLng = new LatLng(PartnerMapFragment.this.lastLocation.getLatitude(), PartnerMapFragment.this.lastLocation.getLongitude());
-                    //Place current location marker
-                    if (PartnerMapFragment.this.CurrLocationMarker != null) {
-                        PartnerMapFragment.this.CurrLocationMarker.remove();
-                    }
-                    ;
-                    PartnerMapFragment.this.CurrLocationMarker = placeMarkerAt(latLng);
-                    // For zooming automatically to the location of the marker
-                    moveToLocation(latLng, 12);
-                    return false;
-                }
-            });
+            showGoToCurrPositionBtn();
+            // 顯示所有mem的markers
+            showMemMarkers();
+        }// end of onMapReady
 
-        }
     };// end of myOnMapReadyCallback
 }
