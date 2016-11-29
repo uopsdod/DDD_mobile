@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.info:
-                        fragment = new OrdInfoFragment();
+                        fragment = new OrderInfoFragment();
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
 
