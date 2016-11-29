@@ -172,7 +172,7 @@ public class MemberWishFragment extends MustLoginFragment {
                     public void onClick(View view) {
                         Fragment fragment = new RoomFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("RoomId", roomId);
+                        bundle.putSerializable("roomId", roomId);
                         fragment.setArguments(bundle);
                         Util.switchFragment(MemberWishFragment.this, fragment);
                     }

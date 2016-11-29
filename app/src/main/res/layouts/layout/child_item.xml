@@ -11,8 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:paddingLeft="25dp"
-        android:background="#cb8f8f"/>
+        android:padding="5dp"
+        android:background="#FFFFF4"
+        android:textColor="@color/black"/>
 
     <!--<ImageView-->
         <!--android:id="@+id/delete"-->

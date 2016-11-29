@@ -6,6 +6,8 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.example.sam.drawerlayoutprac.Hotel.HotelMapFragment;
 import com.example.sam.drawerlayoutprac.Member.MemGetOneTask;
 import com.example.sam.drawerlayoutprac.Member.MemVO;
 import com.example.sam.drawerlayoutprac.Order.OrderLookUpFragment;
+import com.example.sam.drawerlayoutprac.Room.RoomFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetOneTask;
 import com.example.sam.drawerlayoutprac.Hotel.HotelVO;
@@ -35,7 +38,7 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class OrderFragment extends CommonFragment {
-    private Button btSubmit;
+    private Button btSubmit, btCancel;
     private String roomId, hotelId;
     private HotelVO hotelVO;
     private RoomVO roomVO;
@@ -47,7 +50,7 @@ public class OrderFragment extends CommonFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        roomId = getArguments().getString("RoomId");
+        roomId = getArguments().getString("roomId");
         if(getArguments().getString("hotelId") == null){
             hotelId = null;
         }else {
@@ -55,6 +58,7 @@ public class OrderFragment extends CommonFragment {
         }
         View view = inflater.inflate(R.layout.fragment_order_cash, container, false);
         btSubmit = (Button) view.findViewById(R.id.btSubmit);
+        btCancel = (Button) view.findViewById(R.id.btCancel);
         tvHotelName = (TextView) view.findViewById(R.id.tvHotelName);
         tvHotelCity = (TextView) view.findViewById(R.id.tvHotelCity);
         tvHotelCounty = (TextView) view.findViewById(R.id.tvHotelCounty);
@@ -77,6 +81,13 @@ public class OrderFragment extends CommonFragment {
                 }
                 Util.switchFragment(OrderFragment.this, new OrderLookUpFragment());
 
+            }
+        });
+
+        btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchFragment();
             }
         });
         return view;
@@ -124,7 +135,13 @@ public class OrderFragment extends CommonFragment {
         }
     }
 
-//    private void makeOrder(){
-//
-//    }
+    //
+    public void switchFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.remove(OrderFragment.this);
+        fragmentManager.popBackStack();
+        fragmentTransaction.commit();
+    }
 }

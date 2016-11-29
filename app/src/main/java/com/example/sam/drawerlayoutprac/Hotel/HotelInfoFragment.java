@@ -229,11 +229,11 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
                 public void onClick(View view) {
                     Fragment fragment = new RoomFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("RoomId", roomId);
+                    bundle.putSerializable("roomId", roomId);
                     bundle.putSerializable("hotelId", hotelId);
                     fragment.setArguments(bundle);
                     Util.switchFragment(HotelInfoFragment.this, fragment);
-                    Util.showToast(getContext(), "RoomId" + roomId);
+                    Util.showToast(getContext(), "roomId" + roomId);
                 }
             });
         }

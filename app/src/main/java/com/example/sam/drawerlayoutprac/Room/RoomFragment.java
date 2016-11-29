@@ -39,7 +39,7 @@ import java.util.concurrent.ExecutionException;
 public class RoomFragment extends CommonFragment {
     private String TAG = "RoomFragment";
     private TextView tvRoomName, tvFacilitiesDetail, tvPrice, tvStatus;
-    private String RoomId, hotelId;
+    private String roomId, hotelId;
     private ImageView imageView, ivLike, ivUnLike;
     private RecyclerView rv_RoomImage;
     private Button btOrder;
@@ -50,10 +50,10 @@ public class RoomFragment extends CommonFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_room, container, false);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.GONE);
-        RoomId = getArguments().getString("RoomId");
-        if(getArguments().getString("hotelId") == null){
+        roomId = getArguments().getString("roomId");
+        if (getArguments().getString("hotelId") == null) {
             hotelId = null;
-        }else{
+        } else {
             hotelId = getArguments().getString("hotelId");
         }
         tvRoomName = (TextView) view.findViewById(R.id.tvRoomName);
@@ -78,7 +78,7 @@ public class RoomFragment extends CommonFragment {
                     //判斷使用者是否為會員，是會員就加入至願望清單
                     if (id != null) {
                         try {
-                            new WishInsertTask().execute(url, id, RoomId).get();
+                            new WishInsertTask().execute(url, id, roomId).get();
                         } catch (Exception e) {
                             Log.d(TAG, e.toString());
                         }
@@ -119,7 +119,7 @@ public class RoomFragment extends CommonFragment {
                     String url = Common.URL + "/android/Wish/wish.do";
                     String id = MainActivity.pref.getString("memId", null);
                     try {
-                        new WishDeleteTask().execute(url, id, RoomId).get();
+                        new WishDeleteTask().execute(url, id, roomId).get();
                     } catch (Exception e) {
                         Log.d(TAG, e.toString());
                     }
@@ -131,23 +131,23 @@ public class RoomFragment extends CommonFragment {
             @Override
             public void onClick(View view) {
                 boolean login = MainActivity.pref.getBoolean("login", false);
-                if(login){
-                    if(hotelId == null){
+                if (login) {
+                    if (hotelId == null) {
                         Fragment fragment = new OrderFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putString("RoomId", RoomId);
+                        bundle.putString("roomId", roomId);
                         fragment.setArguments(bundle);
                         Util.switchFragment(RoomFragment.this, fragment);
-                    }else{
+                    } else {
                         Fragment fragment = new OrderFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putString("RoomId", RoomId);
+                        bundle.putString("roomId", roomId);
                         bundle.putString("hotelId", hotelId);
                         fragment.setArguments(bundle);
                         Util.switchFragment(RoomFragment.this, fragment);
                     }
-                }else{
-                    Util.showToast(getContext(),"You must login to proceed");
+                } else {
+                    Util.showToast(getContext(), "You must login to proceed");
                     //new AlertDialog.Builder(getActivity()).setCancelable()
                     new AlertDialog.Builder(getActivity())
                             .setCancelable(false) // 讓使用者不能點擊旁邊取消
@@ -158,13 +158,13 @@ public class RoomFragment extends CommonFragment {
                                 public void onClick(DialogInterface dialog, int which) {
 //                            Util.showToast(getContext(),"登入pressed");
                                     MemberFragment.switchFromLoginPage = true;
-                                    Util.switchFragment(RoomFragment.this,new MemberFragment());
+                                    Util.switchFragment(RoomFragment.this, new MemberFragment());
                                 }
                             })
                             .setNegativeButton("暫時不要", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Util.showToast(getContext(),"暫時不要pressed");
+                                    Util.showToast(getContext(), "暫時不要pressed");
                                 }
                             })
                             .show();
@@ -192,7 +192,7 @@ public class RoomFragment extends CommonFragment {
     private void showFirstRoomPhoto() {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/room.do";
-            String id = RoomId;
+            String id = roomId;
             int imageSize = 250;
             new RoomGetImageTask(imageView).execute(url, id, imageSize);
         }
@@ -202,7 +202,7 @@ public class RoomFragment extends CommonFragment {
     private void showAllRoomPhoto() {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/room.do";
-            String id = RoomId;
+            String id = roomId;
             List<String> roomVOList = null;
             int imageSize = 250;
             try {
@@ -222,7 +222,7 @@ public class RoomFragment extends CommonFragment {
     private void showRoomDetail() {
         if (Common.networkConnected(getActivity())) {
             String url = Common.URL + "/android/room.do";
-            String id = RoomId;
+            String id = roomId;
             RoomVO roomVO = null;
             try {
                 roomVO = new RoomGetOneTask().execute(url, id).get();
@@ -233,11 +233,11 @@ public class RoomFragment extends CommonFragment {
                 Util.showToast(getActivity(), "No hotel fonnd");
             } else {
                 tvRoomName.setText(roomVO.getRoomName());
-                if(roomVO.getRoomPrice() == null || roomVO.getRoomPrice().equals(0)){
+                if (roomVO.getRoomPrice() == null || roomVO.getRoomPrice().equals(0)) {
                     tvStatus.setVisibility(View.VISIBLE);
                     tvPrice.setVisibility(View.GONE);
                     btOrder.setVisibility(View.INVISIBLE);
-                }else{
+                } else {
                     tvPrice.setText(roomVO.getRoomPrice().toString());
                 }
 
@@ -309,7 +309,7 @@ public class RoomFragment extends CommonFragment {
             WishVO wishVO = null;
             if (id != null) {
                 try {
-                    wishVO = new WishGetOneTask().execute(url, id, RoomId).get();
+                    wishVO = new WishGetOneTask().execute(url, id, roomId).get();
                 } catch (Exception e) {
                     Log.d(TAG, e.toString());
                 }
@@ -318,7 +318,7 @@ public class RoomFragment extends CommonFragment {
                 //沒有，則顯示中空的愛心
                 ivLike.setVisibility(View.INVISIBLE);
                 ivUnLike.setVisibility(View.VISIBLE);
-            } else if (wishVO.getWishRoomId().equals(RoomId)) {
+            } else if (wishVO.getWishRoomId().equals(roomId)) {
                 //有的話，就顯示實心的愛心
                 ivLike.setVisibility(View.VISIBLE);
                 ivUnLike.setVisibility(View.INVISIBLE);
