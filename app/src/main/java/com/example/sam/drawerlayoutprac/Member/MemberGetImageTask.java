@@ -21,7 +21,7 @@ public class MemberGetImageTask extends AsyncTask<Object /*傳進來的參數*/,
     private String ACTION = "getImage";
     private WeakReference<ImageView> imageViewWeakReference;
 
-    MemberGetImageTask(ImageView imageView){
+    public MemberGetImageTask(ImageView imageView){
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
 

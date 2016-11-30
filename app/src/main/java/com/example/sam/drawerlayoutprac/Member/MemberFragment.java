@@ -1,11 +1,14 @@
 package com.example.sam.drawerlayoutprac.Member;
 
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
@@ -28,12 +32,15 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MemberFragment extends CommonFragment {
     private String TAG = "MemberFragment";
-    TextView tvTroLogin;
+    String url;
+    TextView tvTroLogin, tvMemName, tvMemAccount;
+    ImageView ivMemPhoto;
     TextInputLayout tilUserName, tilPassword;
     EditText etUserName, etPassword;
     Button btLogin, btSignUp;
     Fragment fragment;
     MemVO memVO = new MemVO();
+    DrawerLayout drawerLayout;
     public static boolean switchFromLoginPage;
 
 
@@ -42,6 +49,14 @@ public class MemberFragment extends CommonFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_member, container, false);
+
+        //取得navigetionView的Header與物件
+        drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.navigation_view);
+        View v1 = navigationView.getHeaderView(0);
+        tvMemName = (TextView) v1.findViewById(R.id.tvMemName);
+        tvMemAccount = (TextView) v1.findViewById(R.id.tvMemAccount);
+        ivMemPhoto = (ImageView) v1.findViewById(R.id.ivMemPhoto);
 
         tilUserName = (TextInputLayout) view.findViewById(R.id.tilUserName);
         tilPassword = (TextInputLayout) view.findViewById(R.id.tilPassword);
@@ -84,10 +99,10 @@ public class MemberFragment extends CommonFragment {
     }
 
     private boolean isUserValid(String userName, String password){
-        String url = Common.URL + "/android/mem.do";
+        url = Common.URL + "/android/mem.do";
         if(Common.networkConnected(getActivity())){
             try {
-                memVO = new MemCheckTask().execute(url, userName, password).get();
+                memVO = new MemCheckTask().execute(url, userName, "AA104" + password).get();
                 Log.d(TAG, memVO.toString());
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
@@ -114,6 +129,7 @@ public class MemberFragment extends CommonFragment {
                     return;
                 }else{
                     String memId = memVO.getMemId().trim();
+                    int imageSize = 250;
                     //用Context.getSharedPreferences()呼叫，並指定偏好設定檔名與模式
                     SharedPreferences pref = getContext().getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
                     pref.edit().putString("userName", userName)
@@ -121,6 +137,10 @@ public class MemberFragment extends CommonFragment {
                                .putString("memId", memId)
                                .putBoolean("login" , true)
                                .apply();
+                    //會員登入之後，把該會員的姓名，帳號，照片顯示出來
+                    new MemberGetImageTask(ivMemPhoto).execute(url, memId, imageSize);
+                    tvMemName.setText(memVO.getMemName());
+                    tvMemAccount.setText(memVO.getMemAccount());
                     // 將會員Id與tokenId送到server
                     new TokenIdWebSocket(getActivity()).sendTokenIdToServer();
                     Util.showToast(getActivity(), "Login success");
@@ -189,4 +209,5 @@ public class MemberFragment extends CommonFragment {
             }
         });
     }
+
 }
