@@ -60,7 +60,10 @@ public class PartnerGetOneImageTask extends AsyncTask<Object, Integer, Bitmap> {
         if (isCancelled()) {
             bitmap = null;
         }
-        ImageView imageView = imageViewWeakReference.get();
+        ImageView imageView = null;
+        if (imageViewWeakReference != null){
+            imageView = imageViewWeakReference.get();
+        }
         if (imageView != null) {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
