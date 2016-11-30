@@ -29,8 +29,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sam.drawerlayoutprac.Common;
@@ -39,10 +41,12 @@ import com.example.sam.drawerlayoutprac.Hotel.HotelGetLowestPriceVO;
 import com.example.sam.drawerlayoutprac.Hotel.HotelSearchVO;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.MustLoginFragment;
+import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.MemCoordVO;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.TransformedResult;
 import com.google.android.gms.common.data.BitmapTeleporter;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -256,6 +260,7 @@ public class PartnerMapFragment extends MustLoginFragment {
         PartnerMapFragment.this.googleMap.getUiSettings().setZoomControlsEnabled(true);
         // public final void setPadding (int left, int top, int right, int bottom)
         PartnerMapFragment.this.googleMap.setPadding(0, 0, PartnerMapFragment.map_right_padding, PartnerMapFragment.map_bottom_padding);
+        PartnerMapFragment.this.googleMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
         PartnerMapFragment.this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -300,7 +305,7 @@ public class PartnerMapFragment extends MustLoginFragment {
         bitmap = getCircleBitmap05(bitmap);
 
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-        markerOptions.anchor(0.5f,0.5f);
+        markerOptions.anchor(0.5f, 0.5f);
         return PartnerMapFragment.this.googleMap.addMarker(markerOptions);
     }
 
@@ -446,7 +451,7 @@ public class PartnerMapFragment extends MustLoginFragment {
                 ;
                 PartnerMapFragment.this.CurrLocationMarker = placeMemSelfMarkerAt(latLng);
                 // For zooming automatically to the location of the marker
-                moveToLocation(latLng, 15);
+                moveToLocation(latLng, 16);
                 return false;
             }
         });
@@ -473,13 +478,13 @@ public class PartnerMapFragment extends MustLoginFragment {
 
         for (MemCoordVO myVO : memCoordVOList) {
             LatLng latlng = new LatLng(myVO.getMemLat(), myVO.getMemLng());
-            Marker tmpMarker = placeMemMarkerAt(latlng,myVO.getMemId());
+            Marker tmpMarker = placeMemMarkerAt(latlng, myVO.getMemId());
             PartnerMapFragment.this.markerMap.put(tmpMarker, myVO);
         }
 
         // 設定Marker點擊事件
-//        PartnerMapFragment.MyMarkerListener myMarkerListener = new PartnerMapFragment.MyMarkerListener();
-//        PartnerMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
+        PartnerMapFragment.MyMarkerListener myMarkerListener = new PartnerMapFragment.MyMarkerListener();
+        PartnerMapFragment.this.googleMap.setOnMarkerClickListener(myMarkerListener);
     }
 
 
@@ -497,8 +502,83 @@ public class PartnerMapFragment extends MustLoginFragment {
         return bitmap;
     }
 
+    public class MyMarkerListener implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+        @Override
+        public boolean onMarkerClick(Marker aMarker) {
+            MemCoordVO memCoordVO = markerMap.get(aMarker);
+            // 如果是自己，則不進行任何動作
+            if (memCoordVO == null) {
+                return true;
+            }
+            aMarker.showInfoWindow();
+            // 緯度+0.002,經度-0.00015 - 在還無法調整infowindow大小時，先這樣應對
+            moveToLocation(new LatLng((memCoordVO.getMemLat() + 0.002), memCoordVO.getMemLng() - 0.00015), 16);
+            return true; // return true 取消預設的事件
+        }
+
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+//                showToast(marker.getTitle());
+        }
+    }
+
+    private class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private final View infoWindow;
+
+        MyInfoWindowAdapter() {
+            infoWindow = View.inflate(PartnerMapFragment.this.getContext(), R.layout.partner_map_detail, null);
+            // Set desired height and width
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            MemCoordVO memCoordVO = markerMap.get(marker);
+            String url = Common.URL_Partner;
+            final String toMemId = memCoordVO.getMemId();
+            int imageSize = 250;
+            Bitmap bitmap = null;
+            try {
+                bitmap = new PartnerGetOneImageTask().execute(url, toMemId, imageSize).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            View buttonProfile = infoWindow.findViewById(R.id.map_button_profile);
+
+            buttonProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Util.showToast(getContext(), "進入聊天視窗");
+                    android.support.v4.app.Fragment fragment = new ChatFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ToMemId", toMemId);
+                    fragment.setArguments(bundle);
+                    Util.switchFragment(PartnerMapFragment.this, fragment);
+                }
+            });
 
 
+            ImageView profile = ((ImageView) infoWindow
+                    .findViewById(R.id.map_image_view_avatar));
+            profile.setImageBitmap(bitmap);
+
+            TextView name = ((TextView) infoWindow
+                    .findViewById(R.id.map_text_view_profile_name));
+            name.setText(memCoordVO.getMemName());
+
+            TextView intro = (TextView) infoWindow.findViewById(R.id.map_text_view_profile_description);
+            intro.setText(memCoordVO.getMemIntro());
+
+            return infoWindow;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
+        }
+    }
 
 
     // onMapReady是在myConnectionCallBacks呼叫的，成功連線後才註冊此物件
