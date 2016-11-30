@@ -17,10 +17,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.Member.MemGetOneTask;
+import com.example.sam.drawerlayoutprac.Member.MemVO;
 import com.example.sam.drawerlayoutprac.Member.MemberFragment;
+import com.example.sam.drawerlayoutprac.Member.MemberGetImageTask;
 import com.example.sam.drawerlayoutprac.Member.MemberInfoFragment;
 import com.example.sam.drawerlayoutprac.Order.OrderLookUpFragment;
 import com.example.sam.drawerlayoutprac.Order.OrderLookUpNowAdapter;
@@ -35,8 +41,11 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import org.java_websocket.client.WebSocketClient;
 
+import android.support.v4.app.Fragment;
+
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -44,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     WebSocketClient webSocketClientTmp;
+    private ImageView ivMemPhoto;
+    private TextView tvMemName, tvMemAccount;
+    private LinearLayout linLayout;
     public static FloatingActionButton floatingBtn;
     public static boolean floatingBtnPressed = false;
     public static Menu actionBarMenu;
@@ -138,15 +150,64 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.navigation_view);
 
+        //取得navigationView的header
+        View view = navigationView.getHeaderView(0);
+        //取得header裡面的原件
+        ivMemPhoto = (ImageView) view.findViewById(R.id.ivMemPhoto);
+        tvMemName = (TextView) view.findViewById(R.id.tvMemName);
+        tvMemAccount = (TextView) view.findViewById(R.id.tvMemAccount);
+        linLayout = (LinearLayout) view.findViewById(R.id.linLayout);
+        //點及後進入會員資料修改或登入/註冊畫面
+        linLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean login = pref.getBoolean("login", false);
+                if (login) {
+                    //如果已經登入，就轉到會員資料的頁面
+                    Fragment fragment = new MemberInfoFragment();
+                    Util.switchFragment(MainActivity.this, fragment);
+                    drawerLayout.closeDrawers();
+                } else {
+                    //若還沒登入，就轉到會員登入、註冊頁面
+                    Fragment fragment = new MemberFragment();
+                    Util.switchFragment(MainActivity.this, fragment);
+                    drawerLayout.closeDrawers();
+                }
+            }
+        });
+        String memId = this.pref.getString("memId", null);
+        String url = Common.URL + "/android/mem.do";
+        int imageSize = 250;
+        MemVO memVO = null;
+        //若已經登入則秀出會員的帳號、姓名及照片
+        if (memId != null) {
+            if (Common.networkConnected(this)) {
+                try {
+                    memVO = new MemGetOneTask().execute(url, memId).get();
+                    new MemberGetImageTask(ivMemPhoto).execute(url, memId, imageSize);
+                } catch (Exception e) {
+                    Log.d(TAG, e.toString());
+                }
+
+            }
+            tvMemName.setText(memVO.getMemName());
+            tvMemAccount.setText(memVO.getMemAccount());
+        } else {
+            //未登入則顯示以下的資訊
+            ivMemPhoto.setImageResource(R.drawable.profile_default);
+            tvMemName.setText("訪客");
+            tvMemAccount.setText("點這裡登入");
+        }
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             Menu menu = navigationView.getMenu();
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                View popMenu = findViewById(R.id.my_member);
+//                View popMenu = findViewById(R.id.my_member);
                 item.setChecked(true);
                 drawerLayout.closeDrawers(); // important step
-                android.support.v4.app.Fragment fragment = null;
+                Fragment fragment = null;
                 switch (item.getItemId()) {
                     case R.id.lookfor_hotel:
                         //showToast("hotel clicked");
@@ -165,18 +226,18 @@ public class MainActivity extends AppCompatActivity {
                         Util.switchFragment(MainActivity.this, fragment);
                         break;
 
-                    case R.id.my_member:
-
-                        boolean login = pref.getBoolean("login",false);
-                        if(login){
-                            //如果已經登入，就轉到會員資料的頁面
-                            fragment = new MemberInfoFragment();
-                            Util.switchFragment(MainActivity.this, fragment);
-                        }else{
-                            //若還沒登入，就轉到會員登入、註冊頁面
-                            fragment = new MemberFragment();
-                            Util.switchFragment(MainActivity.this, fragment);
-                        }
+//                    case R.id.my_member:
+//
+//                        boolean login = pref.getBoolean("login", false);
+//                        if (login) {
+//                            //如果已經登入，就轉到會員資料的頁面
+//                            fragment = new MemberInfoFragment();
+//                            Util.switchFragment(MainActivity.this, fragment);
+//                        } else {
+//                            //若還沒登入，就轉到會員登入、註冊頁面
+//                            fragment = new MemberFragment();
+//                            Util.switchFragment(MainActivity.this, fragment);
+//                        }
 //                        PopupMenu popupMenu = new PopupMenu(navigationView.getContext(), popMenu);
 //                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 //                            @Override
@@ -185,14 +246,14 @@ public class MainActivity extends AppCompatActivity {
 //                            }
 //                        });
 //                        popupMenu.show();
-                        break;
+//                        break;
 
                     case R.id.my_member_hotel:
                         String hotelAccount = pref_Hotel.getString("userName", null);
-                        if(hotelAccount == null){
+                        if (hotelAccount == null) {
                             fragment = new HotelMemberFragment();
                             Util.switchFragment(MainActivity.this, fragment);
-                        }else{
+                        } else {
                             fragment = new QRBarcodeScanFragment();
                             Util.switchFragment(MainActivity.this, fragment);
                         }
