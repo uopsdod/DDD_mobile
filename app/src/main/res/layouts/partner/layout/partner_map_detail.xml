@@ -3,16 +3,12 @@
     android:id="@+id/wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/window02"
-    android:paddingBottom="40dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="8dp">
+>
 
     <ImageView
         android:id="@+id/map_image_view_avatar"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="200dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/toolbar_profile"
@@ -58,7 +54,7 @@
 
     <include
         android:id="@+id/map_button_profile"
-        layout="@layout/button_round_msg"
+        layout="@layout/map_button_round_msg"
         android:layout_width="@dimen/size_button_message"
         android:layout_height="@dimen/size_button_message"
         android:layout_marginBottom="29dp"

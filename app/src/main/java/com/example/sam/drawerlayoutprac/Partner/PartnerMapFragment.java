@@ -14,6 +14,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -95,6 +97,10 @@ public class PartnerMapFragment extends MustLoginFragment {
 
     private String memId; // onCreate
 
+    MapWrapperLayout mapWrapperLayout;
+    private View infoWindow;
+    OnInfoWindowElemTouchListener infoButtonListener;
+
     private void uploadCurrentPosToServer() {
     }
 
@@ -104,6 +110,7 @@ public class PartnerMapFragment extends MustLoginFragment {
         super.onResume();
         mMapView.onResume();
         this.googleApiClient.connect();
+        MainActivity.floatingBtn.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -124,9 +131,13 @@ public class PartnerMapFragment extends MustLoginFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.partner_map_fragment, container, false);
+        mapWrapperLayout = (MapWrapperLayout)inflater.inflate(R.layout.partner_map_fragment, container, false);
+        //View mapWrapperLayout = inflater.inflate(R.layout.partner_map_fragment, container, false);
+        infoWindow = View.inflate(PartnerMapFragment.this.getContext(), R.layout.partner_map_detail, null);
+        View buttonProfile = infoWindow.findViewById(R.id.map_button_profile);
+        ImageView map_image_view = (ImageView) infoWindow.findViewById(R.id.map_image_view);
 
-        mMapView = (MapView) rootView.findViewById(R.id.partnerMap);
+        mMapView = (MapView) mapWrapperLayout.findViewById(R.id.partnerMap);
         mMapView.onCreate(savedInstanceState); //接收傳入此Fragment
         mMapView.onResume(); // needed to get the map to display immediately
 
@@ -144,7 +155,21 @@ public class PartnerMapFragment extends MustLoginFragment {
             e.printStackTrace();
         }
 
-        return rootView;
+        infoButtonListener = new OnInfoWindowElemTouchListener(buttonProfile,getContext(),PartnerMapFragment.this)
+        {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                // Here we can perform some action triggered after clicking the button
+                Util.showToast(getActivity(), marker.getTitle() + "'s button clicked!");
+            }
+        };
+        buttonProfile.setOnTouchListener(infoButtonListener);
+
+
+
+
+
+        return mapWrapperLayout;
     }
 
     private void moveToLocation(LatLng aLatLng, int aZoomSize) {
@@ -270,6 +295,14 @@ public class PartnerMapFragment extends MustLoginFragment {
                 MainActivity.floatingBtn.setY(PartnerMapFragment.floatingBtnY);
             }
         });
+
+
+        mapWrapperLayout.init(PartnerMapFragment.this.googleMap, getPixelsFromDp(getContext(), 39 + 20));
+    }
+
+    public static int getPixelsFromDp(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int)(dp * scale + 0.5f);
     }
 
     private void goToCurrPosition() {
@@ -505,6 +538,7 @@ public class PartnerMapFragment extends MustLoginFragment {
     public class MyMarkerListener implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
         @Override
         public boolean onMarkerClick(Marker aMarker) {
+            infoButtonListener.pressed = false;
             MemCoordVO memCoordVO = markerMap.get(aMarker);
             // 如果是自己，則不進行任何動作
             if (memCoordVO == null) {
@@ -523,16 +557,20 @@ public class PartnerMapFragment extends MustLoginFragment {
     }
 
     private class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-        private final View infoWindow;
 
         MyInfoWindowAdapter() {
-            infoWindow = View.inflate(PartnerMapFragment.this.getContext(), R.layout.partner_map_detail, null);
             // Set desired height and width
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
-            MemCoordVO memCoordVO = markerMap.get(marker);
+
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker aMarker) {
+            MemCoordVO memCoordVO = markerMap.get(aMarker);
             String url = Common.URL_Partner;
             final String toMemId = memCoordVO.getMemId();
             int imageSize = 250;
@@ -545,19 +583,31 @@ public class PartnerMapFragment extends MustLoginFragment {
                 e.printStackTrace();
             }
 
-            View buttonProfile = infoWindow.findViewById(R.id.map_button_profile);
 
-            buttonProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Util.showToast(getContext(), "進入聊天視窗");
-                    android.support.v4.app.Fragment fragment = new ChatFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("ToMemId", toMemId);
-                    fragment.setArguments(bundle);
-                    Util.switchFragment(PartnerMapFragment.this, fragment);
-                }
-            });
+            // Setting custom OnTouchListener which deals with the pressed state
+            // so it shows up
+//            LayoutInflater inflator = LayoutInflater.from(getContext());
+//            View button_img = inflator.inflate(R.layout.map_button_round_msg,null,false);
+//            Bitmap bitmap_button = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+//            Canvas canvas = new Canvas(bitmap_button);
+//            button_img.layout(button_img.getLeft(), button_img.getTop(), button_img.getRight(), button_img.getBottom());
+//            button_img.draw(canvas);
+//            Drawable drawable_button = (Drawable)new BitmapDrawable(bitmap_button);
+            infoButtonListener.setMarker(aMarker);
+            Log.d("infoWindow","getInfoContents toMemId: " + memCoordVO.getMemId());
+            infoButtonListener.setToMemId(memCoordVO.getMemId());
+
+//            buttonProfile.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Util.showToast(getContext(), "進入聊天視窗");
+//                    android.support.v4.app.Fragment fragment = new ChatFragment();
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("ToMemId", toMemId);
+//                    fragment.setArguments(bundle);
+//                    Util.switchFragment(PartnerMapFragment.this, fragment);
+//                }
+//            });
 
 
             ImageView profile = ((ImageView) infoWindow
@@ -571,12 +621,11 @@ public class PartnerMapFragment extends MustLoginFragment {
             TextView intro = (TextView) infoWindow.findViewById(R.id.map_text_view_profile_description);
             intro.setText(memCoordVO.getMemIntro());
 
-            return infoWindow;
-        }
+            // We must call this to set the current marker and infoWindow references
+            // to the MapWrapperLayout
+            mapWrapperLayout.setMarkerWithInfoWindow(aMarker, infoWindow);
 
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
+            return infoWindow;
         }
     }
 

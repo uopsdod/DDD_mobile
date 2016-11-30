@@ -3,11 +3,12 @@
     android:orientation="vertical"
     android:layout_width="@dimen/size_button_message"
     android:layout_height="@dimen/size_button_message"
+    android:layout_margin="60dp"
     android:background="@drawable/bg_blue_circle">
 
     <ImageView
         android:layout_marginTop="2dp"
-        android:layout_width="46dp"
+        android:layout_width="49dp"
         android:layout_height="51dp"
         android:src="@drawable/ic_text_white"
         android:layout_gravity="center" />
