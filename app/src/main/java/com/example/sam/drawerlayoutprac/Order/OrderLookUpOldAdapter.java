@@ -162,6 +162,8 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
             holder.ord_report_badhotel.setText("檢舉廠商");
             //holder.ord_rating.setPadding();
             holder.ord_report_badhotel.setCompoundDrawablesWithIntrinsicBounds( R.drawable.stop_red_24dp, 0, 0, 0);
+            holder.ord_report_badhotel.setEnabled(true);
+            holder.ord_report_badhotel.setPressed(false);
             holder.ord_report_badhotel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

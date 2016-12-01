@@ -104,7 +104,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         final OrdVO ordVO = this.myOrdList.get(position);
 
         //啟動倒數:
-        activateCountDown(ordVO,holder.countdown_time,holder.ord_status);
+        activateCountDown(ordVO,holder);
 
         // 開始將data bind 到 view 上面:
         String hotelName = ordVO.getOrdHotelVO().getHotelName();
@@ -177,7 +177,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
     }
 
 
-    private void activateCountDown(OrdVO aOrdVO, TextView countdown_time, TextView aOrd_status) {
+    private void activateCountDown(OrdVO aOrdVO, OrderLookUpNowAdapter.MyViewHolder aHolder) {
         // 完成項目: 可動態依據客戶端timezone，進行倒數
         // 完成一半項目: 尚且無法確切得知server是否有使用DST，目前只是暫時先用土法方法解決
         // 未完成項目: 尚且無法動態抓取server的 timezone hours
@@ -233,11 +233,11 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
 
         // 第一次秀出倒數時間
         DateFormat df = new SimpleDateFormat("HH:mm:ss"); // HH 24小時
-        countdown_time.setText(df.format(remainedTime-totalOffset));
+        aHolder.countdown_time.setText(df.format(remainedTime-totalOffset));
         // end of 第一次秀出倒數時間
 
         // 啟動倒數Thread
-        Thread myThread = new Thread(new myRunnable(remainedTime,countdown_time,totalOffset,aOrd_status));
+        Thread myThread = new Thread(new myRunnable(remainedTime,aHolder,totalOffset));
         myThread.start();
         // end of 啟動倒數Thread
 
@@ -254,14 +254,12 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
 
     private class myRunnable implements Runnable {
         Long remainedTime;
-        TextView remainedTimeView;
-        TextView ordStatus;
+        OrderLookUpNowAdapter.MyViewHolder holder;
         long totalOffset;
 
-        public myRunnable(Long aRemainedTime, TextView aRemainedTimeView, long aTotalOffset, TextView aOrd_status) {
+        public myRunnable(Long aRemainedTime, OrderLookUpNowAdapter.MyViewHolder aHolder, long aTotalOffset) {
             remainedTime = aRemainedTime;
-            remainedTimeView = aRemainedTimeView;
-            ordStatus = aOrd_status;
+            holder = aHolder;
             totalOffset = aTotalOffset;
         }
         @Override
@@ -271,31 +269,37 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
                 Log.d("timeTest-remainedTime", ""+remainedTime);
                 Log.d("timeTest-remainedTime" , ""+TimeUnit.HOURS.convert(remainedTime, TimeUnit.MILLISECONDS) + " hours)");
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     Log.e("OrderLookUpNowAdapter", e.toString());
                 }
-                remainedTimeView.post(new Runnable() {
+                holder.countdown_time.post(new Runnable() {
                     @Override
                     public void run() {
-                        remainedTimeView.setText(df.format(remainedTime-totalOffset));
+                        holder.countdown_time.setText(df.format(remainedTime-totalOffset));
                     }
                 });
 
                 remainedTime -= 1000L;
             }// end of while
-            remainedTimeView.post(new Runnable() {
+            holder.countdown_time.post(new Runnable() {
                 @Override
                 public void run() {
-                    remainedTimeView.setText(df.format(0L-totalOffset));
+                    holder.countdown_time.setText(df.format(0L-totalOffset));
                 }
             });
-            ordStatus.post(new Runnable() {
+            holder.ord_status.post(new Runnable() {
                 @Override
                 public void run() {
-                    ordStatus.setText("逾時取消");
-                    giveStatusColor(ordStatus, "逾時取消");
                     OrderLookUpFragment.isFreshNeeded = true;
+                    holder.ord_status.setText("逾時取消");
+                    giveStatusColor(holder.ord_status, "逾時取消");
+                    //holder.ord_check_qr.setCompoundDrawables(context.getResources().getDrawable(android.R.drawable.ic_dialog_email),null,null,null);
+                    holder.ord_check_qr.setCompoundDrawablesWithIntrinsicBounds( R.drawable.qr_codes_grey_24dp, 0, 0, 0);
+                    holder.ord_check_qr.setEnabled(false);
+                    holder.ord_cancel.setCompoundDrawablesWithIntrinsicBounds( R.drawable.cancel_grey_24dp, 0, 0, 0);
+                    holder.ord_cancel.setEnabled(false);
+
                 }
             });
 
