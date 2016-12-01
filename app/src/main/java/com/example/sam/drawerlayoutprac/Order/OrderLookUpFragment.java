@@ -51,6 +51,8 @@ public class OrderLookUpFragment extends MustLoginFragment {
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     public static long ordDuration; // millesecond
 
+    public static boolean isFreshNeeded = false;
+
     static {
         ordStatusConverter.put("0", "已下單");
         ordStatusConverter.put("1", "主動取消");
@@ -107,6 +109,10 @@ public class OrderLookUpFragment extends MustLoginFragment {
         btnOrdNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isFreshNeeded){
+                    isFreshNeeded = false;
+                    OrderLookUpFragment.this.myOrdList = getOrdList();
+                }
                 Util.showToast(getContext(), "now ord clicked");
                 updateOrdNowList();
             }
@@ -114,6 +120,10 @@ public class OrderLookUpFragment extends MustLoginFragment {
         btnOrdOld.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isFreshNeeded){
+                    isFreshNeeded = false;
+                    OrderLookUpFragment.this.myOrdList = getOrdList();
+                }
                 updateOrdOldList();
             }
         });

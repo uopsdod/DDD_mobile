@@ -67,8 +67,9 @@ public class MemRepGetOneTextViaOrdIdTask extends AsyncTask<String, Void, MemRep
 
         // 回傳至onPostExecute(List<MemVO> items) - 備註:此為 UI main thread在呼叫的
         try{
+            // 這邊要注意傳過來的字串中，不能有圖片資料，如果有的話會傳失敗，而產生Exception
             MemRepVO memRepVO = gson.fromJson(jsonIn, MemRepVO.class);
-            return gson.fromJson(jsonIn, MemRepVO.class);
+            return memRepVO;
         }catch (Exception e){
             e.printStackTrace();
         }

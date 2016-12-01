@@ -101,7 +101,12 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         giveStatusColor(holder.ord_status,ordStatus);
         if ("已入住".equals(ordStatus)){
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            holder.ord_checktime.setText(df.format(ordVO.getOrdLiveDate()));
+            if (ordVO.getOrdLiveDate() != null){
+                holder.ord_checktime.setText(df.format(ordVO.getOrdLiveDate()));
+            }else{
+                holder.ord_checktime.setText("日期更新中");
+            }
+
         }else{
             holder.ord_checktime_title.setVisibility(View.INVISIBLE);
             holder.ord_checktime.setVisibility(View.INVISIBLE);
@@ -141,7 +146,7 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
         MemRepVO memRepVO = null;
         //String ordId = "2016111003";
         String ordId = ordVO.getOrdId();
-        //Log.d("OrderLookUpOldAdapter", "ordId - " + ordId);
+        Log.d("OrderLookUpOldAdapter", "ordId - " + ordId);
         try {
             memRepVO = new MemRepGetOneTextViaOrdIdTask(this.context).execute(ordId).get();
         } catch (InterruptedException e) {
@@ -150,6 +155,9 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
             e.printStackTrace();
         }
 
+        Log.d("OrderLookUpOldAdapter","ordStatus: " + ordStatus);
+        Log.d("OrderLookUpOldAdapter","memRepVO:=" + (memRepVO==null));
+//        Log.d("OrderLookUpOldAdapter","memRepVO: " + memRepVO.getMemRepContent());
         if ("已入住".equals(ordStatus) && memRepVO == null) {
             holder.ord_report_badhotel.setText("檢舉廠商");
             //holder.ord_rating.setPadding();
@@ -167,6 +175,7 @@ public class OrderLookUpOldAdapter extends RecyclerView.Adapter<OrderLookUpOldAd
                 }
             });
         }else if ("已入住".equals(ordStatus)){
+            Log.d("OrderLookUpOldAdapter","已檢舉");
             holder.ord_report_badhotel.setText("已檢舉");
             holder.ord_report_badhotel.setPressed(true);
             holder.ord_report_badhotel.setEnabled(false);

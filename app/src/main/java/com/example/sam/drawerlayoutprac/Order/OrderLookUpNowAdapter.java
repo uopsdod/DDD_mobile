@@ -104,7 +104,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         final OrdVO ordVO = this.myOrdList.get(position);
 
         //啟動倒數:
-        activateCountDown(ordVO,holder.countdown_time);
+        activateCountDown(ordVO,holder.countdown_time,holder.ord_status);
 
         // 開始將data bind 到 view 上面:
         String hotelName = ordVO.getOrdHotelVO().getHotelName();
@@ -177,7 +177,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
     }
 
 
-    private void activateCountDown(OrdVO aOrdVO, TextView countdown_time) {
+    private void activateCountDown(OrdVO aOrdVO, TextView countdown_time, TextView aOrd_status) {
         // 完成項目: 可動態依據客戶端timezone，進行倒數
         // 完成一半項目: 尚且無法確切得知server是否有使用DST，目前只是暫時先用土法方法解決
         // 未完成項目: 尚且無法動態抓取server的 timezone hours
@@ -237,7 +237,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         // end of 第一次秀出倒數時間
 
         // 啟動倒數Thread
-        Thread myThread = new Thread(new myRunnable(remainedTime,countdown_time,totalOffset));
+        Thread myThread = new Thread(new myRunnable(remainedTime,countdown_time,totalOffset,aOrd_status));
         myThread.start();
         // end of 啟動倒數Thread
 
@@ -255,11 +255,13 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
     private class myRunnable implements Runnable {
         Long remainedTime;
         TextView remainedTimeView;
+        TextView ordStatus;
         long totalOffset;
 
-        public myRunnable(Long aRemainedTime, TextView aRemainedTimeView, long aTotalOffset) {
+        public myRunnable(Long aRemainedTime, TextView aRemainedTimeView, long aTotalOffset, TextView aOrd_status) {
             remainedTime = aRemainedTime;
             remainedTimeView = aRemainedTimeView;
+            ordStatus = aOrd_status;
             totalOffset = aTotalOffset;
         }
         @Override
@@ -286,6 +288,14 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
                 @Override
                 public void run() {
                     remainedTimeView.setText(df.format(0L-totalOffset));
+                }
+            });
+            ordStatus.post(new Runnable() {
+                @Override
+                public void run() {
+                    ordStatus.setText("逾時取消");
+                    giveStatusColor(ordStatus, "逾時取消");
+                    OrderLookUpFragment.isFreshNeeded = true;
                 }
             });
 
