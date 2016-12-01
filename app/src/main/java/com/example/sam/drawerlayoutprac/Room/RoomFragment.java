@@ -39,10 +39,11 @@ import java.util.concurrent.ExecutionException;
 public class RoomFragment extends CommonFragment {
     private String TAG = "RoomFragment";
     private TextView tvRoomName, tvFacilitiesDetail, tvPrice, tvStatus;
-    private String roomId, hotelId;
+    private String roomId, hotelId, price;
     private ImageView imageView, ivLike, ivUnLike;
     private RecyclerView rv_RoomImage;
     private Button btOrder;
+
 
     @Nullable
     @Override
@@ -136,6 +137,7 @@ public class RoomFragment extends CommonFragment {
                         Fragment fragment = new OrderFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("roomId", roomId);
+                        bundle.putString("price", price);
                         fragment.setArguments(bundle);
                         Util.switchFragment(RoomFragment.this, fragment);
                     } else {
@@ -143,6 +145,7 @@ public class RoomFragment extends CommonFragment {
                         Bundle bundle = new Bundle();
                         bundle.putString("roomId", roomId);
                         bundle.putString("hotelId", hotelId);
+                        bundle.putString("price", price);
                         fragment.setArguments(bundle);
                         Util.switchFragment(RoomFragment.this, fragment);
                     }
@@ -238,7 +241,8 @@ public class RoomFragment extends CommonFragment {
                     tvPrice.setVisibility(View.GONE);
                     btOrder.setVisibility(View.INVISIBLE);
                 } else {
-                    tvPrice.setText(roomVO.getRoomPrice().toString());
+                    price = roomVO.getRoomPrice().toString();
+                    tvPrice.setText(price);
                 }
 
                 tvFacilitiesDetail.setText(roomVO.getRoomFun() + "\n" + roomVO.getRoomMeal() + "\n" + roomVO.getRoomSleep() + "\n" + roomVO.getRoomFacility() + "\n" + roomVO.getRoomSweetFacility());

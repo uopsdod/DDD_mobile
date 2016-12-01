@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     WebSocketClient webSocketClientTmp;
     private ImageView ivMemPhoto;
     private TextView tvMemName, tvMemAccount;
-    private LinearLayout linLayout;
+    private RelativeLayout linLayout;
     public static FloatingActionButton floatingBtn;
     public static boolean floatingBtnPressed = false;
     public static Menu actionBarMenu;
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         ivMemPhoto = (ImageView) view.findViewById(R.id.ivMemPhoto);
         tvMemName = (TextView) view.findViewById(R.id.tvMemName);
         tvMemAccount = (TextView) view.findViewById(R.id.tvMemAccount);
-        linLayout = (LinearLayout) view.findViewById(R.id.linLayout);
+        linLayout = (RelativeLayout) view.findViewById(R.id.linLayout);
         //點及後進入會員資料修改或登入/註冊畫面
         linLayout.setOnClickListener(new View.OnClickListener() {
             @Override

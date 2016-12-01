@@ -39,18 +39,19 @@ import java.util.concurrent.ExecutionException;
 
 public class OrderFragment extends CommonFragment {
     private Button btSubmit, btCancel;
-    private String roomId, hotelId;
+    private String roomId, hotelId, price;
     private HotelVO hotelVO;
     private RoomVO roomVO;
     private TextView tvHotelName, tvHotelCity, tvHotelCounty, tvHotelRoad, tvHotelPhone, tvRoomName, tvRoomPrice, tvMemName;
     private String memId = MainActivity.pref.getString("memId", null);
-    private int price;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         roomId = getArguments().getString("roomId");
+        price = getArguments().getString("price");
         if(getArguments().getString("hotelId") == null){
             hotelId = null;
         }else {
@@ -112,11 +113,11 @@ public class OrderFragment extends CommonFragment {
                     hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
                     roomVO = new RoomGetOneTask().execute(urlRoom, roomId).get();
                     memVO = new MemGetOneTask().execute(urlMem, memId).get();
-                    price = roomVO.getRoomPrice();
+//                    price = roomVO.getRoomPrice().toString();
                 }else{
                     roomVO = new RoomGetOneTask().execute(urlRoom, roomId).get();
                     memVO = new MemGetOneTask().execute(urlMem, memId).get();
-                    price = roomVO.getRoomPrice();
+//                    price = roomVO.getRoomPrice().toString();
                     hotelId = roomVO.getRoomHotelId();
                     hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
                 }
@@ -130,7 +131,7 @@ public class OrderFragment extends CommonFragment {
             tvHotelRoad.setText(hotelVO.getHotelRoad());
             tvHotelPhone.setText(hotelVO.getHotelPhone());
             tvRoomName.setText(roomVO.getRoomName());
-            tvRoomPrice.setText(roomVO.getRoomPrice().toString());
+            tvRoomPrice.setText(price);
             tvMemName.setText(memVO.getMemName().toString());
         }
     }
