@@ -16,6 +16,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom"
+        android:background="@drawable/bg_shadow"
+        android:paddingTop="1dp"
+        android:elevation="10dp"
         android:visibility="invisible">
             <View
                 android:layout_width="match_parent"
