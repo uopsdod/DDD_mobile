@@ -140,6 +140,7 @@ public class HotelMemberFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getFocus();
+        MainActivity.actionbar.setTitle("廠商會員");
     }
 
     private void getFocus() {

@@ -25,6 +25,12 @@ public class OrderInfoFragment extends CommonFragment {
     Map<String, List<String>> laptopCollection;
     ExpandableListView expListView;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity.actionbar.setTitle("訂房須知");
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -63,6 +63,7 @@ public class MemberWishFragment extends MustLoginFragment {
     @Override
     public void onStart() {
         super.onStart();
+        MainActivity.actionbar.setTitle("願望清單");
         showAllWish();
     }
 

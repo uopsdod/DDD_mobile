@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public static Menu actionBarMenu;
     public static SharedPreferences pref;
     public static SharedPreferences pref_Hotel;
+    public static ActionBar actionbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpActionBar() {
-        ActionBar actionbar = getSupportActionBar();
+        MainActivity.actionbar = getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
         }

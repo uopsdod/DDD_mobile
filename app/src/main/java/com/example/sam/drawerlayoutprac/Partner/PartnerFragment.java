@@ -98,6 +98,7 @@ public class PartnerFragment extends MustLoginFragment {
     @Override
     public void onResume() {
         super.onResume();
+        MainActivity.actionbar.setTitle("找共住夥伴");
         backBtnPressed();
         // 處理聊天訊息回來畫面
         // 排除掉-曾經進入個人詳細頁面，又同時沒有在聊天訊息視窗透過backbutton正常回來的情況
