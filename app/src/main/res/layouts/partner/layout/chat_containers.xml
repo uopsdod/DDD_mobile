@@ -24,7 +24,7 @@
         android:gravity="center_vertical"
         android:background="@drawable/sendbird_chat_input_bg"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="1dp"
         android:layout_marginBottom="8dp"
         android:layout_weight="0.2"
         >
@@ -39,7 +39,7 @@
             android:singleLine="true"
             android:gravity="center_vertical"
             android:textColorHint="#bbc3c9"
-            android:hint="What's on your mind?"
+            android:hint="What's in your mind?"
             android:textColor="#37434f"
             android:textSize="16sp"
             android:text=""

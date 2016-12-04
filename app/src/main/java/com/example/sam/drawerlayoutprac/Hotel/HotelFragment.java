@@ -74,16 +74,17 @@ public class HotelFragment extends CommonFragment {
 
         View myLayout = inflater.inflate(R.layout.fragment_hotel, viewGroup, false);
         myRvSpot = (RecyclerView) myLayout.findViewById(R.id.rv_hotel);
-        Button button = (Button)myLayout.findViewById(R.id.btn_AllSell);
+        Button btnAllSell = (Button)myLayout.findViewById(R.id.btn_AllSell);
+        Button btnSort = (Button)myLayout.findViewById(R.id.btnSort);
+        Button btnFilter = (Button)myLayout.findViewById(R.id.btnFilter);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.VISIBLE);
-
         // 每次開啟view，先抓一次資訊，並啟動第一次adapter
         myHotelGetLowestPriceVOList = getLowestPriceEachHotel();
         if (myHotelGetLowestPriceVOList.size() > 0){
-            button.setVisibility(View.INVISIBLE);
+            btnAllSell.setVisibility(View.INVISIBLE);
         }else{
-            button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(new View.OnClickListener() {
+            btnAllSell.setVisibility(View.VISIBLE);
+            btnAllSell.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Util.showToast(getContext(),"Hey be prepared!");
@@ -92,6 +93,23 @@ public class HotelFragment extends CommonFragment {
                 }
             });
         }
+
+        //開發中功能:
+        //排序:
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.showToast(getContext(),"功能開發中");
+            }
+        });
+        //篩選:
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.showToast(getContext(),"功能開發中");
+            }
+        });
+
 
         myRvSpot.setLayoutManager(new LinearLayoutManager(getActivity()));
         showAllHotel();
