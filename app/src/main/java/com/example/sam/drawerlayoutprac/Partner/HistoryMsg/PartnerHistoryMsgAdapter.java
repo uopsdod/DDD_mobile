@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac.Partner.HistoryMsg;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +20,11 @@ import com.example.sam.drawerlayoutprac.Partner.PartnerGetOneMemVOTask;
 import com.example.sam.drawerlayoutprac.Partner.VO.PartnerMsg;
 import com.example.sam.drawerlayoutprac.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -28,8 +34,11 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class PartnerHistoryMsgAdapter extends BaseAdapter {
+    private static String TAG = "PartHistMsgAdapter";
     private Context context;
     private List<PartnerMsg> partnerMsgList;
+    private static String profileImgDirPath;
+    private static String profileImgDirPath_name = "profileImg";
 
     public PartnerHistoryMsgAdapter(Context aContext, List<PartnerMsg> aMyList) {
         Log.d("ParHisMsgAdapter", ""+"constructor called");
@@ -89,8 +98,20 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         try {
             //memVO = new PartnerGetOneMemVOTask().execute(url,toMemId).get();
             memVO = new PartnerGetOneTextTask().execute(url,toMemId).get();
-            int imageSize = 100;
-            new PartnerGetOneImageTask(holder.img_profile).execute(url, toMemId, imageSize);
+//            String dirPath_name = "profileImg";
+            String fileName = toMemId + ".jpg";
+            Bitmap bitmap = loadImageFromStorage(PartnerHistoryMsgAdapter.profileImgDirPath,fileName);
+            if (bitmap != null){
+                Log.d(TAG, fileName  + "exists");
+                holder.img_profile.setImageBitmap(bitmap);
+            }else{
+                Log.d(TAG, fileName  + "fetched from server");
+                int imageSize = 100;
+                bitmap = new PartnerGetOneImageTask().execute(url, toMemId, imageSize).get();
+                holder.img_profile.setImageBitmap(bitmap);
+                PartnerHistoryMsgAdapter.profileImgDirPath = saveToInternalStorage(bitmap,profileImgDirPath_name,fileName);
+                Log.d(TAG,profileImgDirPath);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -117,6 +138,45 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         TextView txt_date;
         TextView txt_lastmsg;
         TextView txt_unread_count;
+    }
+
+    private Bitmap loadImageFromStorage(String aDirPath, String aFileName)
+    {
+        Bitmap bitmap = null;
+        try {
+            File f = new File(aDirPath, aFileName);
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(f));
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        return bitmap;
+
+    }
+
+    private String saveToInternalStorage(Bitmap aBitmapImage, String aDirPath, String aFileName){
+        ContextWrapper cw = new ContextWrapper(context);
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir(aDirPath, Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath = new File(directory, aFileName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            aBitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath();
     }
 }
 
