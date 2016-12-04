@@ -82,6 +82,32 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
 
 
         // 開始binding data to viewholder:
+        // 將與每個人的最新的訊息數做比較，算出差異數:
+        String msgCountMax = data.getMemChatId(); // 不合常理處，請特別注意且小心行事
+        SharedPreferences pref = context.getSharedPreferences(Common.PREF_FILE, Context.MODE_PRIVATE);
+//        String memId = pref.getString("memId", null);
+        pref.edit().putString("msgCountMax"+data.getMemChatToMemId()+data.getMemChatMemId(),msgCountMax).apply();
+        pref.edit().putString("msgCountMax"+data.getMemChatMemId()+data.getMemChatToMemId(),msgCountMax).apply();
+
+        String msgCountCurr = pref.getString("msgCountCurr"+data.getMemChatToMemId()+data.getMemChatMemId(),null);
+        String msgCountUnread = null;
+        if (msgCountCurr != null){
+            msgCountUnread = Integer.toString(Integer.parseInt(msgCountMax) - Integer.parseInt(msgCountCurr));
+        }else{
+            msgCountUnread = msgCountMax;
+        }
+        Log.d(TAG,"msgCountMax: " + msgCountMax);
+        Log.d(TAG,"msgCountCurr: " + msgCountCurr);
+        Log.d(TAG,"msgCountUnread: " + msgCountUnread);
+        // SharedPreferences preferences = context.getSharedPreferences(Common.PREF_FILE,Context.MODE_PRIVATE);
+        // msgCount - XXOO
+        if (!msgCountUnread.equals("0")){
+            holder.txt_unread_count.setVisibility(View.VISIBLE);
+            holder.txt_unread_count.setText(msgCountUnread);
+        }else{
+            holder.txt_unread_count.setVisibility(View.INVISIBLE);
+        }
+
         String url = Common.URL_Partner;
         MemVO memVO = null;
         // 判斷對方會員的memId - 由於資料庫sql指令的關係，此list資料是依據發訊息者或是接收訊息者其中一方是自己本身的話就放入list，
