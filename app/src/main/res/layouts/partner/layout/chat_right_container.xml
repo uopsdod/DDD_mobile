@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chat_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -114,7 +115,7 @@
             android:id="@+id/text_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/img_thumbnail"
+            android:layout_toLeftOf="@+id/img_cardview"
             android:orientation="horizontal"
             android:paddingLeft="10dp">
 
@@ -206,17 +207,30 @@
             </LinearLayout>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/img_thumbnail"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+        <android.support.v7.widget.CardView
+            android:id="@+id/img_cardview"
             android:layout_alignBottom="@+id/text_container"
             android:layout_alignParentRight="true"
             android:layout_gravity="bottom"
-            android:layout_marginTop="23dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="10dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            card_view:cardCornerRadius="35dp"
+            android:background="#F00">
+
+        <ImageView
+            android:id="@+id/img_thumbnail"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/sendbird_ic_launcher"
+            android:src="@drawable/anastasia"
             android:visibility="visible" />
+
+        </android.support.v7.widget.CardView>
 
     </RelativeLayout>
 
