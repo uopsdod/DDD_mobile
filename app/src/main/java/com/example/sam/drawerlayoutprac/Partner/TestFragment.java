@@ -61,7 +61,7 @@ public class TestFragment extends Fragment {
 
 
 
-    public void allSell(){
+    public static void allSell(){
         Thread myThread = new Thread(new Runnable() {
             @Override
             public void run() {

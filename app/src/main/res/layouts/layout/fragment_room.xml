@@ -21,7 +21,7 @@
                 android:layout_height="180dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/pic_default" />
+                app:srcCompat="@drawable/img_not_available" />
 
 
             <android.support.v7.widget.RecyclerView

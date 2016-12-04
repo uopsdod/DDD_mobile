@@ -40,4 +40,15 @@
         android:layout_height="match_parent"
         android:layout_marginTop="1dp"
         />
+    <Button
+        android:id="@+id/btn_AllSell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_bg_blue"
+        android:layout_marginTop="200dp"
+        android:layout_gravity="center"
+        android:text="點&#160;擊&#160;模&#160;擬&#160;旅&#160;館&#160;房&#160;型&#160;上&#160;架"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:visibility="visible"/>
 </LinearLayout>

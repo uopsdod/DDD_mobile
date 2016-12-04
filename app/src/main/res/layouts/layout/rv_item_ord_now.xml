@@ -71,7 +71,7 @@
                 android:layout_height="match_parent"
                 android:alpha="0.7"
                 android:scaleType="fitXY"
-                android:src="@drawable/pic_default" />
+                android:src="@drawable/img_not_available" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

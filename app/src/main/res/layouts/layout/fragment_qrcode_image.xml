@@ -22,6 +22,6 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:layout_gravity="center"
-            android:src="@drawable/pic_default" />
+            android:src="@drawable/img_not_available" />
     </LinearLayout>
 </LinearLayout>

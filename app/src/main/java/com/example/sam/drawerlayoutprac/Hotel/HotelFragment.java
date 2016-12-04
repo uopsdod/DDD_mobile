@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerMapFragment;
+import com.example.sam.drawerlayoutprac.Partner.TestFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.android.gms.maps.model.LatLng;
@@ -72,10 +74,25 @@ public class HotelFragment extends CommonFragment {
 
         View myLayout = inflater.inflate(R.layout.fragment_hotel, viewGroup, false);
         myRvSpot = (RecyclerView) myLayout.findViewById(R.id.rv_hotel);
+        Button button = (Button)myLayout.findViewById(R.id.btn_AllSell);
         getActivity().findViewById(R.id.floatingBtn).setVisibility(View.VISIBLE);
 
         // 每次開啟view，先抓一次資訊，並啟動第一次adapter
         myHotelGetLowestPriceVOList = getLowestPriceEachHotel();
+        if (myHotelGetLowestPriceVOList.size() > 0){
+            button.setVisibility(View.INVISIBLE);
+        }else{
+            button.setVisibility(View.VISIBLE);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Util.showToast(getContext(),"Hey be prepared!");
+                    TestFragment.allSell();
+                    Util.switchFragment(getActivity(),new HotelFragment());
+                }
+            });
+        }
+
         myRvSpot.setLayoutManager(new LinearLayoutManager(getActivity()));
         showAllHotel();
 
