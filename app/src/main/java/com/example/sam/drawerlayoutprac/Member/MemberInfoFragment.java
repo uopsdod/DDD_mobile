@@ -80,7 +80,7 @@ public class MemberInfoFragment extends MustLoginFragment {
                     tvMemName.setText("訪客");
                     tvMemAccount.setText("點選登入");
 
-                    Fragment fragment = new HotelFragment();
+                    Fragment fragment = new MemberFragment();
                     Util.switchFragment(getActivity(), fragment);
                     //Util.showToast(getContext(),"登出了喔! ");
                 }

@@ -75,7 +75,7 @@ public class SignUp_Page2_Fragment extends CommonFragment {
             public void onFocusChange(View view, boolean b) {
                 String name = etName.getText().toString().trim();
                 if(name.length()<=0){
-                    tilName.setError("TwId can not be empty");
+                    tilName.setError("Name can not be empty");
                     return;
                 }else{
                     tilName.setError(null);
@@ -88,7 +88,7 @@ public class SignUp_Page2_Fragment extends CommonFragment {
             public void onFocusChange(View view, boolean b) {
                 Integer liveBudget=null;
                 if(String.valueOf(etLiveBudget.getText()).length()<=0){//先檢查有無打字，沒有就顯示提示訊息
-                    tilLiveBudget.setError("TwId can not bdfsdfsdfe empty");
+                    tilLiveBudget.setError("Live Budget can not empty");
                     return;
                 }else {
                     // 有打字之後，再把它轉型成數字 (不能打文字或沒打字，會造成轉型失敗)
@@ -103,7 +103,7 @@ public class SignUp_Page2_Fragment extends CommonFragment {
             public void onFocusChange(View view, boolean b) {
                 String intro = etIntro.getText().toString().trim();
                 if(intro.length()<=0){
-                    tilIntro.setError("TwId can not be empty");
+                    tilIntro.setError("Introduction can not be empty");
                     return;
                 }else{
                     tilIntro.setError(null);

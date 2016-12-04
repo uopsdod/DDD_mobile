@@ -193,7 +193,7 @@ public class SignUp_Page1_Fragment extends CommonFragment {
             public void onFocusChange(View view, boolean b) {
                 String phoneNumber = etPhoneNumber.getText().toString().trim();
                 if(phoneNumber.length() <= 0){
-                    tilPhoneNumber.setError("PhoneNumber can not be empty");
+                    tilPhoneNumber.setError("Phone Number can not be empty");
                     return;
                 }else{
                     tilPhoneNumber.setError(null);
@@ -206,7 +206,7 @@ public class SignUp_Page1_Fragment extends CommonFragment {
             public void onFocusChange(View view, boolean b) {
                 String TwId = etIdNumber.getText().toString().trim();
                 if(TwId.length() <= 0){
-                    tilIdNumber.setError("TwId can not be empty");
+                    tilIdNumber.setError("Id Number can not be empty");
                     return;
                 }else{
                     tilIdNumber.setError(null);
@@ -219,7 +219,7 @@ public class SignUp_Page1_Fragment extends CommonFragment {
             public void onFocusChange(View view, boolean b) {
                 String CardNumber = etCardNumber.getText().toString().trim();
                 if(CardNumber.length() <= 0){
-                    tilCardNumber.setError("TwId can not be empty");
+                    tilCardNumber.setError("Card Number can not be empty");
                     return;
                 }else{
                     tilCardNumber.setError(null);
@@ -232,7 +232,7 @@ public class SignUp_Page1_Fragment extends CommonFragment {
             public void onFocusChange(View view, boolean b) {
                 String ChCardNumber = etChCardNumber.getText().toString().trim();
                 if(ChCardNumber.length() <= 0){
-                    tilChCardNumber.setError("TwId can not be empty");
+                    tilChCardNumber.setError("Check Card Number can not be empty");
                     return;
                 }else{
                     tilChCardNumber.setError(null);
