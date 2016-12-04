@@ -1,7 +1,9 @@
 package com.example.sam.drawerlayoutprac.Partner;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.gson.JsonObject;
+
+import junit.framework.Test;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -29,6 +34,7 @@ public class TestFragment extends Fragment {
     EditText memIdView;
     Button btnView;
     Button btn_AllSell;
+    static FragmentActivity fragmentActivity;
 
     @Override
     public void onResume() {
@@ -47,6 +53,7 @@ public class TestFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.rootView = inflater.inflate(R.layout.fragment_blank, container, false);
+        this.fragmentActivity = getActivity();
         btn_AllSell = (Button)rootView.findViewById(R.id.btn_AllSell);
         btn_AllSell.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +130,8 @@ public class TestFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        Fragment fragment = new HotelFragment();
+        Util.switchFragment(TestFragment.fragmentActivity,fragment);
     }
 
 }

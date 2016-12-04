@@ -5,14 +5,25 @@
     android:orientation="vertical"
     tools:context="com.example.sam.drawerlayoutprac.Partner.TestFragment">
 
+    <!--<Button-->
+        <!--android:id="@+id/btn_AllSell"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:text="上架房間"-->
+        <!--/>-->
+
     <Button
         android:id="@+id/btn_AllSell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="上架房間"
-        />
-
+        android:background="@drawable/btn_bg_blue"
+        android:layout_marginTop="200dp"
+        android:layout_gravity="center"
+        android:text="再&#160;次&#160;點&#160;擊&#160;模&#160;擬&#160;旅&#160;館&#160;房&#160;型&#160;上&#160;架"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:visibility="visible"/>
 
 
 </LinearLayout>
