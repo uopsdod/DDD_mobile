@@ -25,10 +25,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
@@ -38,6 +40,7 @@ import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.PRINT_SERVICE;
 import static java.lang.Integer.parseInt;
 
 
@@ -198,12 +201,16 @@ public class MemberUpdateFragment extends Fragment {
                     if(cursor.moveToFirst()){
                         String imagePath = cursor.getString(0);
                         cursor.close();
+
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                        Log.d("12132",bitmap.toString());
-                        ivPhoto.setImageBitmap(bitmap);
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                        image = out.toByteArray();
+                        if (bitmap != null){
+                            Log.d("12132",bitmap.toString());
+                            ivPhoto.setImageBitmap(bitmap);
+                            ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                            image = out.toByteArray();
+                        }
+
                     }
                     break;
             }
@@ -251,10 +258,14 @@ public class MemberUpdateFragment extends Fragment {
                     Log.e("MemberInfo", e.toString());
                 }
                 // bitmap 傳形成 byte[]
-                ivPhoto.setImageBitmap(bitmap);
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                originalImage = out.toByteArray();
+
+                if (bitmap != null) {
+                    ivPhoto.setImageBitmap(bitmap);
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    originalImage = out.toByteArray();
+                }
+
             }
         }
     }
@@ -287,7 +298,40 @@ public class MemberUpdateFragment extends Fragment {
             }
             Log.d("AAAAAA", "memVO" + memVO);
             Fragment fragment = new HotelFragment();
+            updateNavigationHeaderInfo();
             Util.switchFragment(getActivity(),fragment); // 回到首頁，清除所有Fragment stack
+        }
+    }
+
+    private void updateNavigationHeaderInfo() {
+        Util.showToast(getContext(),"updateNavigationHeaderInfo");
+        ImageView ivMemPhoto = (ImageView) MainActivity.navigationViewHeaderView.findViewById(R.id.ivMemPhoto);
+        TextView tvMemName = (TextView) MainActivity.navigationViewHeaderView.findViewById(R.id.tvMemName);
+        TextView tvMemAccount = (TextView) MainActivity.navigationViewHeaderView.findViewById(R.id.tvMemAccount);
+
+        SharedPreferences preference = getActivity().getSharedPreferences(Common.PREF_FILE,MODE_PRIVATE);
+        String memId = preference.getString("memId", null);
+        String url = Common.URL + "/android/mem.do";
+        int imageSize = 250;
+        MemVO memVO = null;
+        //若已經登入則秀出會員的帳號、姓名及照片
+        if (memId != null) {
+            if (Common.networkConnected(getActivity())) {
+                try {
+                    memVO = new MemGetOneTask().execute(url, memId).get();
+                    new MemberGetImageTask(ivMemPhoto).execute(url, memId, imageSize);
+                } catch (Exception e) {
+                    Log.d("MemberUpdateFragment", e.toString());
+                }
+
+            }
+            tvMemName.setText(memVO.getMemName());
+            tvMemAccount.setText(memVO.getMemAccount());
+        } else {
+            //未登入則顯示以下的資訊
+            ivMemPhoto.setImageResource(R.drawable.profile_default);
+            tvMemName.setText("訪客");
+            tvMemAccount.setText("點這裡登入");
         }
     }
 }

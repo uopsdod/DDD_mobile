@@ -121,7 +121,7 @@ public class SignUp_Page1_Fragment extends CommonFragment {
 
                 MemVO memVO = new MemVO();
                 memVO.setMemAccount(account);
-                memVO.setMemPsw(password);
+                memVO.setMemPsw("AA104"+password);
                 memVO.setMemPhone(phoneNumber);
                 memVO.setMemCreditCheckNo(TwIdNumber);
                 memVO.setMemCreditCardNo(cardNumber);

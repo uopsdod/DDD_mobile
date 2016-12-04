@@ -110,6 +110,8 @@ public class SignUp_Page2_Fragment extends CommonFragment {
                 }
             }
         });
+        // default:
+        memVO.setMemGender("M");
         rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
             @Override

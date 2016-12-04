@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public static SharedPreferences pref;
     public static SharedPreferences pref_Hotel;
     public static ActionBar actionbar;
+    public static View navigationViewHeaderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,12 +154,12 @@ public class MainActivity extends AppCompatActivity {
         final NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.navigation_view);
 
         //取得navigationView的header
-        View view = navigationView.getHeaderView(0);
+        navigationViewHeaderView = navigationView.getHeaderView(0);
         //取得header裡面的原件
-        ivMemPhoto = (ImageView) view.findViewById(R.id.ivMemPhoto);
-        tvMemName = (TextView) view.findViewById(R.id.tvMemName);
-        tvMemAccount = (TextView) view.findViewById(R.id.tvMemAccount);
-        linLayout = (RelativeLayout) view.findViewById(R.id.linLayout);
+        ivMemPhoto = (ImageView) navigationViewHeaderView.findViewById(R.id.ivMemPhoto);
+        tvMemName = (TextView) navigationViewHeaderView.findViewById(R.id.tvMemName);
+        tvMemAccount = (TextView) navigationViewHeaderView.findViewById(R.id.tvMemAccount);
+        linLayout = (RelativeLayout) navigationViewHeaderView.findViewById(R.id.linLayout);
         //點及後進入會員資料修改或登入/註冊畫面
         linLayout.setOnClickListener(new View.OnClickListener() {
             @Override
