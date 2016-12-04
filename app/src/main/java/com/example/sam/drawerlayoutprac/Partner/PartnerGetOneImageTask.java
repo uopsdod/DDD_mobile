@@ -25,7 +25,6 @@ public class PartnerGetOneImageTask extends AsyncTask<Object, Integer, Bitmap> {
     private final static String ACTION = "getImage";
     // 使用WeakReference，讓圖片只要滿足一項條件，就釋放記憶體。ex. 參考=null
     private final WeakReference<ImageView> imageViewWeakReference;
-
     public PartnerGetOneImageTask(ImageView imageView) {
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
