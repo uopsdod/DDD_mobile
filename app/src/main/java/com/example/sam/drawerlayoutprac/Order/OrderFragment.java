@@ -1,37 +1,26 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Order;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.sam.drawerlayoutprac.Hotel.HotelMapFragment;
+import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.CommonFragment;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Member.MemGetOneTask;
 import com.example.sam.drawerlayoutprac.Member.MemVO;
-import com.example.sam.drawerlayoutprac.Order.OrderLookUpFragment;
-import com.example.sam.drawerlayoutprac.Room.RoomFragment;
+import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.example.sam.drawerlayoutprac.Hotel.HotelGetOneTask;
 import com.example.sam.drawerlayoutprac.Hotel.HotelVO;
 import com.example.sam.drawerlayoutprac.Room.RoomGetOneTask;
-
-import java.net.URI;
-import java.text.DateFormat;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.concurrent.ExecutionException;
+import com.example.sam.drawerlayoutprac.Util;
 
 /**
  * Created by cuser on 2016/11/22.

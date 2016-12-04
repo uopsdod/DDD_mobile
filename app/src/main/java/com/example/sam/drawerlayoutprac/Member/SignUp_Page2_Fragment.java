@@ -1,11 +1,13 @@
 package com.example.sam.drawerlayoutprac.Member;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,9 +18,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -181,7 +185,7 @@ public class SignUp_Page2_Fragment extends CommonFragment {
         Log.d("resultCode",""+resultCode);
         if(resultCode == RESULT_OK){
             switch(requestCode){
-                case 2:
+                case REQUEST_PICK_PICTURE:
                     Uri uri = data.getData();
                     String[] columns = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContext().getContentResolver().query(uri, columns, null, null, null);
@@ -194,9 +198,20 @@ public class SignUp_Page2_Fragment extends CommonFragment {
                         cursor.close();
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                         Log.d("12132",bitmap.toString());
+
+                        //設定圖片要顯示的大小(寬度、高度)
+                        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+                        Display display = windowManager.getDefaultDisplay();
+                        Point point = new Point();
+                        display.getSize(point);
+                        int width = point.x;
+                        int height = point.y;
+                        int imageSide = width < height ? width : height;
+
+                        bitmap.setDensity(imageSide);//設定圖片的大小，與剛剛設定的  imageSide 大小一致
                         ivPhoto.setImageBitmap(bitmap);
                         ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, out);
                         image = out.toByteArray();
                     }
                     break;

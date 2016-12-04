@@ -4,14 +4,14 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
+
+import com.example.sam.drawerlayoutprac.Order.OrderGetImageTask;
 
 /**
  * Created by cuser on 2016/11/22.

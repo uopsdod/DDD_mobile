@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Order;
 
 import com.example.sam.drawerlayoutprac.Hotel.HotelVO;
 import com.example.sam.drawerlayoutprac.Member.MemVO;

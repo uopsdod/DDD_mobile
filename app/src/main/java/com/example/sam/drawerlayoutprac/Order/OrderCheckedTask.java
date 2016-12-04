@@ -1,44 +1,49 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Order;
+
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.sam.drawerlayoutprac.Room.RoomVO;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
-public class WishGetAllTask extends AsyncTask<Object, String, List<RoomVO>>{
-    private String TAG = "WishGetAllTask";
-    private String ACTION = "getAll";
+public class OrderCheckedTask extends AsyncTask<Object, Integer, Boolean>{
+    private final static String TAG = "OrderCheckedTask";
+    private final static String ACTION = "checked";
     @Override
-    protected List<RoomVO> doInBackground(Object... params) {
+    protected Boolean doInBackground(Object... params) {
         String url = params[0].toString();
-        String id = params[1].toString();
+        String ordId = params[1].toString();
+        String key = params[2].toString();
         String jsonIn;
+        boolean check;
         JsonObject jsonObject = new JsonObject();
+
         jsonObject.addProperty("action",ACTION);
-        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("ordId", ordId);
+        jsonObject.addProperty("key", key);
         try{
             jsonIn = getRemoteData(url, jsonObject.toString());
+            if(jsonIn.equals("true")){
+                check = true;
+            }else{
+                check = false;
+            }
         }catch (IOException e){
             Log.e(TAG, e.toString());
             return null;
         }
 
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<RoomVO>>(){} .getType();//因要給.class檔，但因泛型關係所以用Type轉型成RoomVO.class檔
-        return gson.fromJson(jsonIn, listType);
+        return check;
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {

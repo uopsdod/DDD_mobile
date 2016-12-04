@@ -85,8 +85,8 @@
             android:maxHeight="12dp"
             android:stepSize="0.5"
             android:numStars="5"
-            android:progressTint="#709ACF"
-            android:rating="2" />
+            android:progressTint="#FFD306"
+            android:rating="0" />
     </RelativeLayout>
 
     <LinearLayout

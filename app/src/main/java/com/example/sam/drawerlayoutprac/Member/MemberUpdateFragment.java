@@ -1,34 +1,42 @@
 package com.example.sam.drawerlayoutprac.Member;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
@@ -44,13 +52,15 @@ import static java.lang.Integer.parseInt;
 public class MemberUpdateFragment extends Fragment {
     private MemVO memVO;
     EditText etIntro, etLiveBudget, etName;
+    TextView tvMemName, tvMemAccount;
     Button btSubmit, btChangePhoto;
-    ImageView ivPhoto;
+    ImageView ivPhoto, ivMemPhoto;
     RadioGroup rgGender;
     RadioButton rbMale, rbFemale;
     TextInputLayout tilName, tilLiveBudget, tilIntro;
     byte[] image, originalImage;
     Bitmap finalBitmap = null;
+    private DrawerLayout drawerLayout;
     private static final int REQUEST_PICK_PICTURE = 2;
     private final static int REQ_PERMISSIONS = 0;
 
@@ -59,6 +69,14 @@ public class MemberUpdateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_signup_page2_, container, false);
+
+        drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.navigation_view);
+        View v1 = navigationView.getHeaderView(0);
+        ivMemPhoto = (ImageView) v1.findViewById(R.id.ivMemPhoto);
+        tvMemName = (TextView) v1.findViewById(R.id.tvMemName);
+        tvMemAccount = (TextView) v1.findViewById(R.id.tvMemAccount);
+
         ivPhoto = (ImageView) view.findViewById(R.id.ivPhoto);
         etName = (EditText) view.findViewById(R.id.etName);
         etIntro = (EditText) view.findViewById(R.id.etIntro);
@@ -136,6 +154,7 @@ public class MemberUpdateFragment extends Fragment {
             askPermissions();
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, REQUEST_PICK_PICTURE);
+
         }
     }
 
@@ -187,7 +206,7 @@ public class MemberUpdateFragment extends Fragment {
         Log.d("resultCode",""+resultCode);
         if(resultCode == RESULT_OK){
             switch(requestCode){
-                case 2:
+                case REQUEST_PICK_PICTURE:
                     Uri uri = data.getData();
                     String[] columns = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContext().getContentResolver().query(uri, columns, null, null, null);
@@ -200,9 +219,20 @@ public class MemberUpdateFragment extends Fragment {
                         cursor.close();
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                         Log.d("12132",bitmap.toString());
+
+                        //設定圖片要顯示的大小(寬度、高度)
+                        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+                        Display display = windowManager.getDefaultDisplay();
+                        Point point = new Point();
+                        display.getSize(point);
+                        int width = point.x;
+                        int height = point.y;
+                        int imageSide = width < height ? width : height;
+
+                        bitmap.setDensity(imageSide);//設定圖片的大小，與剛剛設定的  imageSide 大小一致
                         ivPhoto.setImageBitmap(bitmap);
                         ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, out);
                         image = out.toByteArray();
                     }
                     break;
@@ -250,11 +280,16 @@ public class MemberUpdateFragment extends Fragment {
                 }catch(Exception e){
                     Log.e("MemberInfo", e.toString());
                 }
-                // bitmap 傳形成 byte[]
-                ivPhoto.setImageBitmap(bitmap);
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                originalImage = out.toByteArray();
+                // bitmap 轉形成 byte[]
+                if(bitmap != null){
+                    ivPhoto.setImageBitmap(bitmap);
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    originalImage = out.toByteArray();
+                }else{
+                    ivPhoto.setImageResource(R.drawable.profile_default);
+                }
+
             }
         }
     }
@@ -263,6 +298,8 @@ public class MemberUpdateFragment extends Fragment {
         @Override
         public void onClick(View view) {
             String name = etName.getText().toString().trim();
+            String memId = MainActivity.pref.getString("memId", null);
+            int imageSize = 250;
             Integer LiveBudget = parseInt(String.valueOf(etLiveBudget.getText()));
             String Intro = etIntro.getText().toString().trim();
             if(image == null){
@@ -281,6 +318,11 @@ public class MemberUpdateFragment extends Fragment {
                 String action = "Update";
 //                new MemUpdateTask().execute(url, action, memVO, imageBase64);
                 new MemUpdateTask().execute(url, action, memVO);
+                if(memId != null){
+                    new MemberGetImageTask(ivMemPhoto).execute(url, memId, imageSize);
+                    tvMemName.setText(memVO.getMemName());
+                    tvMemAccount.setText(memVO.getMemAccount());
+                }
                 Util.showToast(getActivity(), "Update success");
             }else{
                 Util.showToast(getActivity(), "No network connection available");

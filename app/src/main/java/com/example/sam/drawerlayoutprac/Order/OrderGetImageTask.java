@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Order;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.example.sam.drawerlayoutprac.R;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedWriter;
@@ -15,26 +16,27 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class WishGetImageTask extends AsyncTask<Object /*傳進來的參數*/, String/*進度條的顯示*/, Bitmap /*最後輸出的結果*/> {
-    private String TAG = "WishGetImageTask";
+public class OrderGetImageTask extends AsyncTask<Object /*傳進來的參數*/, String/*進度條的顯示*/, Bitmap /*最後輸出的結果*/> {
+    private String TAG = "HotelGetImageTask";
     private String ACTION = "getImage";
     private WeakReference<ImageView> imageViewWeakReference;
-    float aFloat;
 
-    WishGetImageTask(ImageView imageView){
+    public OrderGetImageTask(ImageView imageView){
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
 
     @Override
-    protected Bitmap doInBackground(Object... params) {
+    public Bitmap doInBackground(Object... params) {
         String url = params[0].toString();
         String id = params[1].toString();
         int imageSize = Integer.parseInt(params[2].toString());
+        String ordId = params[3].toString();
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", ACTION);
-        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("memId", id);
         jsonObject.addProperty("imageSize", imageSize);
-
+        jsonObject.addProperty("ordId", ordId);
+        Log.d(TAG, "ordId" + ordId);
         Bitmap bitmap;
         try{
             bitmap = getRemoteImage(url, jsonObject.toString());  // 拿到回傳的Bitmap
@@ -42,8 +44,11 @@ public class WishGetImageTask extends AsyncTask<Object /*傳進來的參數*/, S
             Log.e(TAG, e.toString());
             return null;
         }
+
         return bitmap;
     }
+
+
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {

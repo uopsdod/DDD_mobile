@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Wish;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,11 +16,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class WishGetOneTask extends AsyncTask<Object, String, WishVO> {
+public class WishInsertTask extends AsyncTask<Object, String, RoomVO> {
     private String TAG = "RoomGetOne";
-    private String ACTION = "getOneWish";
+    private String ACTION = "Insert";
     @Override
-    protected WishVO doInBackground(Object... params) {
+    protected RoomVO doInBackground(Object... params) {
         String url = params[0].toString();
         String id = params[1].toString();
         String roomId = params[2].toString();
@@ -36,7 +36,7 @@ public class WishGetOneTask extends AsyncTask<Object, String, WishVO> {
             return null;
         }
         Gson gson = new Gson();
-        return gson.fromJson(jsonIn, WishVO.class);
+        return gson.fromJson(jsonIn, RoomVO.class);
     }
 
     private String getRemoteData(String url, String jsonOut) throws IOException {

@@ -3,7 +3,6 @@ package com.example.sam.drawerlayoutprac.Room;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,14 +23,13 @@ import com.example.sam.drawerlayoutprac.CommonFragment;
 import com.example.sam.drawerlayoutprac.Hotel.HotelFragment;
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.Member.MemberFragment;
-import com.example.sam.drawerlayoutprac.MustLoginFragment;
-import com.example.sam.drawerlayoutprac.OrderFragment;
+import com.example.sam.drawerlayoutprac.Order.OrderFragment;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
-import com.example.sam.drawerlayoutprac.WishDeleteTask;
-import com.example.sam.drawerlayoutprac.WishGetOneTask;
-import com.example.sam.drawerlayoutprac.WishInsertTask;
-import com.example.sam.drawerlayoutprac.WishVO;
+import com.example.sam.drawerlayoutprac.Wish.WishDeleteTask;
+import com.example.sam.drawerlayoutprac.Wish.WishGetOneTask;
+import com.example.sam.drawerlayoutprac.Wish.WishInsertTask;
+import com.example.sam.drawerlayoutprac.Wish.WishVO;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

@@ -9,7 +9,7 @@
 
 
     <RelativeLayout
-        android:id="@id/linLayout"
+        android:id="@+id/linLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="15dp"

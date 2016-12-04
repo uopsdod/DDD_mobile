@@ -1,4 +1,4 @@
-package com.example.sam.drawerlayoutprac;
+package com.example.sam.drawerlayoutprac.Wish;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,11 +16,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.MainActivity;
+import com.example.sam.drawerlayoutprac.MustLoginFragment;
+import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Room.RoomFragment;
 import com.example.sam.drawerlayoutprac.Room.RoomVO;
+import com.example.sam.drawerlayoutprac.Util;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;

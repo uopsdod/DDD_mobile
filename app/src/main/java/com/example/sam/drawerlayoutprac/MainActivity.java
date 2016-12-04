@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,16 +28,13 @@ import com.example.sam.drawerlayoutprac.Member.MemVO;
 import com.example.sam.drawerlayoutprac.Member.MemberFragment;
 import com.example.sam.drawerlayoutprac.Member.MemberGetImageTask;
 import com.example.sam.drawerlayoutprac.Member.MemberInfoFragment;
+import com.example.sam.drawerlayoutprac.Order.OrderInfoFragment;
 import com.example.sam.drawerlayoutprac.Order.OrderLookUpFragment;
-import com.example.sam.drawerlayoutprac.Order.OrderLookUpNowAdapter;
 import com.example.sam.drawerlayoutprac.Partner.Chat.ChatFragment;
 import com.example.sam.drawerlayoutprac.Partner.PartnerFragment;
 import com.example.sam.drawerlayoutprac.Partner.TestFragment;
 import com.example.sam.drawerlayoutprac.Partner.TokenIdWebSocket;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.example.sam.drawerlayoutprac.Wish.MemberWishFragment;
 
 import org.java_websocket.client.WebSocketClient;
 
@@ -46,7 +42,6 @@ import android.support.v4.app.Fragment;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";

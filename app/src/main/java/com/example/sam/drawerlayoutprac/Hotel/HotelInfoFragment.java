@@ -54,6 +54,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
     private HotelRoomPriceSocket hotelRoomPriceScoket;
     private float aFloat = (float) 0.6;
     private List<RoomVO> room;
+    private RatingBar ratingBar;
     RecyclerView.Adapter<SpotAdapter.ViewHolder> myAdapter;
 
 
@@ -87,6 +88,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
         tvHotelPhone = (TextView) view.findViewById(R.id.tvHotelPhone);
         tvHotelIntro = (TextView) view.findViewById(R.id.tvHotelIntro);
         tvStatus = (TextView) view.findViewById(R.id.tvStatus);
+        ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -148,6 +150,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
                 tvHotelPhone.setText(hotelVO.getHotelPhone());
                 tvHotelRoad.setText(hotelVO.getHotelRoad());
                 tvHotelIntro.setText(hotelVO.getHotelIntro());
+                ratingBar.setRating(hotelVO.getHotelRatingResult().intValue());
             }
         }
 

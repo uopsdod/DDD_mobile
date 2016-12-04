@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.example.sam.drawerlayoutprac.Common;
 import com.example.sam.drawerlayoutprac.MainActivity;
-import com.example.sam.drawerlayoutprac.OrderGetImageTask;
 import com.example.sam.drawerlayoutprac.R;
 
 import java.util.concurrent.ExecutionException;
