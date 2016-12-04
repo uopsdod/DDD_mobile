@@ -304,7 +304,7 @@ public class MemberUpdateFragment extends Fragment {
     }
 
     private void updateNavigationHeaderInfo() {
-        Util.showToast(getContext(),"updateNavigationHeaderInfo");
+        //Util.showToast(getContext(),"updateNavigationHeaderInfo");
         ImageView ivMemPhoto = (ImageView) MainActivity.navigationViewHeaderView.findViewById(R.id.ivMemPhoto);
         TextView tvMemName = (TextView) MainActivity.navigationViewHeaderView.findViewById(R.id.tvMemName);
         TextView tvMemAccount = (TextView) MainActivity.navigationViewHeaderView.findViewById(R.id.tvMemAccount);
