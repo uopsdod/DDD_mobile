@@ -179,6 +179,7 @@ public class MemberFragment extends CommonFragment {
     @Override
     public void onResume() {
         super.onResume();
+        MainActivity.actionbar.setTitle("會員專區");
         // 此配合PartnerMustLoginFragment.java設定使用 - 預防crush
         // 且需判斷是否為被導向登入頁面的狀況: 用是否backStack有Fragment物件塞在裡面:
         int backStackEntryCount = getActivity().getSupportFragmentManager().getBackStackEntryCount();

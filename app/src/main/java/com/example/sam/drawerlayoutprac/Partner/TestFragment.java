@@ -34,7 +34,7 @@ public class TestFragment extends Fragment {
     EditText memIdView;
     Button btnView;
     Button btn_AllSell;
-    static FragmentActivity fragmentActivity;
+    static FragmentActivity activity;
 
     @Override
     public void onResume() {
@@ -53,7 +53,7 @@ public class TestFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.rootView = inflater.inflate(R.layout.fragment_blank, container, false);
-        this.fragmentActivity = getActivity();
+        this.activity = getActivity();
         btn_AllSell = (Button)rootView.findViewById(R.id.btn_AllSell);
         btn_AllSell.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +131,7 @@ public class TestFragment extends Fragment {
             e.printStackTrace();
         }
         Fragment fragment = new HotelFragment();
-        Util.switchFragment(TestFragment.fragmentActivity,fragment);
+        Util.switchFragment(TestFragment.activity,fragment);
     }
 
 }

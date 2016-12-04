@@ -92,6 +92,7 @@ public class MemberInfoFragment extends MustLoginFragment {
     @Override
     public void onStart() {
         super.onStart();
+        MainActivity.actionbar.setTitle("會員專區");
         showMemInfo();
         showMemProfile();
     }
