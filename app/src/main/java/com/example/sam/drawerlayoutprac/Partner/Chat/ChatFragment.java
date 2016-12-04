@@ -347,6 +347,7 @@ public class ChatFragment extends CommonFragment {
     private void addMsgScrollDown(PartnerMsg partnerMsg) {
         ChatFragment.this.partnerMsgList.add(partnerMsg);
         ChatFragment.this.partnerChatAdapter.notifyDataSetChanged();
+        msgCountAdded++;
         // scroll down to the bottom:
         ChatFragment.this.chatContent.post(new Runnable() {
             @Override
