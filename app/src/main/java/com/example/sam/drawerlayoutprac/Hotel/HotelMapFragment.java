@@ -67,7 +67,7 @@ import java.util.logging.Handler;
 public class HotelMapFragment extends CommonFragment {
 
     // 版面配置
-    private static int map_bottom_padding = 150;
+    private static int map_bottom_padding = 165;
     private static int map_bottom_padding_withWindow = map_bottom_padding + 440;
     private static int map_right_padding = 32;
 
