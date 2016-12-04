@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by cuser on 2016/11/8.
  */
@@ -68,6 +70,8 @@ public class ChatFragment extends CommonFragment {
     // 優化訊息視窗讀取順暢度
     static public Map<String, Bitmap> profileMap = new HashMap<>();
     static public Map<String, String> nameMap = new HashMap<>();
+
+    private int msgCountAdded = 0;
 
     @Override
     public void onResume() {
@@ -200,6 +204,15 @@ public class ChatFragment extends CommonFragment {
         super.onPause();
         ChatFragment.this.myWebSocketClient.close();
         Log.d(ChatFragment.TAG, "myWebSocketClient is closed via onPause()");
+
+        SharedPreferences pref = getContext().getSharedPreferences(Common.PREF_FILE, MODE_PRIVATE);
+        String memId = pref.getString("memId", null);
+        String msgCountMax = pref.getString("msgCountMax"+memId+toMemId,null);
+        String msgCountCurr = Integer.toString(Integer.parseInt(msgCountMax) + msgCountAdded);
+//        msgCountMax = Integer.toString(Integer.parseInt(msgCountMax) + msgCountAdded);
+        pref.edit().putString("msgCountCurr"+toMemId+memId,msgCountCurr).apply();
+        pref.edit().putString("msgCountCurr"+memId+toMemId,msgCountCurr).apply();
+        msgCountAdded = 0;
     }
 
     private class PartnerChatWebSocket {

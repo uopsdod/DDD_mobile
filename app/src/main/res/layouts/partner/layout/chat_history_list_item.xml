@@ -113,8 +113,9 @@
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/top"
+                android:background="@drawable/sendbird_bg_notify"
                 android:gravity="center"
-                android:text=""
+                android:text="99"
                 android:textColor="#ffffff"
                 android:textSize="12sp"
                 />
