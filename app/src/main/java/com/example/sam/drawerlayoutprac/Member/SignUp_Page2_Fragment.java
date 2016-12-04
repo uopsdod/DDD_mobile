@@ -232,7 +232,7 @@ public class SignUp_Page2_Fragment extends CommonFragment {
                 //Util.showToast(getActivity(), "No network connection available");
             }
             Log.d("AAAAAA", "memVO" + memVO);
-            Fragment fragment = new HotelFragment();
+            Fragment fragment = new MemberFragment();
             Util.switchFragment(getActivity(),fragment); // 回到首頁，清除所有Fragment stack
         }
     }

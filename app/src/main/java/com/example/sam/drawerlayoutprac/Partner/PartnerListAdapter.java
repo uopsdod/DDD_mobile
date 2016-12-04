@@ -73,8 +73,17 @@ public class PartnerListAdapter extends ArrayAdapter<Map<String, Object>> {
         Integer imageSize = 300;
             // 每次都開另一個thread去抓圖片
         new PartnerGetOneImageTask(viewHolder.mListItemProfile).execute(url, memId, imageSize);
-        viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
-        viewHolder.mListItemDescription.setText((String) mData.get(position).get(KEY_DESCRIPTION_SHORT));
+        if (mData.get(position).get(KEY_NAME) != null){
+            viewHolder.mListItemName.setText(mData.get(position).get(KEY_NAME).toString().toUpperCase());
+        }else{
+            viewHolder.mListItemName.setText("no data found");
+        }
+        if (mData.get(position).get(KEY_DESCRIPTION_SHORT) != null){
+            viewHolder.mListItemDescription.setText((String) mData.get(position).get(KEY_DESCRIPTION_SHORT));
+        }else{
+            viewHolder.mListItemDescription.setText("no data found");
+        }
+
             // 將大頭貼設成圓的
         viewHolder.mViewOverlay.setBackground(buildAvatarCircleOverlay());
         // end of binding data
