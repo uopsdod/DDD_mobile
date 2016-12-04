@@ -51,7 +51,7 @@ public class TestFragment extends Fragment {
         btn_AllSell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.showToast(getContext(),"AllSell clicked");
+                //Util.showToast(getContext(),"AllSell clicked");
                 allSell();
             }
         });

@@ -115,7 +115,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
                     isFreshNeeded = false;
                     OrderLookUpFragment.this.myOrdList = getOrdList();
                 }
-                Util.showToast(getContext(), "now ord clicked");
+                //Util.showToast(getContext(), "now ord clicked");
                 updateOrdNowList();
             }
         });
@@ -249,15 +249,13 @@ public class OrderLookUpFragment extends MustLoginFragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "Fetch Succeeded",
-                                    Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "Fetch Succeeded",Toast.LENGTH_SHORT).show();
 
                             // Once the config is successfully fetched it must be activated before newly fetched
                             // values are returned.
                             mFirebaseRemoteConfig.activateFetched();
                         } else {
-                            Toast.makeText(getActivity(), "Fetch Failed",
-                                    Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "Fetch Failed",Toast.LENGTH_SHORT).show();
                         }
                         // 在進入adapter前先拿到最新的ordDuration
                         OrderLookUpFragment.ordDuration = mFirebaseRemoteConfig.getLong("ord_duration");

@@ -77,7 +77,7 @@ public class OrderFragment extends CommonFragment {
                     try {
                         new OrderAddOneTask().execute(urlOrder, hotelId, roomId, memId, price).get();
                     } catch (Exception e) {
-                        Util.showToast(getContext(), "Orderfragment" + e.toString());
+                        //Util.showToast(getContext(), "Orderfragment" + e.toString());
                     }
                 }
                 Util.switchFragment(OrderFragment.this, new OrderLookUpFragment());
@@ -122,7 +122,7 @@ public class OrderFragment extends CommonFragment {
                     hotelVO = new HotelGetOneTask().execute(urlHotel, hotelId).get();
                 }
             }catch (Exception e) {
-                Util.showToast(getContext(), "Orderfragment" + e.toString());
+                //Util.showToast(getContext(), "Orderfragment" + e.toString());
             }
 
             tvHotelName.setText(hotelVO.getHotelName());

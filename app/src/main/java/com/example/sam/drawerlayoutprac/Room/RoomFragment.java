@@ -100,7 +100,7 @@ public class RoomFragment extends CommonFragment {
                                 .setNegativeButton("暫時不要", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Util.showToast(getContext(), "暫時不要pressed");
+                                        //Util.showToast(getContext(), "暫時不要pressed");
                                         Util.switchFragment(getActivity(), new HotelFragment());
                                     }
                                 })
@@ -150,7 +150,7 @@ public class RoomFragment extends CommonFragment {
                         Util.switchFragment(RoomFragment.this, fragment);
                     }
                 } else {
-                    Util.showToast(getContext(), "You must login to proceed");
+                    //Util.showToast(getContext(), "You must login to proceed");
                     //new AlertDialog.Builder(getActivity()).setCancelable()
                     new AlertDialog.Builder(getActivity())
                             .setCancelable(false) // 讓使用者不能點擊旁邊取消
@@ -167,7 +167,7 @@ public class RoomFragment extends CommonFragment {
                             .setNegativeButton("暫時不要", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Util.showToast(getContext(), "暫時不要pressed");
+                                    //Util.showToast(getContext(), "暫時不要pressed");
                                 }
                             })
                             .show();
@@ -214,7 +214,7 @@ public class RoomFragment extends CommonFragment {
                 Log.e(TAG, e.toString());
             }
             if (roomVOList == null || roomVOList.isEmpty()) {
-                Util.showToast(getActivity(), "No roomVOList Found!!");
+                //Util.showToast(getActivity(), "No roomVOList Found!!");
             } else {
                 rv_RoomImage.setAdapter(new RoomImageRecyclerViewAdapter(getActivity(), roomVOList));
             }
@@ -233,7 +233,7 @@ public class RoomFragment extends CommonFragment {
                 Log.e(TAG, e.toString());
             }
             if (roomVO == null) {
-                Util.showToast(getActivity(), "No hotel fonnd");
+                //Util.showToast(getActivity(), "No hotel fonnd");
             } else {
                 tvRoomName.setText(roomVO.getRoomName());
                 if (roomVO.getRoomPrice() == null || roomVO.getRoomPrice().equals(0)) {

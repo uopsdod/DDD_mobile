@@ -132,7 +132,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         holder.ord_check_qr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.showToast(context,"qr_check clicked");
+                //Util.showToast(context,"qr_check clicked");
                 Intent intent = new Intent(context,OrdLookUpNowCheckQRActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("ordId", ordVO.getOrdId());
@@ -145,7 +145,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
         holder.ord_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.showToast(context,"ord_cancel clicked");
+                //Util.showToast(context,"ord_cancel clicked");
                 Intent intent = new Intent(context,OrdLookUpNowCancelActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("ordId", ordVO.getOrdId());

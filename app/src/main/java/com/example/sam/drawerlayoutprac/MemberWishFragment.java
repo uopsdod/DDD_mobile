@@ -88,13 +88,13 @@ public class MemberWishFragment extends MustLoginFragment {
                     Log.d(TAG, e.toString());
                 }
                 if (roomVOList == null || roomVOList.isEmpty()) {
-                    Util.showToast(getActivity(), "wishVO not found!!");
+                    //Util.showToast(getActivity(), "wishVO not found!!");
                 } else {
                     myAdapter = new MemWishAdapter(getActivity(), roomVOList);
                     myRvWish.setAdapter(myAdapter);
                 }
             } else {
-                Util.showToast(getActivity(), "You need login!");
+                //Util.showToast(getActivity(), "You need login!");
             }
         }
     }
@@ -179,7 +179,7 @@ public class MemberWishFragment extends MustLoginFragment {
                     }
                 });
             } else {
-                Util.showToast(getContext(), "You need login mother fucker!");
+                //Util.showToast(getContext(), "You need login!");
             }
         }
 
@@ -246,7 +246,7 @@ public class MemberWishFragment extends MustLoginFragment {
                                     }
 
                                 }catch (JSONException e){
-                                    Util.showToast(getContext(), e.toString());
+                                    //Util.showToast(getContext(), e.toString());
                                 }
 
                             }

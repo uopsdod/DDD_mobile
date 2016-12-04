@@ -82,7 +82,7 @@ public class MemberInfoFragment extends MustLoginFragment {
 
                     Fragment fragment = new HotelFragment();
                     Util.switchFragment(getActivity(), fragment);
-                    Util.showToast(getContext(),"登出了喔! ");
+                    //Util.showToast(getContext(),"登出了喔! ");
                 }
             }
         });

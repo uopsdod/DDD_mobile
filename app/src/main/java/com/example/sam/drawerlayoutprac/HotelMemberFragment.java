@@ -102,7 +102,7 @@ public class HotelMemberFragment extends Fragment {
                 if(!isUserValid(userName,password)){
                     etUserName.setError("Account or Password is not valid");
                     etPassword.setError(null);
-                    Util.showToast(getActivity(), "Login fail");
+                    //Util.showToast(getActivity(), "Login fail");
                     return;
                 }else{
 //                    String memId = memVO.getMemId().trim();
@@ -114,7 +114,7 @@ public class HotelMemberFragment extends Fragment {
                                .apply();
                     // 將會員Id與tokenId送到server
                     new TokenIdWebSocket(getActivity()).sendTokenIdToServer();
-                    Util.showToast(getActivity(), "Login success");
+                    //Util.showToast(getActivity(), "Login success");
                 }
 
                 fragment = new HotelFragment();
@@ -132,7 +132,7 @@ public class HotelMemberFragment extends Fragment {
            pref.getString("userName", "");
            pref.getString("password", "");
         }else{
-            Util.showToast(getActivity() ,"User Name or Password invalid");
+            //Util.showToast(getActivity() ,"User Name or Password invalid");
         }
     }
 

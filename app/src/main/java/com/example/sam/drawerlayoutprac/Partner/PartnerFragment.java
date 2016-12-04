@@ -219,7 +219,7 @@ public class PartnerFragment extends MustLoginFragment {
                 e.printStackTrace();
             }
         } else {
-            Util.showToast(getActivity(), "no network");
+            //Util.showToast(getActivity(), "no network");
         }
         // end of get data
         Map<String, Object> profileMap;

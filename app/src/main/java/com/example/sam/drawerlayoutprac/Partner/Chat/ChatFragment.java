@@ -132,7 +132,7 @@ public class ChatFragment extends CommonFragment {
                         Log.d(ChatFragment.TAG, "" + partnerMsgGson);
                     } catch (WebsocketNotConnectedException e) {
                         // 如果websocket連線已中斷，幫使用者偷偷的再重新連線一次，並將訊息再次寄出 1
-                        Util.showToast(getContext(), "Not connected to Server. Please relogin.");
+                        //Util.showToast(getContext(), "Not connected to Server. Please relogin.");
                         new TokenIdWebSocket(getContext()).sendTokenIdToServer();
                             // 若在bindMemIdWithSession(partnerMsg);有放入partnerMsg物件，則代表這次的binding要加上resend的動作 2
                         myWebSocketClient = new PartnerChatWebSocket().bindMemIdWithSession(partnerMsg);

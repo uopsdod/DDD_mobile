@@ -160,7 +160,7 @@ public class PartnerMapFragment extends MustLoginFragment {
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 // Here we can perform some action triggered after clicking the button
-                Util.showToast(getActivity(), marker.getTitle() + "'s button clicked!");
+                //Util.showToast(getActivity(), marker.getTitle() + "'s button clicked!");
             }
         };
         buttonProfile.setOnTouchListener(infoButtonListener);
@@ -183,7 +183,7 @@ public class PartnerMapFragment extends MustLoginFragment {
         MainActivity.floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.showToast(getContext(), "ftBtn clicked");
+                //Util.showToast(getContext(), "ftBtn clicked");
                 MainActivity.floatingBtn.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.map_white));
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.popBackStack();
@@ -277,7 +277,7 @@ public class PartnerMapFragment extends MustLoginFragment {
 
                 @Override
                 public void onConnectionSuspended(int i) {
-                    Util.showToast(getContext(), "GoogleApiClient connection suspended");
+                    //Util.showToast(getContext(), "GoogleApiClient connection suspended");
                 }
             };
 

@@ -72,7 +72,7 @@ public abstract class OnInfoWindowElemTouchListener implements OnTouchListener {
 
     private void startPress() {
         Log.d("infoWindow", "startPress-btn pressed");
-        Util.showToast(context,"startPress-btn pressed - toMemId: " + this.toMemId);
+        //Util.showToast(context,"startPress-btn pressed - toMemId: " + this.toMemId);
         Fragment tmpFragment = new ChatFragment();
         Bundle bundle = new Bundle();
         bundle.putString("ToMemId",this.toMemId);

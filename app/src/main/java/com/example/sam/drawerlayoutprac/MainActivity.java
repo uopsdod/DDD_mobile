@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!text.isEmpty()) {
                     text += "text_NotGranted";
-                    Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

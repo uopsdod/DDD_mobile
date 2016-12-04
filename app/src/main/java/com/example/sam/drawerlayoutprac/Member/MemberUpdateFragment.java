@@ -171,7 +171,7 @@ public class MemberUpdateFragment extends Fragment {
                 for (int result : grantResults) {
                     if (result != PackageManager.PERMISSION_GRANTED) {
                         String text = getString(R.string.text_ShouldGrant);
-                        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
                         getActivity().finish();
                         return;
                     }
@@ -281,9 +281,9 @@ public class MemberUpdateFragment extends Fragment {
                 String action = "Update";
 //                new MemUpdateTask().execute(url, action, memVO, imageBase64);
                 new MemUpdateTask().execute(url, action, memVO);
-                Util.showToast(getActivity(), "Update success");
+                //Util.showToast(getActivity(), "Update success");
             }else{
-                Util.showToast(getActivity(), "No network connection available");
+                //Util.showToast(getActivity(), "No network connection available");
             }
             Log.d("AAAAAA", "memVO" + memVO);
             Fragment fragment = new HotelFragment();

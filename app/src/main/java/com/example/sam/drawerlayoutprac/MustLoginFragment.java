@@ -34,7 +34,7 @@ public class MustLoginFragment extends CommonFragment {
             memid = preferences_r.getString("memId", null);
         }
         if (memid == null){
-            Util.showToast(getContext(),"You must login to proceed");
+            //Util.showToast(getContext(),"You must login to proceed");
             //new AlertDialog.Builder(getActivity()).setCancelable()
             new AlertDialog.Builder(getActivity())
                     .setCancelable(false) // 讓使用者不能點擊旁邊取消
@@ -51,7 +51,7 @@ public class MustLoginFragment extends CommonFragment {
                     .setNegativeButton("暫時不要", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Util.showToast(getContext(),"暫時不要pressed");
+                            //Util.showToast(getContext(),"暫時不要pressed");
                             Util.switchFragment(getActivity(),new HotelFragment());
                         }
                     })

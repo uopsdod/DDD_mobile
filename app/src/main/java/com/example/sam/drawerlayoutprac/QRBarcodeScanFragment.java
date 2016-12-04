@@ -93,7 +93,7 @@ public class QRBarcodeScanFragment extends CommonFragment {
                             tvResult.setText(checkdStatus.get("0"));
                         }
                     } catch (Exception e) {
-                        Util.showToast(getContext(), "Orderfragment" + e.toString());
+                        //Util.showToast(getContext(), "Orderfragment" + e.toString());
                     }
                 }
             }else if(resultCode == RESULT_CANCELED){

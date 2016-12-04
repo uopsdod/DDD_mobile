@@ -8,7 +8,7 @@
             android:title="找飯店" />
         <item
             android:id="@+id/lookfor_partner"
-            android:icon="@drawable/search"
+            android:icon="@drawable/logo01_black"
             android:title="找共住夥伴" />
         <item
             android:id="@+id/my_order"
@@ -39,7 +39,7 @@
         <item
             android:id="@+id/test_yo"
             android:icon="@drawable/info"
-            android:title="測試頁面_柚" />
+            android:title="測試用頁面" />
 
     </group>
 </menu>

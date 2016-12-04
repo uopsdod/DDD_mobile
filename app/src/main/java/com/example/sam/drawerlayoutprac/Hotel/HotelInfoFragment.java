@@ -140,7 +140,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
                 Log.e(TAG, e.toString());
             }
             if (hotelVO == null) {
-                Util.showToast(getActivity(), "No hotel fonnd");
+                //Util.showToast(getActivity(), "No hotel fonnd");
             } else {
                 tvHotelName.setText(hotelVO.getHotelName());
                 tvHotelCity.setText(hotelVO.getHotelCity());
@@ -165,7 +165,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
             }
             if (room == null || room.isEmpty()) {
                 tvStatus.setVisibility(View.VISIBLE);
-                Util.showToast(getActivity(), "No Room fonnd");
+                //Util.showToast(getActivity(), "No Room fonnd");
             } else {
                 myAdapter = new SpotAdapter(getActivity(), room);
                 rv_hotelInfo.setAdapter(myAdapter);
@@ -233,7 +233,7 @@ public class HotelInfoFragment extends CommonFragment implements Serializable {
                     bundle.putSerializable("hotelId", hotelId);
                     fragment.setArguments(bundle);
                     Util.switchFragment(HotelInfoFragment.this, fragment);
-                    Util.showToast(getContext(), "roomId" + roomId);
+                    //Util.showToast(getContext(), "roomId" + roomId);
                 }
             });
         }

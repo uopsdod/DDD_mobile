@@ -27,7 +27,7 @@ public class EuclidTest extends EuclidActivity{
         mButtonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplication(), "Oh hi!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplication(), "Oh hi!", Toast.LENGTH_SHORT).show();
             }
         });
     }

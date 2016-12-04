@@ -125,7 +125,7 @@ public class MemberFragment extends CommonFragment {
                 if(!isUserValid(userName,password)){
                     tilUserName.setError("Account or Password is not valid");
                     etPassword.setText(null);
-                    Util.showToast(getActivity(), "Login fail");
+                    //Util.showToast(getActivity(), "Login fail");
                     return;
                 }else{
                     String memId = memVO.getMemId().trim();
@@ -143,7 +143,7 @@ public class MemberFragment extends CommonFragment {
                     tvMemAccount.setText(memVO.getMemAccount());
                     // 將會員Id與tokenId送到server
                     new TokenIdWebSocket(getActivity()).sendTokenIdToServer();
-                    Util.showToast(getActivity(), "Login success");
+                    //Util.showToast(getActivity(), "Login success");
                 }
                 FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
@@ -172,7 +172,7 @@ public class MemberFragment extends CommonFragment {
 //                setResult
 //            }
         }else{
-            Util.showToast(getActivity() ,"User Name or Password invalid");
+            //Util.showToast(getActivity() ,"User Name or Password invalid");
         }
     }
 

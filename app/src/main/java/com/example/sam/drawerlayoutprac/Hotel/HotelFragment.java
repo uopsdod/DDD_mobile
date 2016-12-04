@@ -119,7 +119,7 @@ public class HotelFragment extends CommonFragment {
                 Log.e(TAG, e.toString());
             }
             if(hotel == null || hotel.isEmpty()){
-                Util.showToast(getActivity(), "No hotel fonnd");
+                //Util.showToast(getActivity(), "No hotel fonnd");
             }else{
                 myAdapter = new SpotAdapter(getActivity(), myHotelGetLowestPriceVOList);
                 myRvSpot.setAdapter(myAdapter);
