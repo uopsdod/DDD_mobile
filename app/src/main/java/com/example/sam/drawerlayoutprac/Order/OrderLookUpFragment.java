@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.sam.drawerlayoutprac.BuildConfig;
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.MustLoginFragment;
 import com.example.sam.drawerlayoutprac.Partner.VO.OrdVO;
 import com.example.sam.drawerlayoutprac.R;
@@ -64,6 +65,7 @@ public class OrderLookUpFragment extends MustLoginFragment {
     @Override
     public void onResume() {
         super.onResume();
+        MainActivity.actionbar.setTitle("我的訂單");
         Log.d("OrderLookUpFragment", "onResuemd() called");
         // 驗證登入-防止crash
         SharedPreferences preferences_r = getActivity().getSharedPreferences(Common.PREF_FILE, getActivity().MODE_PRIVATE);

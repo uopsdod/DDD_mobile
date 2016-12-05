@@ -28,7 +28,6 @@ import android.util.Log;
 
 import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.R;
-import com.example.sam.drawerlayoutprac.Util;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -110,8 +109,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String fromMemId = aDataMap.get("fromMemId");
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_stat_ic_notification)
+                .setSmallIcon(R.drawable.logo03_64dp)
+                .setColor(getResources().getColor(R.color.sub1_color))
                 .setContentTitle("DDD hotel")
                 .setContentText(aNotificationMsgBody)
                 .setAutoCancel(true)

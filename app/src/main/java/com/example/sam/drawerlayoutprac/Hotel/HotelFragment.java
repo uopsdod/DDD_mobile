@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class HotelFragment extends CommonFragment {
 
     @Override
     public void onResume() {
+        MainActivity.actionbar.setTitle("找飯店");
         super.onResume();
     }
 

@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--<item-->
+        <!--android:id="@+id/liveTogether"-->
+        <!--android:title=""-->
+        <!--app:actionLayout="@layout/pictoggle_partner"-->
+        <!--app:showAsAction="always"/>-->
+
     <item
         android:id="@+id/action_bar_message"
         android:icon="@drawable/message"
@@ -9,10 +15,5 @@
         app:showAsAction="always"
         />
 
-    <item
-        android:id="@+id/liveTogether"
-        android:title=""
-        app:actionLayout="@layout/pictoggle_partner"
-        app:showAsAction="always"/>
 
 </menu>

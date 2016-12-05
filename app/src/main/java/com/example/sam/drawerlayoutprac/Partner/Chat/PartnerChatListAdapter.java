@@ -63,7 +63,7 @@ public class PartnerChatListAdapter extends BaseAdapter {
             aConvertView = View.inflate(this.context, R.layout.chat_left_container, null);
         }
         holder.chat_container = (LinearLayout) aConvertView.findViewById(R.id.chat_container);
-        holder.text_container = (RelativeLayout) aConvertView.findViewById(R.id.text_container);
+        holder.text_container = (LinearLayout) aConvertView.findViewById(R.id.text_container);
         holder.img_thumbnail = (ImageView) aConvertView.findViewById(R.id.img_thumbnail);
         holder.txt_name = (TextView) aConvertView.findViewById(R.id.txt_name);
         holder.container_bubble = (RelativeLayout) aConvertView.findViewById(R.id.container_bubble);
@@ -76,7 +76,7 @@ public class PartnerChatListAdapter extends BaseAdapter {
 
         holder.txt_name.setText(ChatFragment.nameMap.get(data.getMemChatMemId()));
         holder.txt.setText(data.getMemChatContent().toString());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String date = sdf.format(data.getMemChatDate());
         holder.txt_time.setText(date);
         //Bitmap bitmap = BitmapFactory.decodeByteArray(memVO.getMemProfile(),0,memVO.getMemProfile().length);
@@ -86,7 +86,7 @@ public class PartnerChatListAdapter extends BaseAdapter {
 
     static class ViewHolder {
         LinearLayout chat_container;
-        RelativeLayout text_container;
+        LinearLayout text_container;
         ImageView img_thumbnail;
         TextView txt_name;
         RelativeLayout container_bubble;

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.sam.drawerlayoutprac.Common;
+import com.example.sam.drawerlayoutprac.MainActivity;
 import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 import com.google.gson.JsonObject;
@@ -28,6 +29,12 @@ public class TestFragment extends Fragment {
     EditText memIdView;
     Button btnView;
     Button btn_AllSell;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity.actionbar.setTitle("測試頁面");
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

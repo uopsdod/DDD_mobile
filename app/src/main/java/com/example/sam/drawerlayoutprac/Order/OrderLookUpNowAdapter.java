@@ -269,7 +269,7 @@ public class OrderLookUpNowAdapter extends RecyclerView.Adapter<OrderLookUpNowAd
                 Log.d("timeTest-remainedTime", ""+remainedTime);
                 Log.d("timeTest-remainedTime" , ""+TimeUnit.HOURS.convert(remainedTime, TimeUnit.MILLISECONDS) + " hours)");
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     Log.e("OrderLookUpNowAdapter", e.toString());
                 }
