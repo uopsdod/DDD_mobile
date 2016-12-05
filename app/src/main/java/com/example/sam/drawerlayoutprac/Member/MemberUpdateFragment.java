@@ -1,6 +1,7 @@
 package com.example.sam.drawerlayoutprac.Member;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,6 +43,8 @@ import com.example.sam.drawerlayoutprac.R;
 import com.example.sam.drawerlayoutprac.Util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -63,6 +67,8 @@ public class MemberUpdateFragment extends Fragment {
     private DrawerLayout drawerLayout;
     private static final int REQUEST_PICK_PICTURE = 2;
     private final static int REQ_PERMISSIONS = 0;
+    private static final int REQUEST_CROP = 3;
+    private Uri imageUri, cropImageUri;
 
     @Nullable
     @Override
@@ -144,6 +150,7 @@ public class MemberUpdateFragment extends Fragment {
         btSubmit.setOnClickListener(new UpdateFinishClick());
 
         btChangePhoto.setOnClickListener(new changePhotoClick());
+        showMemProfile();
         return view;
     }
 
@@ -162,7 +169,6 @@ public class MemberUpdateFragment extends Fragment {
     public void onStart() {
         super.onStart();
         showMemInfo();
-        showMemProfile();
     }
     //問User同不同意這個APP使用他手機的相簿功能
     private void askPermissions() {
@@ -207,17 +213,24 @@ public class MemberUpdateFragment extends Fragment {
         if(resultCode == RESULT_OK){
             switch(requestCode){
                 case REQUEST_PICK_PICTURE:
-                    Uri uri = data.getData();
+                    imageUri = data.getData();
+                    crop();
+                    break;
+
+                case REQUEST_CROP:
+                    Log.d("tag", "REQUEST_CROP: " + cropImageUri.toString());
                     String[] columns = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getContext().getContentResolver().query(uri, columns, null, null, null);
-                    Log.d("uri",uri.toString());
-                    Log.d("columns",columns.toString());
-                    Log.d("cursor",""+cursor.getCount());
+                    Cursor cursor = getContext().getContentResolver().query(imageUri, columns, null, null, null);
+                    Log.d("12132","131231");
 
                     if(cursor.moveToFirst()){
-                        String imagePath = cursor.getString(0);
                         cursor.close();
-                        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(cropImageUri));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         Log.d("12132",bitmap.toString());
 
                         //設定圖片要顯示的大小(寬度、高度)
@@ -230,6 +243,8 @@ public class MemberUpdateFragment extends Fragment {
                         int imageSide = width < height ? width : height;
 
                         bitmap.setDensity(imageSide);//設定圖片的大小，與剛剛設定的  imageSide 大小一致
+                        Boolean r = bitmap==null;
+                        Log.d("12132",r.toString());
                         ivPhoto.setImageBitmap(bitmap);
                         ByteArrayOutputStream out = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 10, out);
@@ -237,6 +252,36 @@ public class MemberUpdateFragment extends Fragment {
                     }
                     break;
             }
+        }
+    }
+
+    private void crop() {
+        cropImageUri = getImageUri("image_cropped.jpg");
+        // take care of exceptions
+        try {
+            // call the standard crop action intent (the user device may not support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // set image source Uri and type
+            cropIntent.setDataAndType(imageUri, "image/*");
+            // send crop message
+            cropIntent.putExtra("crop", "true");
+            // aspect ratio of the cropped area
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            // output with and height
+            cropIntent.putExtra("outputX", 500);
+            cropIntent.putExtra("outputY", 500);
+            // whether keep original aspect ratio
+            cropIntent.putExtra("scale", true);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropImageUri);
+            // whether return data by the intent
+            cropIntent.putExtra("return-data", false);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, REQUEST_CROP);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException anfe) {
+            Util.showToast(getContext(),"NotFoundException");
         }
     }
 
@@ -292,6 +337,13 @@ public class MemberUpdateFragment extends Fragment {
 
             }
         }
+    }
+
+    private Uri getImageUri(String fileName) {
+        File dir = Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File imageFile = new File(dir, fileName);
+        return Uri.fromFile(imageFile);
     }
 
     private class UpdateFinishClick implements View.OnClickListener{

@@ -172,7 +172,7 @@ public class MemberFragment extends CommonFragment {
 //                setResult
 //            }
         }else{
-            Util.showToast(getActivity() ,"User Name or Password invalid");
+
         }
     }
 
