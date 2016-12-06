@@ -114,7 +114,7 @@
             android:layout_weight="1"
             android:background="@drawable/btn_bg"
             android:drawableLeft="@drawable/qr_codes_24dp"
-            android:drawablePadding="-55dp"
+            android:drawablePadding="-25dp"
             android:paddingLeft="33dp"
             android:text="查看QR"
             android:textSize="18sp" />
@@ -126,7 +126,7 @@
             android:layout_weight="1"
             android:background="@drawable/btn_bg"
             android:drawableLeft="@drawable/cancel_red_24dp"
-            android:drawablePadding="-45dp"
+            android:drawablePadding="-25dp"
             android:paddingLeft="33dp"
             android:text="取消訂單"
             android:textSize="18sp" />
