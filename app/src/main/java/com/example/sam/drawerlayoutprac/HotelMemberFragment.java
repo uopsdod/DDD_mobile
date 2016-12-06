@@ -132,7 +132,7 @@ public class HotelMemberFragment extends Fragment {
            pref.getString("userName", "");
            pref.getString("password", "");
         }else{
-            Util.showToast(getActivity() ,"User Name or Password invalid");
+            Log.d(TAG, "User Name or Password invalid");
         }
     }
 

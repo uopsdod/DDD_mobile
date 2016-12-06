@@ -12,13 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         >
     <TextView
         android:id="@+id/tvHotel"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:text="旅館名稱 : "
         android:textSize="30sp"
         android:background="#709acf"
@@ -31,8 +30,7 @@
         android:id="@id/tvHotelName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvHotel"
-        android:layout_toRightOf="@+id/tvHotel"
+        android:layout_below="@id/tvHotel"
         android:text=" 中壢大飯店"
         android:textColor="@color/colorAccent"
         android:textSize="30sp"
@@ -43,7 +41,7 @@
         android:id="@id/tvAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvHotel"
+        android:layout_below="@id/tvHotelName"
         android:layout_marginTop="1dp"
         android:text="旅館地址 : "
         android:textSize="30sp"
@@ -57,7 +55,7 @@
         android:layout_below="@id/tvAddress"
         android:text="桃園市"
         android:textColor="@color/colorAccent"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:background="@color/white"/>
 
     <TextView
@@ -68,7 +66,7 @@
         android:layout_toRightOf="@id/tvHotelCity"
         android:text="中壢區"
         android:textColor="@color/colorAccent"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:background="@color/white"/>
 
     <TextView
@@ -79,7 +77,7 @@
         android:layout_toRightOf="@id/tvHotelCounty"
         android:text="延平路645號4樓"
         android:textColor="@color/colorAccent"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:background="@color/white"/>
 
     <TextView
@@ -111,7 +109,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:layout_below="@id/rlHotelInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

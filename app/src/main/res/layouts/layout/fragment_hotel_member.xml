@@ -47,6 +47,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:hint="@string/Password"
+        android:inputType="textPassword"
          />
 
 </android.support.design.widget.TextInputLayout>

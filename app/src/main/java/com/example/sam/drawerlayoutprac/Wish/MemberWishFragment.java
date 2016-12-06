@@ -183,7 +183,7 @@ public class MemberWishFragment extends MustLoginFragment {
                     }
                 });
             } else {
-                Util.showToast(getContext(), "You need login mother fucker!");
+                Util.showToast(getContext(), "You need login!");
             }
         }
 
@@ -250,7 +250,7 @@ public class MemberWishFragment extends MustLoginFragment {
                                     }
 
                                 }catch (JSONException e){
-                                    Util.showToast(getContext(), e.toString());
+                                   Log.d("MemberWishFragment", e.toString());
                                 }
 
                             }
