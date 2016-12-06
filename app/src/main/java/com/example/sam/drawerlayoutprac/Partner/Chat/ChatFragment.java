@@ -206,10 +206,13 @@ public class ChatFragment extends CommonFragment {
         SharedPreferences pref = getContext().getSharedPreferences(Common.PREF_FILE, Context.MODE_PRIVATE);
         String memId = pref.getString("memId", null);
         String msgCountMax = pref.getString("msgCountMax"+memId+toMemId,null);
-        String msgCountCurr = Integer.toString(Integer.parseInt(msgCountMax) + msgCountAdded);
+        if (msgCountMax != null){
+            String msgCountCurr = Integer.toString(Integer.parseInt(msgCountMax) + msgCountAdded);
 //        msgCountMax = Integer.toString(Integer.parseInt(msgCountMax) + msgCountAdded);
-        pref.edit().putString("msgCountCurr"+toMemId+memId,msgCountCurr).apply();
-        pref.edit().putString("msgCountCurr"+memId+toMemId,msgCountCurr).apply();
+            pref.edit().putString("msgCountCurr"+toMemId+memId,msgCountCurr).apply();
+            pref.edit().putString("msgCountCurr"+memId+toMemId,msgCountCurr).apply();
+        }
+
         msgCountAdded = 0;
     }
 
