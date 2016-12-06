@@ -92,7 +92,15 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
         String msgCountCurr = pref.getString("msgCountCurr"+data.getMemChatToMemId()+data.getMemChatMemId(),null);
         String msgCountUnread = null;
         if (msgCountCurr != null){
-            msgCountUnread = Integer.toString(Integer.parseInt(msgCountMax) - Integer.parseInt(msgCountCurr));
+            int msgCountUnread_int = Integer.parseInt(msgCountMax) - Integer.parseInt(msgCountCurr);
+            if (msgCountUnread_int < 0){
+                // 如果資料庫刷新，導致msgCountUnread_int出現負數，則當作此些訊息皆已讀，且將msgCountCurr設定為現在的msgCountMax
+                msgCountUnread = "0";
+                pref.edit().putString("msgCountCurr"+data.getMemChatToMemId()+data.getMemChatMemId(),msgCountMax).apply();
+                pref.edit().putString("msgCountCurr"+data.getMemChatMemId()+data.getMemChatToMemId(),msgCountMax).apply();
+            }else{
+                msgCountUnread = Integer.toString(msgCountUnread_int);
+            }
         }else{
             msgCountUnread = msgCountMax;
         }
