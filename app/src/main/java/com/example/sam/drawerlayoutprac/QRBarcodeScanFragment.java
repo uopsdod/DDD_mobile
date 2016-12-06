@@ -98,12 +98,11 @@ public class QRBarcodeScanFragment extends CommonFragment {
                     }
                 }
             }else if(resultCode == RESULT_CANCELED){
-                tvMessage.setText("Scan was Cancelled");
+//                tvMessage.setText("Scan was Cancelled");
             }
-
-            tvMessage.setText(str[0] + "\n" + str[1] + "\n" + str[2] + str[3] + "\n" + str[4] + str[5] + "\n" + str[6] + str[7] + "\n" + str[8] + str[9]);
-
-
+            if(str != null){
+                tvMessage.setText(str[0] + "\n" + str[1] + "\n" + str[2] + str[3] + "\n" + str[4] + str[5] + "\n" + str[6] + str[7] + "\n" + str[8] + str[9]);
+            }
         }
     }
 
