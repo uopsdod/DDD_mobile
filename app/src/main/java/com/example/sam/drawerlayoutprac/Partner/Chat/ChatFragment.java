@@ -104,6 +104,7 @@ public class ChatFragment extends CommonFragment {
             @Override
             public void onClick(View v) {
                 String newMsg = ChatFragment.this.msg.getText().toString();
+                ChatFragment.this.msg.setText("");
                 //Util.showToast(getContext(), ChatFragment.TAG + ChatFragment.this.msg.getText().toString());
                 if (newMsg.trim().isEmpty()) {
                     Util.showToast(getContext(), "message is empty.");
