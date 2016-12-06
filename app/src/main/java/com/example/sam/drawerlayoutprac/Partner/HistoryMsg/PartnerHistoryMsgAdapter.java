@@ -102,7 +102,9 @@ public class PartnerHistoryMsgAdapter extends BaseAdapter {
                 msgCountUnread = Integer.toString(msgCountUnread_int);
             }
         }else{
-            msgCountUnread = msgCountMax;
+            msgCountUnread = "0";
+            pref.edit().putString("msgCountCurr"+data.getMemChatToMemId()+data.getMemChatMemId(),msgCountMax).apply();
+            pref.edit().putString("msgCountCurr"+data.getMemChatMemId()+data.getMemChatToMemId(),msgCountMax).apply();
         }
         Log.d(TAG,"msgCountMax: " + msgCountMax);
         Log.d(TAG,"msgCountCurr: " + msgCountCurr);
