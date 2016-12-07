@@ -103,6 +103,8 @@ public class RoomFragment extends CommonFragment {
                                     }
                                 })
                                 .show();
+                        ivUnLike.setVisibility(View.VISIBLE);
+                        ivLike.setVisibility(View.INVISIBLE);
                     }
                 }
             }
